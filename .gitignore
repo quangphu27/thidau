@@ -1,0 +1,31 @@
+# Python
+**/venv/
+**/__pycache__/
+*.pyc
+*.egg-info/
+**/.pytest_cache/
+
+# Node
+**/node_modules/
+**/dist/
+
+# Runtime DB (đề thi/câu hỏi/media nằm trong seed_data + uploads)
+**/database.db
+**/database.db-wal
+**/database.db-shm
+
+# Secrets / local env
+**/.env
+**/.env.local
+**/.env.*.local
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.tmp
+.vscode/
+.idea/
+
+# Keep uploaded media & seed pack in git
+!knowledge-arena/backend/uploads/**/.gitkeep
+!knowledge-arena/backend/seed_data/**

@@ -1,0 +1,324 @@
+{
+  "course": "Scratch",
+  "levels": ["medium", "hard"],
+  "total": 35,
+  "medium_count": 19,
+  "hard_count": 16,
+  "questions": [
+    {
+      "stt": 1,
+      "level": "hard",
+      "category": "algorithm",
+      "cau_hoi": "🔁 Lặp 5 lần, MỖI lần lặp 'di chuyển 2 bước' 4 lần — tổng bao nhiêu bước?",
+      "dap_an": ["9 bước", "20 bước", "40 bước", "10 bước"],
+      "dap_an_dung": "40 bước"
+    },
+    {
+      "stt": 2,
+      "level": "hard",
+      "category": "problem_solving",
+      "cau_hoi": "👥 Tạo 3 bản sao (clone) + 1 nhân vật gốc — có tất cả mấy nhân vật?",
+      "dap_an": ["4 nhân vật", "3 nhân vật", "1 nhân vật", "7 nhân vật"],
+      "dap_an_dung": "4 nhân vật"
+    },
+    {
+      "stt": 3,
+      "level": "hard",
+      "category": "sequencing",
+      "cau_hoi": "📨 Muốn nhân vật B chạy khi nhân vật A 'phát tin bắt đầu', B cần khối nào?",
+      "dap_an": ["Khi chạm biên", "Khi bấm cờ xanh", "Khi nhận tin bắt đầu", "Khi ẩn"],
+      "dap_an_dung": "Khi nhận tin bắt đầu"
+    },
+    {
+      "stt": 4,
+      "level": "hard",
+      "category": "algorithm",
+      "cau_hoi": "🔄 Xoay 15° rồi lặp 24 lần — mèo quay được mấy vòng tròn?",
+      "dap_an": ["1 vòng (360°)", "Không quay", "2 vòng", "Nửa vòng"],
+      "dap_an_dung": "1 vòng (360°)"
+    },
+    {
+      "stt": 5,
+      "level": "hard",
+      "category": "observation",
+      "cau_hoi": "🎨 Nếu 'chạm màu đỏ' thì dừng lại — cần khối nhóm nào?",
+      "dap_an": ["Chỉ Biến", "Chỉ Vẽ", "Nhận biết (Sensing) + Điều kiện", "Chỉ Âm thanh"],
+      "dap_an_dung": "Nhận biết (Sensing) + Điều kiện"
+    },
+    {
+      "stt": 6,
+      "level": "hard",
+      "category": "sequencing",
+      "cau_hoi": "🧩 Thứ tự đúng: đặt điểm = 0 → lặp 10 lần chơi → nếu chạm sao thì +1 điểm.\n\nBước đầu tiên là gì?",
+      "dap_an": ["Chạm sao +1", "Đặt điểm = 0", "Lặp 10 lần", "Nói Thắng"],
+      "dap_an_dung": "Đặt điểm = 0"
+    },
+    {
+      "stt": 7,
+      "level": "hard",
+      "category": "problem_solving",
+      "cau_hoi": "🎯 Một nhân vật nhận được tin nhắn \"Bắt đầu\" rồi chạy chương trình riêng của nó.\n\nĐây là ví dụ của:",
+      "dap_an": ["Biến", "Điều kiện", "Sự kiện và truyền tin nhắn", "Tọa độ"],
+      "dap_an_dung": "Sự kiện và truyền tin nhắn"
+    },
+    {
+      "stt": 8,
+      "level": "hard",
+      "category": "problem_solving",
+      "cau_hoi": "📍 Nhân vật đang ở tọa độ (0, 0).\n\nSau đó:\n• thay đổi x thêm 50\n• thay đổi y thêm 100\n\nNhân vật ở tọa độ nào?",
+      "dap_an": ["(100, 100)", "(50, 100)", "(50, 50)", "(100, 50)"],
+      "dap_an_dung": "(50, 100)"
+    },
+    {
+      "stt": 9,
+      "level": "hard",
+      "category": "logic",
+      "cau_hoi": "🎯 Để thắng game:\n\n• Phải chạm sao\n• VÀ điểm > 5\n\n• Điểm hiện tại = 8\n• Vừa chạm sao\n\nBạn có thắng không?",
+      "dap_an": ["Có, thắng", "Chỉ cần điểm > 5", "Chỉ cần chạm sao", "Không, chưa đủ"],
+      "dap_an_dung": "Có, thắng"
+    },
+    {
+      "stt": 10,
+      "level": "hard",
+      "category": "problem_solving",
+      "cau_hoi": "👥 Ban đầu có 1 nhân vật.\nLặp 2 lần, mỗi lần tạo 1 bản sao (clone).\n\nSau khi chạy xong có tất cả mấy nhân vật?",
+      "dap_an": ["4 nhân vật", "2 nhân vật", "1 nhân vật", "3 nhân vật"],
+      "dap_an_dung": "3 nhân vật"
+    },
+    {
+      "stt": 11,
+      "level": "hard",
+      "category": "sequencing",
+      "cau_hoi": "📐 Sắp xếp các khối để mèo vẽ hình tam giác:\n\n① Xoay 120 độ\n② Di chuyển 100 bước\n③ Lặp lại 3 lần\n\nThứ tự đúng là?",
+      "dap_an": [
+        "Di chuyển 100 bước\nLặp lại 3 lần\n    Xoay 120 độ",
+        "Lặp lại 3 lần\n    Xoay 120 độ\n    Di chuyển 100 bước",
+        "Xoay 120 độ\nDi chuyển 100 bước",
+        "Lặp lại 3 lần\n    Di chuyển 100 bước\n    Xoay 120 độ"
+      ],
+      "dap_an_dung": "Lặp lại 3 lần\n    Di chuyển 100 bước\n    Xoay 120 độ"
+    },
+    {
+      "stt": 12,
+      "level": "hard",
+      "category": "logic",
+      "cau_hoi": "Chức năng nào sau đây KHÔNG phải là chức năng của biến trong Scratch?",
+      "dap_an": [
+        "Lưu trữ một giá trị (số, chữ) để dùng lại",
+        "Đếm điểm số trong trò chơi",
+        "Tự động vẽ hình và đổi trang phục nhân vật",
+        "Thay đổi giá trị khi nhân vật chạm vật thể"
+      ],
+      "dap_an_dung": "Tự động vẽ hình và đổi trang phục nhân vật"
+    },
+    {
+      "stt": 13,
+      "level": "hard",
+      "category": "algorithm",
+      "cau_hoi": "Muốn vẽ hình tròn có bán kính R thì khối lệnh nào sau đây là đúng?",
+      "dap_an": [
+        "Lặp 360 lần: di chuyển (2 × π × R / 360) bước, xoay phải 1 độ",
+        "Lặp 4 lần: di chuyển R bước, xoay phải 90 độ",
+        "Di chuyển R bước rồi xoay phải 360 độ một lần",
+        "Lặp R lần: di chuyển 360 bước, xoay phải 2 độ"
+      ],
+      "dap_an_dung": "Lặp 360 lần: di chuyển (2 × π × R / 360) bước, xoay phải 1 độ"
+    },
+    {
+      "stt": 14,
+      "level": "hard",
+      "category": "problem_solving",
+      "cau_hoi": "Trong trò chơi kiểu Flappy Bird, khi con vịt đang rơi xuống (không nhảy), khối lệnh nào thường được dùng?",
+      "dap_an": [
+        "Thay đổi y đi một số âm (ví dụ thay đổi y đi -3)",
+        "Thay đổi x đi 10",
+        "Đặt hướng 90 độ",
+        "Đổi trang phục sang trang phục tiếp theo"
+      ],
+      "dap_an_dung": "Thay đổi y đi một số âm (ví dụ thay đổi y đi -3)"
+    },
+    {
+      "stt": 15,
+      "level": "hard",
+      "category": "logic",
+      "cau_hoi": "Em có biến «điểm». Khi nhân vật chạm vào sao, muốn cộng thêm 1 điểm. Khối lệnh nào đúng?",
+      "dap_an": [
+        "Đặt «điểm» thành 1",
+        "Thay đổi «điểm» đi 1",
+        "Đặt «điểm» thành 0",
+        "Ẩn biến «điểm»"
+      ],
+      "dap_an_dung": "Thay đổi «điểm» đi 1"
+    },
+    {
+      "stt": 16,
+      "level": "hard",
+      "category": "algorithm",
+      "cau_hoi": "Muốn nhân vật liên tục rơi xuống cho đến khi chạm mặt đất, cách làm nào đúng nhất?",
+      "dap_an": [
+        "Lặp lại mãi: nếu không chạm màu đất thì thay đổi y đi số âm",
+        "Chỉ dùng «đi đến x:0 y:0» một lần",
+        "Xoay phải 15 độ trong khối «khi nhấn phím mũi tên»",
+        "Đặt kích thước thành 100%"
+      ],
+      "dap_an_dung": "Lặp lại mãi: nếu không chạm màu đất thì thay đổi y đi số âm"
+    },
+    {
+      "stt": 17,
+      "level": "medium",
+      "category": "sequencing",
+      "cau_hoi": "▶️ Để chạy chương trình Scratch, ghép khối vào sự kiện nào?",
+      "dap_an": ["Khi nhấn Delete", "Khi tắt máy", "Khi bấm cờ xanh ▶️", "Khi bấm cờ đỏ ⏹️"],
+      "dap_an_dung": "Khi bấm cờ xanh ▶️"
+    },
+    {
+      "stt": 18,
+      "level": "medium",
+      "category": "observation",
+      "cau_hoi": "🟦 Khối màu xanh dương thuộc nhóm lệnh gì?",
+      "dap_an": ["Biến số", "Sự kiện (Events)", "Âm thanh", "Chuyển động (Motion)"],
+      "dap_an_dung": "Chuyển động (Motion)"
+    },
+    {
+      "stt": 19,
+      "level": "medium",
+      "category": "problem_solving",
+      "cau_hoi": "🐱 Muốn mèo đi thẳng 50 bước, dùng khối nào?",
+      "dap_an": ["Di chuyển 50 bước", "Xoay 50 độ", "Ẩn nhân vật", "Đổi kích thước 50%"],
+      "dap_an_dung": "Di chuyển 50 bước"
+    },
+    {
+      "stt": 20,
+      "level": "medium",
+      "category": "problem_solving",
+      "cau_hoi": "⬆️ Muốn nhân vật nhảy lên, thay đổi tọa độ nào?",
+      "dap_an": ["Ẩn nhân vật", "Giảm x", "Đổi hướng 0°", "Tăng y"],
+      "dap_an_dung": "Tăng y"
+    },
+    {
+      "stt": 21,
+      "level": "medium",
+      "category": "problem_solving",
+      "cau_hoi": "📍 Khối 'đi tới x: 0 y: 0' đưa nhân vật về đâu?",
+      "dap_an": ["Góc trên phải", "Vị trí ngẫu nhiên", "Tâm màn hình", "Ra ngoài màn hình"],
+      "dap_an_dung": "Tâm màn hình"
+    },
+    {
+      "stt": 22,
+      "level": "medium",
+      "category": "sequencing",
+      "cau_hoi": "🏃 Mèo Scratch làm lần lượt:\n\n① Xoay 90°\n② Di chuyển 10 bước\n③ Nói \"Xong!\"\n\nSau khi đi thẳng xong, mèo làm gì tiếp theo?",
+      "dap_an": ["Di chuyển 10 bước", "Ẩn đi", "Nói \"Xong!\"", "Xoay 90°"],
+      "dap_an_dung": "Nói \"Xong!\""
+    },
+    {
+      "stt": 23,
+      "level": "medium",
+      "category": "algorithm",
+      "cau_hoi": "🔁 Chương trình Scratch:\n\n• Lặp 3 lần\n• Mỗi lần lặp: di chuyển 4 bước\n\nTổng cộng mèo đi được bao nhiêu bước?",
+      "dap_an": ["7 bước", "4 bước", "3 bước", "12 bước"],
+      "dap_an_dung": "12 bước"
+    },
+    {
+      "stt": 24,
+      "level": "medium",
+      "category": "math",
+      "cau_hoi": "🔄 Vẽ hình vuông cạnh 50:\n\n• Lặp 4 lần\n• Mỗi lần: di chuyển 50 bước → xoay 90°\n\nTổng quãng đường mèo đi?",
+      "dap_an": ["50 bước", "200 bước", "100 bước", "150 bước"],
+      "dap_an_dung": "200 bước"
+    },
+    {
+      "stt": 25,
+      "level": "medium",
+      "category": "problem_solving",
+      "cau_hoi": "🧱 Chạm cạnh màn hình thì quay ngược — dùng khối nào?",
+      "dap_an": ["Nếu chạm cạnh thì quay lại", "Đổi nền", "Lặp vô hạn", "Dừng tất cả"],
+      "dap_an_dung": "Nếu chạm cạnh thì quay lại"
+    },
+    {
+      "stt": 26,
+      "level": "medium",
+      "category": "problem_solving",
+      "cau_hoi": "💬 Hai nhân vật nói nối tiếp — dùng khối nào?",
+      "dap_an": ["Xóa bản sao", "Ẩn và hiện", "Dừng khối khác", "Nói ... và đợi"],
+      "dap_an_dung": "Nói ... và đợi"
+    },
+    {
+      "stt": 27,
+      "level": "medium",
+      "category": "algorithm",
+      "cau_hoi": "🔄 Vẽ hình tròn bằng mèo — cách phổ biến?",
+      "dap_an": ["Lặp: xoay một chút + di chuyển", "Di chuyển 1 lần", "Ẩn mèo", "Đổi tên dự án"],
+      "dap_an_dung": "Lặp: xoay một chút + di chuyển"
+    },
+    {
+      "stt": 28,
+      "level": "medium",
+      "category": "logic",
+      "cau_hoi": "♾️ 'Lặp mãi mãi' khác 'lặp 10 lần' ở điểm nào?",
+      "dap_an": [
+        "Lặp không dừng cho đến khi dừng chương trình",
+        "Không lặp được",
+        "Chỉ khi cờ đỏ",
+        "Chỉ chạy 1 lần"
+      ],
+      "dap_an_dung": "Lặp không dừng cho đến khi dừng chương trình"
+    },
+    {
+      "stt": 29,
+      "level": "medium",
+      "category": "problem_solving",
+      "cau_hoi": "📣 Khối 'phát tin' (broadcast) dùng để?",
+      "dap_an": ["In chữ ra màn hình", "Tắt Scratch", "Báo sự kiện cho nhân vật khác", "Lưu file"],
+      "dap_an_dung": "Báo sự kiện cho nhân vật khác"
+    },
+    {
+      "stt": 30,
+      "level": "medium",
+      "category": "sequencing",
+      "cau_hoi": "🎭 Đổi trang phục (costume) nhân vật — khối nào?",
+      "dap_an": ["Đổi nền trắng", "Chuyển sang trang phục tiếp theo", "Xóa biến", "Dừng âm thanh"],
+      "dap_an_dung": "Chuyển sang trang phục tiếp theo"
+    },
+    {
+      "stt": 31,
+      "level": "medium",
+      "category": "logic",
+      "cau_hoi": "🚦 Đèn xanh thì đi, đỏ thì dừng — tư duy lập trình gì?",
+      "dap_an": ["Vẽ hình", "Lặp vô hạn", "Điều kiện (nếu — thì)", "Ngẫu nhiên"],
+      "dap_an_dung": "Điều kiện (nếu — thì)"
+    },
+    {
+      "stt": 32,
+      "level": "medium",
+      "category": "math",
+      "cau_hoi": "🔁 Lặp 'di chuyển 8 bước' 4 lần — tổng bao nhiêu bước?",
+      "dap_an": ["32 bước", "4 bước", "12 bước", "8 bước"],
+      "dap_an_dung": "32 bước"
+    },
+    {
+      "stt": 33,
+      "level": "medium",
+      "category": "math",
+      "cau_hoi": "🎮 Trò chơi bắt sao:\n\n• Điểm ban đầu = 5\n• Mỗi lần chạm sao: +2 điểm\n• Bạn chạm sao 3 lần\n\nĐiểm cuối cùng là bao nhiêu?",
+      "dap_an": ["8 điểm", "11 điểm", "5 điểm", "6 điểm"],
+      "dap_an_dung": "11 điểm"
+    },
+    {
+      "stt": 34,
+      "level": "medium",
+      "category": "math",
+      "cau_hoi": "🎮 Game né vật cản:\n\n• Điểm ban đầu = 20\n• Chạm vật cản 3 lần\n• Mỗi lần chạm: trừ 5 điểm\n\nĐiểm còn lại?",
+      "dap_an": ["5 điểm", "0 điểm", "15 điểm", "10 điểm"],
+      "dap_an_dung": "5 điểm"
+    },
+    {
+      "stt": 35,
+      "level": "medium",
+      "category": "math",
+      "cau_hoi": "⭐ Biến \"sao\" = 0\n\nLặp 4 lần, mỗi lần:\n→ Đổi \"sao\" thêm 1\n\nSau khi chạy xong, sao bằng bao nhiêu?",
+      "dap_an": ["4", "3", "0", "1"],
+      "dap_an_dung": "4"
+    }
+  ]
+}

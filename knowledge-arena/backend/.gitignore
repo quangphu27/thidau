@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.pyc
+# DB runtime (WAL) — đề thi/câu hỏi nằm trong seed_data/, ảnh trong uploads/ + seed_data/media/
+database.db
+database.db-wal
+database.db-shm
+.pytest_cache/
+*.egg-info/
+
+# Theo dõi ảnh/audio/video trong git (để clone vẫn còn media)
+# Chỉ bỏ qua file tạm nếu có
+uploads/**/*.tmp

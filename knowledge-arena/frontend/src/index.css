@@ -1,0 +1,400 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Nunito", "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fredoka", "Nunito", sans-serif;
+  --color-arena-900: #1e3a5f;
+  --color-arena-800: #ffffff;
+  --color-arena-700: #e8f4ff;
+  --color-arena-accent: #ff5a36;
+  --color-arena-gold: #ffb703;
+  --color-arena-cyan: #00b4d8;
+  --color-arena-pink: #ff6b9d;
+  --color-arena-green: #06d6a0;
+  --color-arena-red: #ef476f;
+  --color-arena-sky: #4cc9f0;
+  --color-arena-ink: #1b3a4b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: #eaf6ff;
+  color: #1b3a4b;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  border: 3px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 12px 32px rgba(30, 90, 140, 0.12);
+}
+
+.arena-bg {
+  background-color: #eaf6ff;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(255, 183, 3, 0.45) 0%, transparent 28%),
+    radial-gradient(circle at 88% 12%, rgba(255, 107, 157, 0.35) 0%, transparent 26%),
+    radial-gradient(circle at 80% 78%, rgba(6, 214, 160, 0.3) 0%, transparent 30%),
+    radial-gradient(circle at 15% 85%, rgba(76, 201, 240, 0.4) 0%, transparent 32%),
+    linear-gradient(165deg, #fff9e8 0%, #e8f7ff 45%, #ffe8f3 100%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.arena-bg::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(27, 58, 75, 0.06) 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
+  opacity: 0.5;
+}
+
+.answer-btn {
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease,
+    background 0.15s ease;
+}
+
+.answer-btn:hover:not(:disabled) {
+  transform: scale(1.04) rotate(-0.5deg);
+  box-shadow: 0 14px 28px rgba(30, 90, 140, 0.2);
+}
+
+.answer-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 183, 3, 0.55), 0 8px 24px rgba(255, 183, 3, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(255, 183, 3, 0), 0 12px 32px rgba(255, 183, 3, 0.5);
+  }
+}
+
+.glow-gold {
+  animation: pulse-glow 1.8s ease-in-out infinite;
+}
+
+@keyframes float-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.float-in {
+  animation: float-up 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.bob {
+  animation: bob 2.4s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
+.wiggle {
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+/* Soft inputs for light theme */
+input,
+textarea,
+select {
+  color: #1b3a4b;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #7a93a3;
+}
+
+/* ===== BATTLE ARENA ===== */
+.battle-ground {
+  background:
+    linear-gradient(180deg, rgba(255, 249, 232, 0.9) 0%, rgba(232, 247, 255, 0.95) 55%, rgba(255, 220, 180, 0.55) 100%);
+  transform-origin: center top;
+}
+
+.battle-zoom-active {
+  background:
+    linear-gradient(180deg, rgba(255, 236, 179, 0.95) 0%, rgba(255, 220, 200, 0.92) 40%, rgba(255, 183, 3, 0.35) 100%);
+}
+
+.battle-floor::before {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 1.6rem;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(255, 90, 54, 0.25), rgba(255, 183, 3, 0.35), rgba(6, 214, 160, 0.25), transparent);
+  z-index: 0;
+}
+
+.fighter-idle {
+  animation: fighter-bounce 1.6s ease-in-out infinite;
+}
+
+@keyframes fighter-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.fighter-attack {
+  animation: fighter-punch 0.55s ease-out forwards;
+  z-index: 5;
+}
+
+@keyframes fighter-punch {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  35% {
+    transform: translateX(18px) scale(1.12) rotate(8deg);
+  }
+  70% {
+    transform: translateX(-4px) scale(1.05);
+  }
+  100% {
+    transform: translateX(0) scale(1.08);
+  }
+}
+
+.fighter-hit {
+  animation: fighter-get-hit 0.65s ease-in forwards;
+}
+
+@keyframes fighter-get-hit {
+  0% {
+    transform: translateX(0) rotate(0);
+  }
+  30% {
+    transform: translateX(-14px) rotate(-12deg);
+  }
+  100% {
+    transform: translateX(-8px) rotate(-88deg) translateY(18px);
+    opacity: 0.85;
+  }
+}
+
+.fighter-fallen {
+  animation: fighter-fall-back 0.75s cubic-bezier(0.4, 0.1, 0.6, 1.2) forwards;
+}
+
+@keyframes fighter-fall-back {
+  0% {
+    transform: rotate(0) translateY(0);
+  }
+  40% {
+    transform: rotate(-45deg) translateY(-6px);
+  }
+  100% {
+    transform: rotate(-90deg) translateY(22px) translateX(-8px);
+    opacity: 0.75;
+  }
+}
+
+.fighter-body.fighter-fallen {
+  filter: grayscale(0.35);
+}
+
+/* ===== WAITING HALL (game lobby) ===== */
+.lobby-hall {
+  background: #7ec8e3;
+}
+
+.lobby-hall-bg {
+  background:
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(255, 255, 255, 0.45), transparent 60%),
+    linear-gradient(180deg, #87ceeb 0%, #b8e0f0 28%, #d4f0c8 28%, #d4f0c8 52%, #c4a574 52%, #a07848 100%);
+  background-size: 100% 100%;
+}
+
+.lobby-hall-bg::after {
+  content: "";
+  position: absolute;
+  inset: 52% 0 0;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 28px,
+      rgba(0, 0, 0, 0.04) 28px,
+      rgba(0, 0, 0, 0.04) 30px
+    );
+  opacity: 0.7;
+}
+
+.lobby-idle {
+  animation: lobby-bob 2s ease-in-out infinite;
+}
+
+@keyframes lobby-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.lobby-throw {
+  animation: lobby-throw-anim 0.55s ease-out;
+}
+
+@keyframes lobby-throw-anim {
+  0% {
+    transform: rotate(0) scale(1);
+  }
+  40% {
+    transform: rotate(-18deg) scale(1.12) translateX(-6px);
+  }
+  100% {
+    transform: rotate(8deg) scale(1.05) translateX(8px);
+  }
+}
+
+.lobby-hit {
+  animation: lobby-hit-anim 0.7s ease-in;
+}
+
+@keyframes lobby-hit-anim {
+  0% {
+    transform: translateX(0) rotate(0);
+  }
+  35% {
+    transform: translateX(10px) rotate(12deg);
+  }
+  100% {
+    transform: translateX(-4px) rotate(-25deg) translateY(6px);
+  }
+}
+
+.lobby-charge {
+  animation: lobby-charge-anim 0.38s ease-in forwards;
+  z-index: 30;
+}
+
+@keyframes lobby-charge-anim {
+  0% {
+    transform: scale(1) rotate(0);
+  }
+  100% {
+    transform: scale(1.12) rotate(-8deg);
+  }
+}
+
+.lobby-brawl {
+  animation: lobby-brawl-anim 0.28s ease-in-out 3;
+}
+
+@keyframes lobby-brawl-anim {
+  0%,
+  100% {
+    transform: translateX(-4px) rotate(-6deg) scale(1.08);
+  }
+  50% {
+    transform: translateX(5px) rotate(8deg) scale(1.12);
+  }
+}
+
+.lobby-host-idle {
+  animation: lobby-host-bob 2.4s ease-in-out infinite;
+}
+
+@keyframes lobby-host-bob {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.02);
+  }
+}
+
+.lobby-host-aura {
+  background: radial-gradient(
+    circle,
+    rgba(255, 183, 3, 0.55) 0%,
+    rgba(255, 183, 3, 0.15) 45%,
+    transparent 70%
+  );
+  animation: lobby-host-pulse 2s ease-in-out infinite;
+}
+
+@keyframes lobby-host-pulse {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.lobby-host-cape {
+  animation: lobby-cape-sway 2.8s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+@keyframes lobby-cape-sway {
+  0%,
+  100% {
+    transform: rotate(-4deg) skewX(-2deg);
+  }
+  50% {
+    transform: rotate(5deg) skewX(3deg);
+  }
+}
+

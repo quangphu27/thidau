@@ -1,0 +1,2353 @@
+{
+  "version": 2,
+  "exams": [
+    {
+      "title": "Scratch 1",
+      "description": "",
+      "time_per_question": 15,
+      "questions": [
+        {
+          "content": "Vẽ hình tròn cần lặp lại bao nhiêu lần, xoay gốc bao nhiêu độ.\nĐáp án nào sau đây là đúng",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "Lạp lại 180 lần xoay gốc 1 độ",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "Lạp lại 90 lần xoay gốc 1 độ",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "Lạp lại 180 lần xoay gốc 2 độ",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "Lạp lại 180 lần xoay gốc 1 độ",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 0
+        }
+      ]
+    },
+    {
+      "title": "Ai thông minh hơn học sinh lớp 3",
+      "description": "",
+      "time_per_question": 45,
+      "questions": [
+        {
+          "content": "📍 Nhân vật đang ở tọa độ (0, 0).\n\nSau đó:\n• thay đổi x thêm 50\n• thay đổi y thêm 100\n\nNhân vật ở tọa độ nào?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "(100, 100)",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "(50, 100)",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "(50, 50)",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "(100, 50)",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 0
+        },
+        {
+          "content": "Tên tiếng anh của thầy Phú là gì?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "IMAGE",
+          "media_url": "/media/images/e1f3b02a104448889f7dd09e5dd6b5f5.jpg",
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "Thầy David",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "Thầy Kevin",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "Thầy Anex",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "Thầy Flex",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 1
+        },
+        {
+          "content": "Tuổi mẹ gấp 3 lần tuổi con. Sau 10 năm nữa, tuổi mẹ gấp đôi tuổi con.\n\nHỏi hiện nay người con bao nhiêu tuổi?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "8",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "10",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "12",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "15",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 2
+        },
+        {
+          "content": "🔄 Xoay 15° rồi lặp 24 lần — mèo quay được mấy vòng tròn?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "1 vòng (360°)",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "Không quay",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "2 vòng",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "Nửa vòng",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 3
+        },
+        {
+          "content": "🧩 Thứ tự đúng: đặt điểm = 0 → lặp 10 lần chơi → nếu chạm sao thì +1 điểm.\n\nBước đầu tiên là gì?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "Chạm sao +1",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "Đặt điểm = 0",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "Lặp 10 lần",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "Nói Thắng",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 4
+        },
+        {
+          "content": "Chức năng nào sau đây KHÔNG phải là chức năng của biến trong Scratch?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "Lưu trữ một giá trị (số, chữ) để dùng lại",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "Đếm điểm số trong trò chơi",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "Tự động vẽ hình và đổi trang phục nhân vật",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "Thay đổi giá trị khi nhân vật chạm vật thể",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 5
+        },
+        {
+          "content": "Một gia đình có 6 anh em trai, mỗi người anh em trai đó đều có một em gái. Hỏi gia đình đó có tất cả bao nhiêu người?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "7 người",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "8 người",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "9 người",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "12 người",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 6
+        },
+        {
+          "content": "🎨 Nếu 'chạm màu đỏ' thì dừng lại — cần khối nhóm nào?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "Chỉ Biến",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "Chỉ Vẽ",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "Nhận biết (Sensing) + Điều kiện",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "Chỉ Âm thanh",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 7
+        },
+        {
+          "content": "👥 Tạo 3 bản sao (clone) + 1 nhân vật gốc — có tất cả mấy nhân vật?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "4 nhân vật",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "3 nhân vật",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "1 nhân vật",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "7 nhân vật",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 8
+        },
+        {
+          "content": "📨 Muốn nhân vật B chạy khi nhân vật A 'phát tin bắt đầu', B cần khối nào?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "Khi chạm biên",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "Khi bấm cờ xanh",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "Khi nhận tin bắt đầu",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "Khi ẩn",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 9
+        },
+        {
+          "content": "Hỏi 10 con vịt donald và 20 con chó đốm có tổng bao nhiêu chân?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "80",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "90",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "100",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "120",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 10
+        },
+        {
+          "content": "Muốn vẽ hình tròn có bán kính R thì khối lệnh nào sau đây là đúng?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "Lặp 360 lần: di chuyển (2 × π × R / 360) bước, xoay phải 1 độ",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "Lặp 4 lần: di chuyển R bước, xoay phải 90 độ",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "Di chuyển R bước rồi xoay phải 360 độ một lần",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "Lặp R lần: di chuyển 360 bước, xoay phải 2 độ",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 11
+        },
+        {
+          "content": "🎯 Một nhân vật nhận được tin nhắn \"Bắt đầu\" rồi chạy chương trình riêng của nó.\n\nĐây là ví dụ của:",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "Biến",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "Điều kiện",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "Sự kiện và truyền tin nhắn",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "Tọa độ",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 12
+        },
+        {
+          "content": "Trong trò chơi kiểu Flappy Bird, khi con vịt đang rơi xuống (không nhảy), khối lệnh nào thường được dùng?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "Thay đổi y đi một số âm (ví dụ thay đổi y đi -3)",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "Thay đổi x đi 10",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "Đặt hướng 90 độ",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "Đổi trang phục sang trang phục tiếp theo",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 13
+        },
+        {
+          "content": "🎯 Để thắng game:\n\n• Phải chạm sao\n• VÀ điểm > 5\n\n• Điểm hiện tại = 8\n• Vừa chạm sao\n\nBạn có thắng không?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "Có, thắng",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "Chỉ cần điểm > 5",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "Chỉ cần chạm sao",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "Không, chưa đủ",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 14
+        },
+        {
+          "content": "🔁 Lặp 5 lần, MỖI lần lặp 'di chuyển 2 bước' 4 lần — tổng bao nhiêu bước?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "9 bước",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "20 bước",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "40 bước",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "10 bước",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 15
+        },
+        {
+          "content": "📐 Sắp xếp các khối để mèo vẽ hình tam giác:\n\n① Xoay 120 độ\n② Di chuyển 100 bước\n③ Lặp lại 3 lần\n\nThứ tự đúng là?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "Di chuyển 100 bước\nLặp lại 3 lần\n    Xoay 120 độ",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "Lặp lại 3 lần\n    Xoay 120 độ\n    Di chuyển 100 bước",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "Xoay 120 độ\nDi chuyển 100 bước",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "Lặp lại 3 lần\n    Di chuyển 100 bước\n    Xoay 120 độ",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 16
+        },
+        {
+          "content": "1, 3, 6, 10, 15, ?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "18",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "20",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "21",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "25",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 17
+        },
+        {
+          "content": "Câu đố: Nếu 3 con mèo bắt được 3 con chuột trong 3 phút, thì cần bao nhiêu con mèo để bắt 100 con chuột trong 100 phút?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "1 con mèo",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "3 con mèo",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "33 con mèo",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "100 con mèo",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 18
+        },
+        {
+          "content": "👥 Ban đầu có 1 nhân vật.\nLặp 2 lần, mỗi lần tạo 1 bản sao (clone).\n\nSau khi chạy xong có tất cả mấy nhân vật?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "4 nhân vật",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "2 nhân vật",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "1 nhân vật",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "3 nhân vật",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 19
+        }
+      ]
+    },
+    {
+      "title": "Exam from bank test",
+      "description": "",
+      "time_per_question": 15,
+      "questions": [
+        {
+          "content": "Ngân hàng test: 5+5=?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "9",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "10",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "11",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "12",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 0
+        }
+      ]
+    },
+    {
+      "title": "Exam from bank test",
+      "description": "",
+      "time_per_question": 15,
+      "questions": [
+        {
+          "content": "Ngân hàng test: 5+5=?",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "options": [
+            {
+              "content": "9",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "10",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "11",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            },
+            {
+              "content": "12",
+              "is_correct": false,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 3
+            }
+          ],
+          "order_index": 0
+        }
+      ]
+    }
+  ],
+  "bank_questions": [
+    {
+      "content": "2+2=?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "3",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "4",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "5",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "22",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "toán, cộng"
+    },
+    {
+      "content": "Ngân hàng test: 5+5=?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "9",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "10",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "11",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "12",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "toán, cộng"
+    },
+    {
+      "content": "🔁 Lặp 5 lần, MỖI lần lặp 'di chuyển 2 bước' 4 lần — tổng bao nhiêu bước?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "9 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "20 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "40 bước",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "10 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, algorithm"
+    },
+    {
+      "content": "👥 Tạo 3 bản sao (clone) + 1 nhân vật gốc — có tất cả mấy nhân vật?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "4 nhân vật",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "3 nhân vật",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "1 nhân vật",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "7 nhân vật",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, problem solving"
+    },
+    {
+      "content": "📨 Muốn nhân vật B chạy khi nhân vật A 'phát tin bắt đầu', B cần khối nào?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Khi chạm biên",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Khi bấm cờ xanh",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Khi nhận tin bắt đầu",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Khi ẩn",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, sequencing"
+    },
+    {
+      "content": "🔄 Xoay 15° rồi lặp 24 lần — mèo quay được mấy vòng tròn?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "1 vòng (360°)",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Không quay",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "2 vòng",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Nửa vòng",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, algorithm"
+    },
+    {
+      "content": "🎨 Nếu 'chạm màu đỏ' thì dừng lại — cần khối nhóm nào?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Chỉ Biến",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Chỉ Vẽ",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Nhận biết (Sensing) + Điều kiện",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Chỉ Âm thanh",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, observation"
+    },
+    {
+      "content": "🧩 Thứ tự đúng: đặt điểm = 0 → lặp 10 lần chơi → nếu chạm sao thì +1 điểm.\n\nBước đầu tiên là gì?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Chạm sao +1",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Đặt điểm = 0",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Lặp 10 lần",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Nói Thắng",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, sequencing"
+    },
+    {
+      "content": "🎯 Một nhân vật nhận được tin nhắn \"Bắt đầu\" rồi chạy chương trình riêng của nó.\n\nĐây là ví dụ của:",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Biến",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Điều kiện",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Sự kiện và truyền tin nhắn",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Tọa độ",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, problem solving"
+    },
+    {
+      "content": "📍 Nhân vật đang ở tọa độ (0, 0).\n\nSau đó:\n• thay đổi x thêm 50\n• thay đổi y thêm 100\n\nNhân vật ở tọa độ nào?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "(100, 100)",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "(50, 100)",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "(50, 50)",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "(100, 50)",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, problem solving"
+    },
+    {
+      "content": "🎯 Để thắng game:\n\n• Phải chạm sao\n• VÀ điểm > 5\n\n• Điểm hiện tại = 8\n• Vừa chạm sao\n\nBạn có thắng không?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Có, thắng",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Chỉ cần điểm > 5",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Chỉ cần chạm sao",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Không, chưa đủ",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, logic"
+    },
+    {
+      "content": "👥 Ban đầu có 1 nhân vật.\nLặp 2 lần, mỗi lần tạo 1 bản sao (clone).\n\nSau khi chạy xong có tất cả mấy nhân vật?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "4 nhân vật",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "2 nhân vật",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "1 nhân vật",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "3 nhân vật",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, problem solving"
+    },
+    {
+      "content": "📐 Sắp xếp các khối để mèo vẽ hình tam giác:\n\n① Xoay 120 độ\n② Di chuyển 100 bước\n③ Lặp lại 3 lần\n\nThứ tự đúng là?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Di chuyển 100 bước\nLặp lại 3 lần\n    Xoay 120 độ",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Lặp lại 3 lần\n    Xoay 120 độ\n    Di chuyển 100 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Xoay 120 độ\nDi chuyển 100 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Lặp lại 3 lần\n    Di chuyển 100 bước\n    Xoay 120 độ",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, sequencing"
+    },
+    {
+      "content": "Chức năng nào sau đây KHÔNG phải là chức năng của biến trong Scratch?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Lưu trữ một giá trị (số, chữ) để dùng lại",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Đếm điểm số trong trò chơi",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Tự động vẽ hình và đổi trang phục nhân vật",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Thay đổi giá trị khi nhân vật chạm vật thể",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, logic"
+    },
+    {
+      "content": "Muốn vẽ hình tròn có bán kính R thì khối lệnh nào sau đây là đúng?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Lặp 360 lần: di chuyển (2 × π × R / 360) bước, xoay phải 1 độ",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Lặp 4 lần: di chuyển R bước, xoay phải 90 độ",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Di chuyển R bước rồi xoay phải 360 độ một lần",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Lặp R lần: di chuyển 360 bước, xoay phải 2 độ",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, algorithm"
+    },
+    {
+      "content": "Trong trò chơi kiểu Flappy Bird, khi con vịt đang rơi xuống (không nhảy), khối lệnh nào thường được dùng?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Thay đổi y đi một số âm (ví dụ thay đổi y đi -3)",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Thay đổi x đi 10",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Đặt hướng 90 độ",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Đổi trang phục sang trang phục tiếp theo",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, problem solving"
+    },
+    {
+      "content": "Em có biến «điểm». Khi nhân vật chạm vào sao, muốn cộng thêm 1 điểm. Khối lệnh nào đúng?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Đặt «điểm» thành 1",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Thay đổi «điểm» đi 1",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Đặt «điểm» thành 0",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Ẩn biến «điểm»",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, logic"
+    },
+    {
+      "content": "Muốn nhân vật liên tục rơi xuống cho đến khi chạm mặt đất, cách làm nào đúng nhất?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Lặp lại mãi: nếu không chạm màu đất thì thay đổi y đi số âm",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Chỉ dùng «đi đến x:0 y:0» một lần",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Xoay phải 15 độ trong khối «khi nhấn phím mũi tên»",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Đặt kích thước thành 100%",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, hard, algorithm"
+    },
+    {
+      "content": "▶️ Để chạy chương trình Scratch, ghép khối vào sự kiện nào?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Khi nhấn Delete",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Khi tắt máy",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Khi bấm cờ xanh ▶️",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Khi bấm cờ đỏ ⏹️",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, sequencing"
+    },
+    {
+      "content": "🟦 Khối màu xanh dương thuộc nhóm lệnh gì?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Biến số",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Sự kiện (Events)",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Âm thanh",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Chuyển động (Motion)",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, observation"
+    },
+    {
+      "content": "🐱 Muốn mèo đi thẳng 50 bước, dùng khối nào?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Di chuyển 50 bước",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Xoay 50 độ",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Ẩn nhân vật",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Đổi kích thước 50%",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, problem solving"
+    },
+    {
+      "content": "⬆️ Muốn nhân vật nhảy lên, thay đổi tọa độ nào?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Ẩn nhân vật",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Giảm x",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Đổi hướng 0°",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Tăng y",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, problem solving"
+    },
+    {
+      "content": "📍 Khối 'đi tới x: 0 y: 0' đưa nhân vật về đâu?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Góc trên phải",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Vị trí ngẫu nhiên",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Tâm màn hình",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Ra ngoài màn hình",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, problem solving"
+    },
+    {
+      "content": "🏃 Mèo Scratch làm lần lượt:\n\n① Xoay 90°\n② Di chuyển 10 bước\n③ Nói \"Xong!\"\n\nSau khi đi thẳng xong, mèo làm gì tiếp theo?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Di chuyển 10 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Ẩn đi",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Nói \"Xong!\"",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Xoay 90°",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, sequencing"
+    },
+    {
+      "content": "🔁 Chương trình Scratch:\n\n• Lặp 3 lần\n• Mỗi lần lặp: di chuyển 4 bước\n\nTổng cộng mèo đi được bao nhiêu bước?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "7 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "4 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "3 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "12 bước",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, algorithm"
+    },
+    {
+      "content": "🔄 Vẽ hình vuông cạnh 50:\n\n• Lặp 4 lần\n• Mỗi lần: di chuyển 50 bước → xoay 90°\n\nTổng quãng đường mèo đi?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "50 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "200 bước",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "100 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "150 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, math"
+    },
+    {
+      "content": "🧱 Chạm cạnh màn hình thì quay ngược — dùng khối nào?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Nếu chạm cạnh thì quay lại",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Đổi nền",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Lặp vô hạn",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Dừng tất cả",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, problem solving"
+    },
+    {
+      "content": "💬 Hai nhân vật nói nối tiếp — dùng khối nào?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Xóa bản sao",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Ẩn và hiện",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Dừng khối khác",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Nói ... và đợi",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, problem solving"
+    },
+    {
+      "content": "🔄 Vẽ hình tròn bằng mèo — cách phổ biến?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Lặp: xoay một chút + di chuyển",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Di chuyển 1 lần",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Ẩn mèo",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Đổi tên dự án",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, algorithm"
+    },
+    {
+      "content": "♾️ 'Lặp mãi mãi' khác 'lặp 10 lần' ở điểm nào?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Lặp không dừng cho đến khi dừng chương trình",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Không lặp được",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Chỉ khi cờ đỏ",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Chỉ chạy 1 lần",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, logic"
+    },
+    {
+      "content": "📣 Khối 'phát tin' (broadcast) dùng để?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "In chữ ra màn hình",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Tắt Scratch",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Báo sự kiện cho nhân vật khác",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Lưu file",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, problem solving"
+    },
+    {
+      "content": "🎭 Đổi trang phục (costume) nhân vật — khối nào?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Đổi nền trắng",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Chuyển sang trang phục tiếp theo",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Xóa biến",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Dừng âm thanh",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, sequencing"
+    },
+    {
+      "content": "🚦 Đèn xanh thì đi, đỏ thì dừng — tư duy lập trình gì?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "Vẽ hình",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "Lặp vô hạn",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "Điều kiện (nếu — thì)",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "Ngẫu nhiên",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, logic"
+    },
+    {
+      "content": "🔁 Lặp 'di chuyển 8 bước' 4 lần — tổng bao nhiêu bước?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "32 bước",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "4 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "12 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "8 bước",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, math"
+    },
+    {
+      "content": "🎮 Trò chơi bắt sao:\n\n• Điểm ban đầu = 5\n• Mỗi lần chạm sao: +2 điểm\n• Bạn chạm sao 3 lần\n\nĐiểm cuối cùng là bao nhiêu?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "8 điểm",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "11 điểm",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "5 điểm",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "6 điểm",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, math"
+    },
+    {
+      "content": "🎮 Game né vật cản:\n\n• Điểm ban đầu = 20\n• Chạm vật cản 3 lần\n• Mỗi lần chạm: trừ 5 điểm\n\nĐiểm còn lại?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "5 điểm",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "0 điểm",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "15 điểm",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "10 điểm",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, math"
+    },
+    {
+      "content": "⭐ Biến \"sao\" = 0\n\nLặp 4 lần, mỗi lần:\n→ Đổi \"sao\" thêm 1\n\nSau khi chạy xong, sao bằng bao nhiêu?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "4",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "3",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "0",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "1",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "Scratch, medium, math"
+    },
+    {
+      "content": "Ngân hàng test: 5+5=?",
+      "question_type": "MULTIPLE_CHOICE",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "options": [
+        {
+          "content": "9",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "10",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "11",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        },
+        {
+          "content": "12",
+          "is_correct": false,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 3
+        }
+      ],
+      "tags": "toán, cộng"
+    }
+  ]
+}
