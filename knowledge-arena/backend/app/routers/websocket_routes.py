@@ -7,6 +7,7 @@ from sqlalchemy.orm import joinedload
 from app.database import SessionLocal
 from app.models import Question, Room, RoomStatus
 from app.services import game_service
+from app.utils import RetryCooldown
 from app.websocket import ws_manager
 
 router = APIRouter(tags=["websocket"])
@@ -180,6 +181,18 @@ async def websocket_room(
                         answer_text=answer_text,
                     )
                     await game_service.broadcast_answer_result(db, room_code, result)
+                except RetryCooldown as e:
+                    wait = max(1, int(round(e.retry_after)))
+                    await ws_manager.send_to_connection(
+                        websocket,
+                        {
+                            "type": "error",
+                            "code": "RETRY_COOLDOWN",
+                            "retry_after": wait,
+                            "can_retry": True,
+                            "message": f"Đợi {wait} giây rồi nhập lại.",
+                        },
+                    )
                 except ValueError as e:
                     await ws_manager.send_to_connection(
                         websocket, {"type": "error", "code": str(e)}

@@ -1,5 +1,12 @@
 import { useState } from 'react'
 import { uploadApi } from '../services/api'
+import ScratchBlockBuilder from './ScratchBlockBuilder'
+
+export function questionTypeLabel(t) {
+  if (t === 'ESSAY') return 'Tự luận'
+  if (t === 'BLOCK_PUZZLE') return 'Thực hành Scratch'
+  return 'Trắc nghiệm'
+}
 
 export const emptyOption = (i) => ({
   content: '',
@@ -16,6 +23,8 @@ export const defaultQuestionForm = () => ({
   media_url: null,
   media_position: 'BEFORE',
   tags: '',
+  points: 10,
+  blocks: [],
   options: [emptyOption(0), emptyOption(1), emptyOption(2), emptyOption(3)],
 })
 
@@ -27,6 +36,8 @@ export function formFromQuestion(q) {
     media_url: q.media_url,
     media_position: q.media_position || 'BEFORE',
     tags: q.tags || '',
+    points: q.points || 10,
+    blocks: parseBlocks(q.blocks_json),
     options: q.options?.length
       ? q.options.map((o, i) => ({
           content: o.content,
@@ -39,7 +50,20 @@ export function formFromQuestion(q) {
   }
 }
 
+function parseBlocks(raw) {
+  if (!raw) return []
+  if (Array.isArray(raw)) return raw
+  try {
+    const data = typeof raw === 'string' ? JSON.parse(raw) : raw
+    if (Array.isArray(data)) return data
+    return data?.script || []
+  } catch {
+    return []
+  }
+}
+
 export function buildQuestionPayload(form) {
+  const isPuzzle = form.question_type === 'BLOCK_PUZZLE'
   return {
     content: form.content,
     question_type: form.question_type,
@@ -47,6 +71,8 @@ export function buildQuestionPayload(form) {
     media_url: form.media_url,
     media_position: form.media_position,
     tags: form.tags || '',
+    points: Number(form.points) || (isPuzzle ? 20 : 10),
+    blocks_json: isPuzzle ? JSON.stringify({ script: form.blocks || [] }) : null,
     options:
       form.question_type === 'ESSAY'
         ? form.options
@@ -58,7 +84,9 @@ export function buildQuestionPayload(form) {
               media_url: null,
               order_index: i,
             }))
-        : form.options.map((o, i) => ({ ...o, order_index: i })),
+        : isPuzzle
+          ? []
+          : form.options.map((o, i) => ({ ...o, order_index: i })),
   }
 }
 
@@ -152,6 +180,14 @@ export default function QuestionFormEditor({
                       },
                     ],
               })
+            } else if (t === 'BLOCK_PUZZLE') {
+              setForm({
+                ...form,
+                question_type: t,
+                points: form.points || 20,
+                blocks: form.blocks?.length ? form.blocks : [],
+                options: [],
+              })
             } else {
               setForm({
                 ...form,
@@ -166,6 +202,7 @@ export default function QuestionFormEditor({
         >
           <option value="MULTIPLE_CHOICE">Trắc nghiệm</option>
           <option value="ESSAY">Tự luận</option>
+          <option value="BLOCK_PUZZLE">Thực hành Scratch (ghép khối)</option>
         </select>
         <select
           className="rounded-lg border border-arena-sky/30 bg-white px-3 py-2"
@@ -191,6 +228,25 @@ export default function QuestionFormEditor({
           </p>
         )}
       </div>
+
+      <div>
+        <label className="text-sm text-arena-ink/50">Điểm khi đúng</label>
+        <input
+          type="number"
+          min={1}
+          max={100}
+          className="ml-2 w-20 rounded border border-arena-sky/30 bg-white px-2 py-1"
+          value={form.points || 10}
+          onChange={(e) => setForm({ ...form, points: Number(e.target.value) || 10 })}
+        />
+      </div>
+
+      {form.question_type === 'BLOCK_PUZZLE' && (
+        <ScratchBlockBuilder
+          script={form.blocks || []}
+          onChange={(blocks) => setForm({ ...form, blocks })}
+        />
+      )}
 
       {form.question_type === 'MULTIPLE_CHOICE' && (
         <div className="space-y-2">

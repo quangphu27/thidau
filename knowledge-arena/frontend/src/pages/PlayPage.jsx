@@ -10,6 +10,7 @@ import BattleArena from '../components/BattleArena'
 import NextQuestionCountdown from '../components/NextQuestionCountdown'
 import WaitingLobby from '../components/WaitingLobby'
 import WinnerScreen from '../components/WinnerScreen'
+import BlockPuzzlePlay from '../components/BlockPuzzlePlay'
 import { mediaUrl } from '../utils/config'
 import { useBattleFighters } from '../hooks/useBattleFighters'
 
@@ -42,6 +43,8 @@ export default function PlayPage() {
     lobbyMessages,
     lobbyFx,
     lobbyPositions,
+    retryUntil,
+    eliminatedIds,
     submitAnswer,
     sendLobbyChat,
     sendLobbyAction,
@@ -111,6 +114,17 @@ export default function PlayPage() {
   const [essayText, setEssayText] = useState('')
   const [selectedId, setSelectedId] = useState(null)
   const [lockedLocal, setLockedLocal] = useState(false)
+  const [nowTick, setNowTick] = useState(() => Date.now())
+
+  useEffect(() => {
+    if (!retryUntil || retryUntil <= Date.now()) return undefined
+    const t = setInterval(() => setNowTick(Date.now()), 200)
+    return () => clearInterval(t)
+  }, [retryUntil])
+
+  const retryLeft =
+    retryUntil && retryUntil > nowTick ? Math.ceil((retryUntil - nowTick) / 1000) : 0
+  const isNumberInput = (question?.input_mode || '').toUpperCase() === 'NUMBER'
 
   const endsAt = question?.ends_at || roomState?.question_ends_at
   const remaining = useServerTimer(endsAt, roomState?.status === 'PAUSED')
@@ -121,7 +135,8 @@ export default function PlayPage() {
     roomState?.question_answered ||
     expired ||
     roomState?.status === 'PAUSED' ||
-    countdown != null
+    countdown != null ||
+    retryLeft > 0
 
   useEffect(() => {
     setEssayText('')
@@ -143,8 +158,13 @@ export default function PlayPage() {
 
   const waiting = !question || roomState?.status === 'WAITING'
 
+  const eliminatedSet = useMemo(
+    () => new Set((eliminatedIds || []).map(Number)),
+    [eliminatedIds],
+  )
+
   const onSelect = (opt) => {
-    if (locked) return
+    if (locked || eliminatedSet.has(Number(opt.id))) return
     setSelectedId(opt.id)
     setLockedLocal(true)
     submitAnswer({ questionId: question.id, answerId: opt.id })
@@ -153,8 +173,12 @@ export default function PlayPage() {
   const onEssay = (e) => {
     e.preventDefault()
     if (locked || !essayText.trim()) return
-    setLockedLocal(true)
-    submitAnswer({ questionId: question.id, answerText: essayText.trim() })
+    if (!isNumberInput) setLockedLocal(true)
+    submitAnswer({
+      questionId: question.id,
+      answerText: essayText.trim(),
+      lock: !isNumberInput,
+    })
   }
 
   return (
@@ -267,33 +291,74 @@ export default function PlayPage() {
                       }}
                       index={i}
                       disabled={locked}
+                      eliminated={eliminatedSet.has(Number(opt.id))}
                       selected={selectedId === opt.id}
                       onSelect={onSelect}
                       large
                     />
                   ))}
                 </div>
+              ) : question.question_type === 'BLOCK_PUZZLE' ? (
+                <div className="glass rounded-[2rem] p-4 md:p-5">
+                  <BlockPuzzlePlay
+                    pieces={question.pieces || []}
+                    disabled={locked}
+                    seed={`${question.id}-${playerInfo?.player_id || 's'}`}
+                    points={question.points || 20}
+                    retryLeft={retryLeft}
+                    onSubmit={(answerText) => {
+                      if (locked) return
+                      submitAnswer({
+                        questionId: question.id,
+                        answerText,
+                        lock: false,
+                      })
+                    }}
+                  />
+                </div>
               ) : (
                 <form onSubmit={onEssay} className="glass rounded-[2rem] p-5">
-                  <textarea
-                    value={essayText}
-                    onChange={(e) => setEssayText(e.target.value)}
-                    disabled={locked}
-                    rows={4}
-                    placeholder="Gõ câu trả lời của bạn ở đây..."
-                    className="w-full rounded-2xl border-4 border-arena-sky/30 bg-white p-4 font-bold text-arena-ink outline-none focus:border-arena-cyan disabled:opacity-60"
-                  />
+                  {isNumberInput ? (
+                    <>
+                      <p className="mb-2 text-center text-sm font-extrabold text-arena-cyan">
+                        Nhập số · Đúng được {question.points || 20} điểm
+                      </p>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={essayText}
+                        onChange={(e) => setEssayText(e.target.value)}
+                        disabled={locked}
+                        placeholder="Nhập số..."
+                        className="w-full rounded-2xl border-4 border-arena-sky/30 bg-white p-4 text-center font-display text-3xl font-black text-arena-ink outline-none focus:border-arena-cyan disabled:opacity-60"
+                      />
+                    </>
+                  ) : (
+                    <textarea
+                      value={essayText}
+                      onChange={(e) => setEssayText(e.target.value)}
+                      disabled={locked}
+                      rows={4}
+                      placeholder="Gõ câu trả lời của bạn ở đây..."
+                      className="w-full rounded-2xl border-4 border-arena-sky/30 bg-white p-4 font-bold text-arena-ink outline-none focus:border-arena-cyan disabled:opacity-60"
+                    />
+                  )}
                   <button
                     type="submit"
                     disabled={locked || !essayText.trim()}
                     className="mt-3 w-full rounded-full bg-arena-accent py-3 font-black text-white shadow-[0_6px_0_#c43a1a] disabled:opacity-50"
                   >
-                    Gửi đáp án
+                    {retryLeft > 0 ? `Đợi ${retryLeft}s...` : 'Gửi đáp án'}
                   </button>
                 </form>
               )}
 
-              {locked && !expired && countdown == null && (
+              {retryLeft > 0 && !expired && countdown == null && (
+                <p className="text-center font-display text-lg font-bold text-arena-pink">
+                  Sai rồi — đợi {retryLeft} giây rồi nhập lại
+                </p>
+              )}
+              {locked && retryLeft <= 0 && !expired && countdown == null && (
                 <p className="text-center font-display text-lg font-bold text-arena-accent">
                   ĐÃ CHỐT ĐÁP ÁN
                 </p>

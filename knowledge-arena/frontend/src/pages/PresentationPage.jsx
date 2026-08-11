@@ -11,7 +11,7 @@ import MediaPlayer from '../components/MediaPlayer'
 
 export default function PresentationPage() {
   const { code } = useParams()
-  const { roomState, question, rankings, toast, finished, clearToast, battleEvent } =
+  const { roomState, question, rankings, toast, finished, clearToast, battleEvent, eliminatedIds } =
     useRoomSocket(code, { role: 'presentation' })
 
   const remaining = useServerTimer(
@@ -142,22 +142,46 @@ export default function PresentationPage() {
           <h2 className="mt-4 text-3xl font-extrabold leading-tight text-arena-ink md:text-5xl">
             {question.content}
           </h2>
+          {question.question_type === 'BLOCK_PUZZLE' && (
+            <div className="mt-8">
+              <p className="mb-3 text-center text-xl font-extrabold text-arena-cyan">
+                Ghép khối Scratch · {question.points || 20} điểm
+              </p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {(question.pieces || []).map((p) => (
+                  <div
+                    key={p.uid}
+                    className={`scratch-block scratch-block-${p.shape} font-bold text-white`}
+                    style={{ background: p.color || '#888' }}
+                  >
+                    {String(p.label || p.kind).replace(/\{(\d+)\}/g, '□')}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {question.question_type === 'MULTIPLE_CHOICE' && (
             <div className="mt-8 grid gap-4 md:grid-cols-2">
               {question.options?.map((o, i) => {
                 const colors = ['#4cc9f0', '#ff6b9d', '#ffb703', '#06d6a0']
+                const gone = (eliminatedIds || []).map(Number).includes(Number(o.id))
                 return (
                   <div
                     key={o.id}
-                    className="rounded-3xl border-4 border-white bg-white px-6 py-5 text-2xl font-bold text-arena-ink shadow-lg md:text-3xl"
+                    className={`rounded-3xl border-4 px-6 py-5 text-2xl font-bold shadow-lg md:text-3xl ${
+                      gone
+                        ? 'border-stone-300 bg-stone-200/80 text-arena-ink/40 line-through grayscale'
+                        : 'border-white bg-white text-arena-ink'
+                    }`}
                   >
                     <span
                       className="mr-3 inline-flex h-10 w-10 items-center justify-center rounded-xl font-display text-white"
-                      style={{ background: colors[i % 4] }}
+                      style={{ background: gone ? '#9ca3af' : colors[i % 4] }}
                     >
                       {String.fromCharCode(65 + i)}
                     </span>
                     {o.content}
+                    {gone ? '  · SAI' : ''}
                   </div>
                 )
               })}

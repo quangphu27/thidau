@@ -286,11 +286,15 @@ def test_essay_auto_grade(client, db):
 
 
 def test_normalize_match():
-    from app.utils import match_essay_answer
+    from app.utils import match_essay_answer, match_numeric_answer
 
     assert match_essay_answer('print("Hi")', ['print("Hi")', "print('Hi')"])
     assert match_essay_answer("  DEF ", ["def"])
     assert not match_essay_answer("print", ['print("Hi")'])
+    assert match_numeric_answer("9", ["9 người", "9"])
+    assert match_numeric_answer("9 người", ["9"])
+    assert match_numeric_answer("21", ["21"])
+    assert not match_numeric_answer("20", ["21"])
 
 
 def test_empty_name_rejected(client):

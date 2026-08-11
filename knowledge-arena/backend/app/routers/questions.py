@@ -63,6 +63,12 @@ def create_question(
         # Normalize: all essay options are accepted answers
         for o in body.options:
             o.is_correct = True
+    elif body.question_type == "BLOCK_PUZZLE":
+        from app.scratch_blocks import parse_blocks_json
+
+        script = parse_blocks_json(body.blocks_json)
+        if len(script) < 1:
+            raise HTTPException(status_code=400, detail="INVALID_ANSWER")
 
     question = Question(
         exam_id=body.exam_id,
@@ -72,10 +78,13 @@ def create_question(
         media_type=body.media_type,
         media_url=body.media_url,
         media_position=body.media_position,
+        points=int(body.points or 10),
+        input_mode=(body.input_mode or "TEXT").upper(),
+        blocks_json=body.blocks_json,
     )
     db.add(question)
     db.flush()
-    for opt in body.options:
+    for opt in body.options or []:
         if body.question_type == "ESSAY" and not (opt.content or "").strip():
             continue
         db.add(
@@ -129,6 +138,22 @@ def update_question(
         question.media_url = body.media_url
     if body.media_position is not None:
         question.media_position = body.media_position
+    if body.points is not None:
+        question.points = int(body.points)
+    if body.input_mode is not None:
+        question.input_mode = body.input_mode.upper()
+    if body.blocks_json is not None:
+        question.blocks_json = body.blocks_json
+
+    qtype = body.question_type or question.question_type
+    if qtype == "BLOCK_PUZZLE":
+        from app.scratch_blocks import parse_blocks_json
+
+        script = parse_blocks_json(
+            body.blocks_json if body.blocks_json is not None else question.blocks_json
+        )
+        if len(script) < 1:
+            raise HTTPException(status_code=400, detail="INVALID_ANSWER")
 
     if body.options is not None:
         qtype = body.question_type or question.question_type

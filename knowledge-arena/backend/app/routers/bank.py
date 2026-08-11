@@ -44,7 +44,17 @@ def _exam_locked(db: Session, exam_id: int) -> bool:
     )
 
 
-def _validate_options(question_type: str, options: list) -> None:
+def _validate_blocks(blocks_json) -> None:
+    from app.scratch_blocks import parse_blocks_json
+
+    if len(parse_blocks_json(blocks_json)) < 1:
+        raise HTTPException(status_code=400, detail="INVALID_ANSWER")
+
+
+def _validate_options(question_type: str, options: list, blocks_json=None) -> None:
+    if question_type == "BLOCK_PUZZLE":
+        _validate_blocks(blocks_json)
+        return
     if question_type == "MULTIPLE_CHOICE":
         if len(options) < 2:
             raise HTTPException(status_code=400, detail="INVALID_ANSWER")
@@ -129,7 +139,7 @@ def create_bank_question(
     db: Session = Depends(get_db),
     admin: Admin = Depends(get_current_admin),
 ):
-    _validate_options(body.question_type, body.options)
+    _validate_options(body.question_type, body.options, body.blocks_json)
     if body.question_type == "ESSAY":
         for o in body.options:
             o.is_correct = True
@@ -141,6 +151,8 @@ def create_bank_question(
         media_url=body.media_url,
         media_position=body.media_position,
         tags=(body.tags or "").strip(),
+        points=int(body.points or 10),
+        blocks_json=body.blocks_json,
     )
     db.add(item)
     db.flush()
@@ -184,10 +196,23 @@ def update_bank_question(
         item.media_position = body.media_position
     if body.tags is not None:
         item.tags = body.tags.strip()
+    if body.points is not None:
+        item.points = int(body.points)
+    if body.blocks_json is not None:
+        item.blocks_json = body.blocks_json
+
+    if body.question_type == "BLOCK_PUZZLE" or (
+        body.question_type is None and item.question_type == "BLOCK_PUZZLE"
+    ):
+        _validate_blocks(body.blocks_json if body.blocks_json is not None else item.blocks_json)
 
     if body.options is not None:
         qtype = body.question_type or item.question_type
-        _validate_options(qtype, body.options)
+        _validate_options(
+            qtype,
+            body.options,
+            body.blocks_json if body.blocks_json is not None else item.blocks_json,
+        )
         if qtype == "ESSAY":
             for o in body.options:
                 o.is_correct = True
@@ -263,6 +288,8 @@ def add_bank_questions_to_exam(
             media_type=bq.media_type or "NONE",
             media_url=bq.media_url,
             media_position=bq.media_position or "BEFORE",
+            points=int(getattr(bq, "points", None) or 10),
+            blocks_json=getattr(bq, "blocks_json", None),
         )
         db.add(q)
         db.flush()

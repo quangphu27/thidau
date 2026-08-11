@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional
+import re
 import secrets
 import string
 
@@ -70,6 +71,8 @@ ERROR_MESSAGES = {
     "WRONG_QUESTION": "Đây không phải câu hỏi hiện tại",
     "GAME_NOT_STARTED": "Cuộc thi chưa bắt đầu",
     "NO_MORE_QUESTIONS": "Đã hết câu hỏi",
+    "RETRY_COOLDOWN": "Nhập sai — đợi rồi thử lại",
+    "OPTION_ELIMINATED": "Đáp án này đã bị loại",
 }
 
 
@@ -78,6 +81,24 @@ def normalize_answer(text: str) -> str:
     if not text:
         return ""
     return " ".join(str(text).strip().lower().split())
+
+
+_NUM_RE = re.compile(r"-?\d+(?:[.,]\d+)?")
+
+
+def extract_number(text: str) -> float | None:
+    """First number in text, or None."""
+    if not text:
+        return None
+    m = _NUM_RE.search(str(text).strip().replace(" ", ""))
+    if not m:
+        m = _NUM_RE.search(str(text))
+    if not m:
+        return None
+    try:
+        return float(m.group(0).replace(",", "."))
+    except ValueError:
+        return None
 
 
 def match_essay_answer(student_text: str, accepted: list[str]) -> bool:
@@ -89,4 +110,24 @@ def match_essay_answer(student_text: str, accepted: list[str]) -> bool:
         if normalize_answer(ans) == target:
             return True
     return False
+
+
+def match_numeric_answer(student_text: str, accepted: list[str]) -> bool:
+    """Match by number value (9 == '9 người') or fallback string match."""
+    if match_essay_answer(student_text, accepted):
+        return True
+    student_n = extract_number(student_text)
+    if student_n is None:
+        return False
+    for ans in accepted:
+        ans_n = extract_number(ans)
+        if ans_n is not None and abs(student_n - ans_n) < 1e-9:
+            return True
+    return False
+
+
+class RetryCooldown(ValueError):
+    def __init__(self, retry_after: float):
+        self.retry_after = max(0.0, float(retry_after))
+        super().__init__("RETRY_COOLDOWN")
 

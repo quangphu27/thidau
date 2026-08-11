@@ -46,6 +46,40 @@ def init_db():
     (UPLOAD_DIR / "videos").mkdir(exist_ok=True)
     Base.metadata.create_all(bind=engine)
 
+    # Lightweight SQLite column adds
+    try:
+        insp = inspect(engine)
+        if "questions" in insp.get_table_names():
+            cols = {c["name"] for c in insp.get_columns("questions")}
+            with engine.begin() as conn:
+                if "points" not in cols:
+                    conn.execute(
+                        text("ALTER TABLE questions ADD COLUMN points INTEGER DEFAULT 10")
+                    )
+                if "input_mode" not in cols:
+                    conn.execute(
+                        text(
+                            "ALTER TABLE questions ADD COLUMN input_mode VARCHAR(20) DEFAULT 'TEXT'"
+                        )
+                    )
+                if "blocks_json" not in cols:
+                    conn.execute(text("ALTER TABLE questions ADD COLUMN blocks_json TEXT"))
+        if "bank_questions" in insp.get_table_names():
+            bcols = {c["name"] for c in insp.get_columns("bank_questions")}
+            with engine.begin() as conn:
+                if "blocks_json" not in bcols:
+                    conn.execute(
+                        text("ALTER TABLE bank_questions ADD COLUMN blocks_json TEXT")
+                    )
+                if "points" not in bcols:
+                    conn.execute(
+                        text(
+                            "ALTER TABLE bank_questions ADD COLUMN points INTEGER DEFAULT 10"
+                        )
+                    )
+    except Exception:
+        pass
+
     # Migrate: drop old "one submission per question" unique if present
     try:
         insp = inspect(engine)

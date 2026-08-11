@@ -5,6 +5,7 @@ import QuestionFormEditor, {
   buildQuestionPayload,
   defaultQuestionForm,
   formFromQuestion,
+  questionTypeLabel,
 } from '../../components/QuestionFormEditor'
 import { examApi, questionApi } from '../../services/api'
 
@@ -89,6 +90,10 @@ export default function ExamDetailPage() {
     }
     if (form.question_type === 'ESSAY' && payload.options.length === 0) {
       setError('Vui lòng thêm ít nhất 1 đáp án đúng cho câu tự luận')
+      return
+    }
+    if (form.question_type === 'BLOCK_PUZZLE' && !(form.blocks || []).length) {
+      setError('Hãy xếp ít nhất 1 khối Scratch cho chương trình mẫu')
       return
     }
     try {
@@ -256,7 +261,7 @@ export default function ExamDetailPage() {
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
                 <span className="text-xs font-bold text-arena-gold">
-                  Câu {idx + 1} · {q.question_type === 'ESSAY' ? 'Tự luận' : 'Trắc nghiệm'}
+                  Câu {idx + 1} · {questionTypeLabel(q.question_type)} · {q.points || 10} điểm
                 </span>
                 <p className="mt-1 font-medium whitespace-pre-wrap">{q.content}</p>
                 {q.question_type === 'MULTIPLE_CHOICE' && (
@@ -268,6 +273,11 @@ export default function ExamDetailPage() {
                       </li>
                     ))}
                   </ul>
+                )}
+                {q.question_type === 'BLOCK_PUZZLE' && (
+                  <p className="mt-2 text-xs font-bold text-arena-cyan">
+                    Học sinh ghép khối lộn xộn + điền số
+                  </p>
                 )}
                 {q.question_type === 'ESSAY' && (
                   <ul className="mt-2 space-y-1 text-sm text-emerald-300/90">

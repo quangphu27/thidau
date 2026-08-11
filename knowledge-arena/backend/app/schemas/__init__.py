@@ -71,6 +71,9 @@ class QuestionCreate(BaseModel):
     media_type: str = "NONE"
     media_url: Optional[str] = None
     media_position: str = "BEFORE"
+    points: int = Field(default=10, ge=1, le=100)
+    input_mode: str = "TEXT"
+    blocks_json: Optional[str] = None
     options: List[AnswerOptionCreate] = []
 
 
@@ -81,6 +84,9 @@ class QuestionUpdate(BaseModel):
     media_type: Optional[str] = None
     media_url: Optional[str] = None
     media_position: Optional[str] = None
+    points: Optional[int] = Field(default=None, ge=1, le=100)
+    input_mode: Optional[str] = None
+    blocks_json: Optional[str] = None
     options: Optional[List[AnswerOptionCreate]] = None
 
 
@@ -93,6 +99,9 @@ class QuestionOut(BaseModel):
     media_type: str
     media_url: Optional[str] = None
     media_position: str
+    points: int = 10
+    input_mode: str = "TEXT"
+    blocks_json: Optional[str] = None
     options: List[AnswerOptionOut] = []
 
     model_config = {"from_attributes": True}
@@ -106,7 +115,10 @@ class QuestionPublic(BaseModel):
     media_type: str
     media_url: Optional[str] = None
     media_position: str
+    points: int = 10
+    input_mode: str = "TEXT"
     options: List[AnswerOptionPublic] = []
+    pieces: Optional[List[dict]] = None
     time_per_question: int = 15
     question_number: int = 1
     total_questions: int = 1
@@ -272,6 +284,8 @@ class BankQuestionCreate(BaseModel):
     media_url: Optional[str] = None
     media_position: str = "BEFORE"
     tags: str = ""
+    points: int = Field(default=10, ge=1, le=100)
+    blocks_json: Optional[str] = None
     options: List[BankOptionCreate] = []
 
 
@@ -282,6 +296,8 @@ class BankQuestionUpdate(BaseModel):
     media_url: Optional[str] = None
     media_position: Optional[str] = None
     tags: Optional[str] = None
+    points: Optional[int] = Field(default=None, ge=1, le=100)
+    blocks_json: Optional[str] = None
     options: Optional[List[BankOptionCreate]] = None
 
 
@@ -293,6 +309,8 @@ class BankQuestionOut(BaseModel):
     media_url: Optional[str] = None
     media_position: str
     tags: str = ""
+    points: int = 10
+    blocks_json: Optional[str] = None
     created_at: datetime
     updated_at: datetime
     options: List[BankOptionOut] = []

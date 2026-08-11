@@ -57,6 +57,8 @@ export const ERROR_VI = {
   NO_MORE_QUESTIONS: 'Đã hết câu hỏi',
   LOBBY_CLOSED: 'Phòng chờ đã đóng (thi đấu đã bắt đầu)',
   COOLDOWN: 'Chờ một chút rồi chơi tiếp nhé!',
+  RETRY_COOLDOWN: 'Nhập sai — đợi rồi thử lại',
+  OPTION_ELIMINATED: 'Đáp án này đã bị loại',
 }
 
 export function errorMessage(code) {

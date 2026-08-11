@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { bankApi } from '../services/api'
+import { questionTypeLabel } from './QuestionFormEditor'
 
 const PAGE_SIZE = 15
 
@@ -115,6 +116,7 @@ export default function BankPickerModal({ examId, onClose, onAdded }) {
             <option value="">Tất cả loại</option>
             <option value="MULTIPLE_CHOICE">Trắc nghiệm</option>
             <option value="ESSAY">Tự luận</option>
+            <option value="BLOCK_PUZZLE">Thực hành Scratch</option>
           </select>
           <button
             type="submit"
@@ -146,7 +148,7 @@ export default function BankPickerModal({ examId, onClose, onAdded }) {
                   />
                   <div className="min-w-0 flex-1">
                     <p className="text-xs text-arena-ink/50">
-                      {q.question_type === 'ESSAY' ? 'Tự luận' : 'Trắc nghiệm'}
+                      {questionTypeLabel(q.question_type)}
                       {q.tags ? ` · ${q.tags}` : ''}
                     </p>
                     <p className="mt-0.5 text-sm font-medium whitespace-pre-wrap line-clamp-3">

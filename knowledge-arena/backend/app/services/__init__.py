@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import time
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
@@ -17,7 +18,14 @@ from app.models import (
     Submission,
     QuestionType,
 )
-from app.utils import generate_player_id, generate_room_code, match_essay_answer
+from app.scratch_blocks import match_script, parse_blocks_json, public_pieces, student_script_from_payload
+from app.utils import (
+    RetryCooldown,
+    generate_player_id,
+    generate_room_code,
+    match_essay_answer,
+    match_numeric_answer,
+)
 from app.websocket import ws_manager
 
 
@@ -41,6 +49,7 @@ class GameService:
     CORRECT_PER_KILL_MS = 800
     CORRECT_SETTLE_MS = 1000  # pause before countdown
     CORRECT_COUNTDOWN_SEC = 3
+    WRONG_RETRY_SEC = 10
 
     def correct_effect_ms(self, victim_count: int) -> int:
         n = max(0, int(victim_count))
@@ -54,6 +63,10 @@ class GameService:
         self._auto_next_tasks: Dict[str, asyncio.Task] = {}
         self._lobby_history: Dict[str, List[dict]] = {}
         self._lobby_positions: Dict[str, Dict[str, dict]] = {}
+        # (room_code, player_id, question_id) -> unix timestamp when retry is allowed
+        self._wrong_retry_at: Dict[tuple, float] = {}
+        # (room_code, question_id) -> set of eliminated (wrong) option ids
+        self._eliminated_options: Dict[tuple, set] = {}
 
     def push_lobby_event(self, room_code: str, event: dict) -> None:
         hist = self._lobby_history.setdefault(room_code, [])
@@ -67,6 +80,31 @@ class GameService:
     def clear_lobby(self, room_code: str) -> None:
         self._lobby_history.pop(room_code, None)
         self._lobby_positions.pop(room_code, None)
+        for key in list(self._eliminated_options):
+            if key[0] == room_code:
+                self._eliminated_options.pop(key, None)
+        for key in list(self._wrong_retry_at):
+            if key[0] == room_code:
+                self._wrong_retry_at.pop(key, None)
+
+    def mark_option_eliminated(
+        self, room_code: str, question_id: int, option_id: int
+    ) -> list:
+        key = (room_code, int(question_id))
+        bucket = self._eliminated_options.setdefault(key, set())
+        bucket.add(int(option_id))
+        return sorted(bucket)
+
+    def get_eliminated_option_ids(self, room_code: str, question_id: int) -> list:
+        return sorted(self._eliminated_options.get((room_code, int(question_id)), set()))
+
+    def clear_eliminated_options(self, room_code: str, question_id: int | None = None) -> None:
+        if question_id is None:
+            for key in list(self._eliminated_options):
+                if key[0] == room_code:
+                    self._eliminated_options.pop(key, None)
+            return
+        self._eliminated_options.pop((room_code, int(question_id)), None)
 
     def set_lobby_position(
         self, room_code: str, player_id: str, x: float, y: float
@@ -225,7 +263,10 @@ class GameService:
         options = sorted(question.options, key=lambda o: o.order_index)
         # Never send accepted essay answers to students
         public_options = []
-        if question.question_type != QuestionType.ESSAY.value:
+        if question.question_type not in (
+            QuestionType.ESSAY.value,
+            QuestionType.BLOCK_PUZZLE.value,
+        ):
             public_options = [
                 {
                     "id": o.id,
@@ -246,14 +287,27 @@ class GameService:
                 "media_type": question.media_type,
                 "media_url": question.media_url,
                 "media_position": question.media_position,
+                "points": int(getattr(question, "points", None) or 10),
+                "input_mode": (getattr(question, "input_mode", None) or "TEXT"),
                 "options": public_options,
+                "pieces": (
+                    public_pieces(parse_blocks_json(getattr(question, "blocks_json", None)))
+                    if question.question_type == QuestionType.BLOCK_PUZZLE.value
+                    else None
+                ),
                 "time_per_question": exam.time_per_question if exam else 15,
                 "question_number": room.current_question_index + 1,
                 "total_questions": len(questions),
                 "ends_at": ends_at,
                 "remaining_seconds": remaining,
+                "eliminated_option_ids": self.get_eliminated_option_ids(
+                    room.room_code, question.id
+                ),
             },
             "question_answered": room.question_answered,
+            "eliminated_option_ids": self.get_eliminated_option_ids(
+                room.room_code, question.id
+            ),
         }
 
     async def start_game(self, db: Session, room_code: str) -> dict:
@@ -295,6 +349,7 @@ class GameService:
 
     async def next_question(self, db: Session, room_code: str) -> dict:
         self.cancel_auto_next(room_code)
+        self.clear_eliminated_options(room_code)
         room = self.get_room(db, room_code)
         if not room:
             raise ValueError("ROOM_NOT_FOUND")
@@ -441,9 +496,10 @@ class GameService:
         answer_text: Optional[str] = None,
     ) -> dict:
         """
-        Each player submits once per question.
-        Wrong: -10 (score may go negative), question stays open.
-        Correct: +10 and locks question for others (first correct wins).
+        Each player submits once per question (MCQ / text essay).
+        Numeric fill-in: wrong answers do not lock; 10s cooldown then retry.
+        Wrong MCQ: -10, question stays open.
+        Correct: +points and locks question for others (first correct wins).
         """
         lock = await self.get_room_lock(room_code)
         async with lock:
@@ -491,6 +547,29 @@ class GameService:
         if not player:
             raise ValueError("PLAYER_NOT_FOUND")
 
+        question = (
+            db.query(Question)
+            .options(joinedload(Question.options))
+            .filter(Question.id == question_id)
+            .first()
+        )
+        if not question:
+            raise ValueError("QUESTION_NOT_FOUND")
+
+        is_numeric = (
+            question.question_type == QuestionType.ESSAY.value
+            and str(getattr(question, "input_mode", None) or "TEXT").upper() == "NUMBER"
+        )
+        is_puzzle = question.question_type == QuestionType.BLOCK_PUZZLE.value
+        award = int(getattr(question, "points", None) or 10)
+
+        if is_numeric or is_puzzle:
+            key = (room_code, player_id, question_id)
+            until = self._wrong_retry_at.get(key)
+            now_ts = time.time()
+            if until and now_ts < until:
+                raise RetryCooldown(until - now_ts)
+
         existing = (
             db.query(Submission)
             .filter(
@@ -502,15 +581,6 @@ class GameService:
         )
         if existing:
             raise ValueError("ALREADY_SUBMITTED")
-
-        question = (
-            db.query(Question)
-            .options(joinedload(Question.options))
-            .filter(Question.id == question_id)
-            .first()
-        )
-        if not question:
-            raise ValueError("QUESTION_NOT_FOUND")
 
         is_correct = False
         points = 0
@@ -530,6 +600,10 @@ class GameService:
             )
             if not option:
                 raise ValueError("INVALID_ANSWER")
+            if int(answer_id) in set(
+                self.get_eliminated_option_ids(room_code, question_id)
+            ):
+                raise ValueError("OPTION_ELIMINATED")
             is_correct = bool(option.is_correct)
             answer_letter = chr(65 + (option.order_index or 0))
             display_answer = (
@@ -537,15 +611,52 @@ class GameService:
                 if option.content
                 else answer_letter
             )
-            points = 10 if is_correct else -10
+            points = award if is_correct else -10
+        elif is_puzzle:
+            if not answer_text or not str(answer_text).strip():
+                raise ValueError("INVALID_ANSWER")
+            display_answer = "ghép khối Scratch"
+            solution = parse_blocks_json(getattr(question, "blocks_json", None))
+            student = student_script_from_payload(answer_text)
+            is_correct = match_script(solution, student)
+            points = award if is_correct else 0
         else:
-            # Essay — auto-check against accepted answer list (AnswerOption contents)
+            # Essay — auto-check against accepted answer list
             if not answer_text or not answer_text.strip():
                 raise ValueError("INVALID_ANSWER")
             display_answer = answer_text.strip()[:200]
             accepted = [o.content for o in question.options if (o.content or "").strip()]
-            is_correct = match_essay_answer(answer_text, accepted)
-            points = 10 if is_correct else -10
+            if is_numeric:
+                is_correct = match_numeric_answer(answer_text, accepted)
+            else:
+                is_correct = match_essay_answer(answer_text, accepted)
+            points = award if is_correct else (0 if is_numeric else -10)
+
+        # Numeric / puzzle: wrong = cooldown, no permanent submit / no score hit
+        if (is_numeric or is_puzzle) and not is_correct:
+            self._wrong_retry_at[(room_code, player_id, question_id)] = (
+                time.time() + self.WRONG_RETRY_SEC
+            )
+            return {
+                "ok": True,
+                "player_id": player_id,
+                "player_name": player.name,
+                "question_id": question_id,
+                "is_correct": False,
+                "points": 0,
+                "score": player.score,
+                "answer_display": display_answer,
+                "answer_letter": "",
+                "question_type": question.question_type,
+                "response_time_ms": 0,
+                "question_locked": False,
+                "is_first": False,
+                "can_retry": True,
+                "retry_after": self.WRONG_RETRY_SEC,
+            }
+
+        if (is_numeric or is_puzzle) and is_correct:
+            self._wrong_retry_at.pop((room_code, player_id, question_id), None)
 
         prior_count = (
             db.query(Submission)
@@ -593,6 +704,16 @@ class GameService:
             db.rollback()
             raise ValueError("ALREADY_SUBMITTED")
 
+        eliminated_ids = self.get_eliminated_option_ids(room_code, question_id)
+        if (
+            not is_correct
+            and question.question_type == QuestionType.MULTIPLE_CHOICE.value
+            and answer_id is not None
+        ):
+            eliminated_ids = self.mark_option_eliminated(
+                room_code, question_id, int(answer_id)
+            )
+
         return {
             "ok": True,
             "player_id": player_id,
@@ -603,6 +724,8 @@ class GameService:
             "score": player.score,
             "answer_display": display_answer,
             "answer_letter": answer_letter,
+            "answer_id": answer_id,
+            "eliminated_option_ids": eliminated_ids,
             "question_type": question.question_type,
             "response_time_ms": response_time_ms,
             "question_locked": is_correct,
@@ -686,6 +809,8 @@ class GameService:
                     "question_locked": True,
                     "question_type": result["question_type"],
                     "question_id": question_id,
+                    "answer_id": result.get("answer_id"),
+                    "eliminated_option_ids": result.get("eliminated_option_ids") or [],
                     "effect_ms": effect_ms,
                     "countdown_seconds": self.CORRECT_COUNTDOWN_SEC,
                     "auto_next": True,
@@ -697,7 +822,17 @@ class GameService:
                     room_code, int(question_id), effect_ms
                 )
         else:
-            # Also send player_id on answer_wrong for battle sync
+            can_retry = bool(result.get("can_retry"))
+            retry_after = int(result.get("retry_after") or self.WRONG_RETRY_SEC)
+            if can_retry:
+                msg = (
+                    f"❌ Sai rồi! Đợi {retry_after} giây rồi nhập lại."
+                )
+            else:
+                msg = (
+                    f"❌ Rất tiếc! Bạn đã trả lời sai ({result['answer_display']}). "
+                    f"{result['points']} điểm."
+                )
             await ws_manager.send_to_player(
                 room_code,
                 result["player_id"],
@@ -709,10 +844,11 @@ class GameService:
                     "score": result["score"],
                     "answer_display": result["answer_display"],
                     "question_locked": False,
-                    "message": (
-                        f"❌ Rất tiếc! Bạn đã trả lời sai ({result['answer_display']}). "
-                        f"{result['points']} điểm."
-                    ),
+                    "can_retry": can_retry,
+                    "retry_after": retry_after if can_retry else 0,
+                    "answer_id": result.get("answer_id"),
+                    "eliminated_option_ids": result.get("eliminated_option_ids") or [],
+                    "message": msg,
                 },
             )
             await ws_manager.broadcast(
@@ -725,11 +861,18 @@ class GameService:
                     "points": result["points"],
                     "answer_display": result["answer_display"],
                     "answer_letter": result.get("answer_letter", ""),
+                    "answer_id": result.get("answer_id"),
+                    "eliminated_option_ids": result.get("eliminated_option_ids") or [],
                     "question_locked": False,
                     "question_type": result["question_type"],
+                    "can_retry": can_retry,
                     "message": (
-                        f"⚡ {result['player_name']} đã trả lời: «{result['answer_display']}» — SAI "
-                        f"({result['points']} điểm). Người khác vẫn có thể trả lời!"
+                        f"⚡ {result['player_name']} nhập «{result['answer_display']}» — SAI"
+                        + (
+                            f" (đợi {retry_after}s rồi thử lại)."
+                            if can_retry
+                            else f" ({result['points']} điểm). Người khác vẫn có thể trả lời!"
+                        )
                     ),
                 },
                 exclude_player_id=result["player_id"],

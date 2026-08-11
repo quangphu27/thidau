@@ -31,6 +31,7 @@ export default function RoomControlPage() {
     sendLobbyMove,
     clearToast,
     clearLobbyFx,
+    eliminatedIds,
     status,
   } = useRoomSocket(code, { role: 'admin' })
 
@@ -237,13 +238,25 @@ export default function RoomControlPage() {
                 className="my-3"
               />
               <h2 className="text-xl font-bold md:text-2xl">{question.content}</h2>
+              {question.question_type === 'BLOCK_PUZZLE' && (
+                <p className="mt-3 text-sm font-bold text-arena-cyan">
+                  Học sinh đang ghép khối Scratch · {question.points || 20} điểm
+                </p>
+              )}
               {question.question_type === 'MULTIPLE_CHOICE' && (
                 <ul className="mt-3 space-y-1 text-arena-ink/70">
-                  {question.options?.map((o, i) => (
-                    <li key={o.id}>
-                      {String.fromCharCode(65 + i)}. {o.content}
-                    </li>
-                  ))}
+                  {question.options?.map((o, i) => {
+                    const gone = (eliminatedIds || []).map(Number).includes(Number(o.id))
+                    return (
+                      <li
+                        key={o.id}
+                        className={gone ? 'text-arena-ink/35 line-through' : ''}
+                      >
+                        {String.fromCharCode(65 + i)}. {o.content}
+                        {gone ? ' (SAI)' : ''}
+                      </li>
+                    )
+                  })}
                 </ul>
               )}
             </div>

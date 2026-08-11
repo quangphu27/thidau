@@ -32,6 +32,7 @@ class RoomStatus(str, Enum):
 class QuestionType(str, Enum):
     MULTIPLE_CHOICE = "MULTIPLE_CHOICE"
     ESSAY = "ESSAY"
+    BLOCK_PUZZLE = "BLOCK_PUZZLE"
 
 
 class MediaType(str, Enum):
@@ -86,6 +87,9 @@ class Question(Base):
     media_type = Column(String(20), default=MediaType.NONE.value)
     media_url = Column(String(500), nullable=True)
     media_position = Column(String(20), default=MediaPosition.BEFORE.value)
+    points = Column(Integer, default=10)
+    input_mode = Column(String(20), default="TEXT")  # TEXT | NUMBER
+    blocks_json = Column(Text, nullable=True)  # Scratch puzzle script JSON
     created_at = Column(DateTime, default=utcnow)
 
     exam = relationship("Exam", back_populates="questions")
@@ -200,6 +204,8 @@ class BankQuestion(Base):
     media_url = Column(String(500), nullable=True)
     media_position = Column(String(20), default=MediaPosition.BEFORE.value)
     tags = Column(String(200), default="")  # free text, e.g. "toán, lớp 3"
+    points = Column(Integer, default=10)
+    blocks_json = Column(Text, nullable=True)
     created_at = Column(DateTime, default=utcnow)
     updated_at = Column(DateTime, default=utcnow, onupdate=utcnow)
 

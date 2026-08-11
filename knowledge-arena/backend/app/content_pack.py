@@ -67,6 +67,9 @@ def _serialize_question(q, *, include_order: bool = False) -> dict[str, Any]:
         "media_type": q.media_type or MediaType.NONE.value,
         "media_url": q.media_url,
         "media_position": q.media_position or "BEFORE",
+        "points": int(getattr(q, "points", None) or 10),
+        "input_mode": getattr(q, "input_mode", None) or "TEXT",
+        "blocks_json": getattr(q, "blocks_json", None),
         "options": options_out,
     }
     if include_order:
@@ -131,8 +134,10 @@ def export_content(db: Session | None = None, *, quiet: bool = False) -> Path:
                 copied += 1
 
         if not quiet:
-            print(f"✓ Đã xuất {len(exams_out)} đề thi + {len(bank_out)} câu ngân hàng → {CONTENT_FILE}")
-            print(f"✓ Đã sao chép {copied} file media → {MEDIA_DIR}")
+            print(
+                f"Exported {len(exams_out)} exams + {len(bank_out)} bank questions -> {CONTENT_FILE}"
+            )
+            print(f"Copied {copied} media files -> {MEDIA_DIR}")
         return CONTENT_FILE
     finally:
         if own_session:
@@ -249,6 +254,9 @@ def import_content(
                         media_type=q_data.get("media_type") or MediaType.NONE.value,
                         media_url=q_data.get("media_url"),
                         media_position=q_data.get("media_position") or "BEFORE",
+                        points=int(q_data.get("points") or 10),
+                        input_mode=(q_data.get("input_mode") or "TEXT"),
+                        blocks_json=q_data.get("blocks_json"),
                     )
                     db.add(q)
                     db.flush()
@@ -288,6 +296,8 @@ def import_content(
                     media_url=q_data.get("media_url"),
                     media_position=q_data.get("media_position") or "BEFORE",
                     tags=q_data.get("tags") or "",
+                    points=int(q_data.get("points") or 10),
+                    blocks_json=q_data.get("blocks_json"),
                 )
                 db.add(bq)
                 db.flush()
@@ -315,6 +325,54 @@ def import_content(
             db.close()
 
 
+def ensure_scratch_practice(db: Session) -> None:
+    """Add circle-drawing BLOCK_PUZZLE to existing Scratch 1 exam / bank if missing."""
+    from app.scratch_blocks import SAMPLE_CIRCLE_CONTENT, SAMPLE_CIRCLE_SCRIPT, dumps_script
+
+    blocks = dumps_script(SAMPLE_CIRCLE_SCRIPT)
+    exam = db.query(Exam).filter(Exam.title == "Scratch 1").first()
+    if exam:
+        exists = (
+            db.query(Question)
+            .filter(
+                Question.exam_id == exam.id,
+                Question.question_type == "BLOCK_PUZZLE",
+            )
+            .first()
+        )
+        if not exists:
+            n = db.query(Question).filter(Question.exam_id == exam.id).count()
+            db.add(
+                Question(
+                    exam_id=exam.id,
+                    content=SAMPLE_CIRCLE_CONTENT,
+                    question_type="BLOCK_PUZZLE",
+                    order_index=n,
+                    points=20,
+                    blocks_json=blocks,
+                )
+            )
+            if int(exam.time_per_question or 0) < 60:
+                exam.time_per_question = 90
+            db.commit()
+    bank_exists = (
+        db.query(BankQuestion)
+        .filter(BankQuestion.question_type == "BLOCK_PUZZLE")
+        .first()
+    )
+    if not bank_exists:
+        db.add(
+            BankQuestion(
+                content=SAMPLE_CIRCLE_CONTENT,
+                question_type="BLOCK_PUZZLE",
+                points=20,
+                tags="scratch, thực hành, hình tròn",
+                blocks_json=blocks,
+            )
+        )
+        db.commit()
+
+
 def ensure_content_on_startup() -> None:
     """Called from app lifespan: restore media always; import exams/bank if empty."""
     init_db()
@@ -323,5 +381,6 @@ def ensure_content_on_startup() -> None:
     try:
         if db.query(Exam).count() == 0 or db.query(BankQuestion).count() == 0:
             import_content(db, only_if_empty=True)
+        ensure_scratch_practice(db)
     finally:
         db.close()

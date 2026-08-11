@@ -4,6 +4,7 @@ import QuestionFormEditor, {
   buildQuestionPayload,
   defaultQuestionForm,
   formFromQuestion,
+  questionTypeLabel,
 } from '../../components/QuestionFormEditor'
 
 const PAGE_SIZE = 20
@@ -67,6 +68,10 @@ export default function QuestionsBankPage() {
     const payload = buildQuestionPayload(form)
     if (form.question_type === 'ESSAY' && payload.options.length === 0) {
       setError('Vui lòng thêm ít nhất 1 đáp án đúng cho câu tự luận')
+      return
+    }
+    if (form.question_type === 'BLOCK_PUZZLE' && !(form.blocks || []).length) {
+      setError('Hãy xếp ít nhất 1 khối Scratch cho chương trình mẫu')
       return
     }
     try {
@@ -135,6 +140,7 @@ export default function QuestionsBankPage() {
           <option value="">Tất cả loại</option>
           <option value="MULTIPLE_CHOICE">Trắc nghiệm</option>
           <option value="ESSAY">Tự luận</option>
+          <option value="BLOCK_PUZZLE">Thực hành Scratch</option>
         </select>
         <button type="submit" className="rounded-xl bg-arena-cyan/80 px-4 py-2 font-bold text-white">
           Tìm
@@ -180,7 +186,7 @@ export default function QuestionsBankPage() {
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0 flex-1">
                   <p className="text-xs text-arena-ink/50">
-                    {q.question_type === 'ESSAY' ? 'Tự luận' : 'Trắc nghiệm'}
+                    {questionTypeLabel(q.question_type)}
                     {q.tags ? ` · ${q.tags}` : ''}
                   </p>
                   <p className="mt-1 font-medium whitespace-pre-wrap">{q.content}</p>

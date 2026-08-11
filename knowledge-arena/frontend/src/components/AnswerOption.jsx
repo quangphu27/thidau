@@ -14,24 +14,31 @@ export default function AnswerOption({
   index,
   disabled,
   selected,
+  eliminated = false,
   onSelect,
   large = false,
 }) {
   const letter = String.fromCharCode(65 + index)
   const color = COLORS[index % COLORS.length]
+  const blocked = disabled || eliminated
 
   return (
     <button
       type="button"
-      disabled={disabled}
-      onClick={() => onSelect(option)}
+      disabled={blocked}
+      onClick={() => {
+        if (blocked) return
+        onSelect(option)
+      }}
       className={`answer-btn relative w-full rounded-3xl border-4 p-4 text-left md:p-5 ${
-        selected
-          ? 'border-arena-gold bg-arena-gold/25 shadow-[0_8px_0_#e09a00]'
-          : 'border-white bg-white shadow-[0_8px_0_rgba(30,90,140,0.15)] hover:border-arena-sky'
-      } ${disabled ? 'cursor-not-allowed opacity-55' : 'cursor-pointer'} ${
-        large ? 'min-h-[92px]' : ''
-      }`}
+        eliminated
+          ? 'border-stone-300 bg-stone-200/80 shadow-none'
+          : selected
+            ? 'border-arena-gold bg-arena-gold/25 shadow-[0_8px_0_#e09a00]'
+            : 'border-white bg-white shadow-[0_8px_0_rgba(30,90,140,0.15)] hover:border-arena-sky'
+      } ${blocked ? 'cursor-not-allowed' : 'cursor-pointer'} ${
+        eliminated ? 'opacity-40 grayscale' : disabled ? 'opacity-55' : ''
+      } ${large ? 'min-h-[92px]' : ''}`}
     >
       <div className="flex items-start gap-3">
         <span
@@ -42,7 +49,9 @@ export default function AnswerOption({
         <div className="min-w-0 flex-1 pt-1">
           {option.content && (
             <p
-              className={`font-bold text-arena-ink ${large ? 'text-lg md:text-xl' : ''}`}
+              className={`font-bold text-arena-ink ${large ? 'text-lg md:text-xl' : ''} ${
+                eliminated ? 'line-through decoration-2' : ''
+              }`}
             >
               {option.content}
             </p>
@@ -66,6 +75,11 @@ export default function AnswerOption({
           )}
         </div>
       </div>
+      {eliminated && (
+        <span className="absolute right-3 top-3 rounded-full bg-stone-500 px-2 py-0.5 text-[10px] font-black uppercase text-white">
+          SAI
+        </span>
+      )}
     </button>
   )
 }

@@ -15,7 +15,20 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
   const [lobbyMessages, setLobbyMessages] = useState([])
   const [lobbyFx, setLobbyFx] = useState(null)
   const [lobbyPositions, setLobbyPositions] = useState({})
+  const [retryUntil, setRetryUntil] = useState(0)
+  const [eliminatedIds, setEliminatedIds] = useState([])
   const wsRef = useRef(null)
+
+  const mergeEliminated = useCallback((data) => {
+    const ids = [
+      ...(Array.isArray(data?.eliminated_option_ids) ? data.eliminated_option_ids : []),
+      ...(data?.answer_id != null && data?.is_correct === false ? [data.answer_id] : []),
+    ]
+      .map(Number)
+      .filter((n) => Number.isFinite(n))
+    if (!ids.length) return
+    setEliminatedIds((prev) => [...new Set([...prev, ...ids])])
+  }, [])
 
   const pushLobby = useCallback((item) => {
     setLobbyMessages((prev) => {
@@ -48,6 +61,7 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
         setLobbyMessages([])
         setLobbyFx(null)
         setLobbyPositions({})
+        setEliminatedIds([])
         break
       case 'lobby_history':
         setLobbyMessages(Array.isArray(data.items) ? data.items : [])
@@ -112,19 +126,25 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
       case 'answer_wrong':
         setToast({
           kind: 'wrong',
-          title: 'Rất tiếc!',
+          title: data.can_retry ? 'Sai rồi!' : 'Rất tiếc!',
           message: data.message || '❌ Bạn đã trả lời sai.',
-          points: data.points ?? -10,
+          points: data.can_retry ? 0 : (data.points ?? -10),
           answer_display: data.answer_display,
           score: data.score,
         })
-        setAlreadySubmitted(true)
-        setBattleEvent({
-          kind: 'wrong',
-          player_id: data.player_id || playerId,
-          player_name: data.player_name || null,
-          at: Date.now(),
-        })
+        if (data.can_retry) {
+          setAlreadySubmitted(false)
+          setRetryUntil(Date.now() + (Number(data.retry_after) || 10) * 1000)
+        } else {
+          mergeEliminated({ ...data, is_correct: false })
+          setAlreadySubmitted(true)
+          setBattleEvent({
+            kind: 'wrong',
+            player_id: data.player_id || playerId,
+            player_name: data.player_name || null,
+            at: Date.now(),
+          })
+        }
         break
       case 'answer_received':
         setToast({
@@ -140,7 +160,10 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
         if (data.locked && data.player_id === playerId) {
           setAlreadySubmitted(true)
         }
-        if (data.is_correct === false && data.player_id) {
+        if (data.is_correct === false && !data.can_retry) {
+          mergeEliminated(data)
+        }
+        if (data.is_correct === false && data.player_id && !data.can_retry) {
           setBattleEvent({
             kind: 'wrong',
             player_id: data.player_id,
@@ -152,6 +175,14 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
       case 'question_started':
         setQuestion(data.question)
         setAlreadySubmitted(!!data.already_submitted)
+        setRetryUntil(0)
+        setEliminatedIds(
+          Array.isArray(data.question?.eliminated_option_ids)
+            ? data.question.eliminated_option_ids.map(Number)
+            : Array.isArray(data.eliminated_option_ids)
+              ? data.eliminated_option_ids.map(Number)
+              : [],
+        )
         setToast(null)
         setBattleEvent(null)
         setAutoNext(null)
@@ -194,13 +225,18 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
         if (data.code === 'QUESTION_ALREADY_ANSWERED') {
           setRoomState((prev) => ({ ...prev, question_answered: true }))
         }
+        if (data.code === 'RETRY_COOLDOWN') {
+          setAlreadySubmitted(false)
+          const wait = Number(data.retry_after) || 10
+          setRetryUntil(Date.now() + wait * 1000)
+        }
         break
       case 'joined':
         break
       default:
         break
     }
-  }, [playerId, pushLobby])
+  }, [playerId, pushLobby, mergeEliminated])
 
   useEffect(() => {
     if (!enabled || !roomCode) return undefined
@@ -219,7 +255,9 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
   }, [roomCode, role, playerId, enabled, handleMessage])
 
   const submitAnswer = useCallback((payload) => {
-    setAlreadySubmitted(true)
+    if (payload?.lock !== false) {
+      setAlreadySubmitted(true)
+    }
     wsRef.current?.submitAnswer(payload)
   }, [])
 
@@ -257,6 +295,8 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
     lobbyMessages,
     lobbyFx,
     lobbyPositions,
+    retryUntil,
+    eliminatedIds,
     submitAnswer,
     sendLobbyChat,
     sendLobbyAnnounce,
