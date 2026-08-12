@@ -219,6 +219,27 @@ git push
 
 Hoặc chạy tay (double-click `export_for_git.bat` / `python export_content.py`) để xuất lại toàn bộ.
 
+### Sau khi clone / git pull (máy đã có database.db cũ)
+
+`database.db` **không** nằm trên git. Nếu máy đã chạy app trước đó, DB cũ vẫn giữ câu hỏi cũ — **không tự đổi** chỉ vì bạn `git pull`.
+
+Cách xử lý (chọn 1):
+
+```bat
+cd knowledge-arena\backend
+venv\Scripts\activate
+python import_content.py --sync
+```
+
+Hoặc xóa DB rồi chạy lại `start.bat` (tạo DB mới từ `seed_data`):
+
+```bat
+del backend\database.db
+start.bat
+```
+
+Từ bản cập nhật này, khi khởi động server nếu `seed_data/content.json` đổi (sau git pull), hệ thống **tự đồng bộ** đề trùng tên.
+
 ### Sau khi clone (máy mới)
 
 ```bash

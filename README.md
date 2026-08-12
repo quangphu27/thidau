@@ -25,3 +25,13 @@ Học sinh: http://localhost:5173
 Chi tiết: [knowledge-arena/README.md](knowledge-arena/README.md)
 
 SQLite `database.db` không đưa lên git. Máy mới tự tạo DB rồi nạp `seed_data/`.
+
+Nếu máy đã có DB cũ rồi `git pull`, chạy:
+
+```bat
+cd knowledge-arena\backend
+venv\Scripts\activate
+python import_content.py --sync
+```
+
+hoặc xóa `backend\database.db` rồi chạy lại `start.bat`.

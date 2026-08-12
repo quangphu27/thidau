@@ -1,6 +1,7 @@
 """Export / import exams, questions, and media so git clone keeps content intact."""
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 from pathlib import Path
@@ -16,11 +17,172 @@ from app.models import (
     Exam,
     MediaType,
     Question,
+    Setting,
 )
 
 SEED_DIR = Path(__file__).resolve().parent.parent / "seed_data"
 CONTENT_FILE = SEED_DIR / "content.json"
 MEDIA_DIR = SEED_DIR / "media"
+PACK_HASH_KEY = "content_pack_sha256"
+
+
+def content_file_hash() -> str | None:
+    if not CONTENT_FILE.is_file():
+        return None
+    return hashlib.sha256(CONTENT_FILE.read_bytes()).hexdigest()
+
+
+def _get_setting(db: Session, key: str) -> str | None:
+    row = db.query(Setting).filter(Setting.key == key).first()
+    return row.value if row else None
+
+
+def _set_setting(db: Session, key: str, value: str) -> None:
+    row = db.query(Setting).filter(Setting.key == key).first()
+    if row:
+        row.value = value
+    else:
+        db.add(Setting(key=key, value=value))
+
+
+def _add_options(db: Session, question_id: int, options: list) -> None:
+    for o_data in options or []:
+        db.add(
+            AnswerOption(
+                question_id=question_id,
+                content=o_data.get("content") or "",
+                is_correct=bool(o_data.get("is_correct")),
+                media_type=o_data.get("media_type") or MediaType.NONE.value,
+                media_url=o_data.get("media_url"),
+                order_index=int(o_data.get("order_index") or 0),
+            )
+        )
+
+
+def _replace_exam_questions(db: Session, exam: Exam, exam_data: dict[str, Any]) -> None:
+    """Keep exam.id (rooms still work); replace all questions from seed."""
+    from app.models import Room, Submission
+
+    exam_id = exam.id
+    exam.description = exam_data.get("description") or ""
+    exam.time_per_question = int(exam_data.get("time_per_question") or 15)
+    qids = [
+        row[0]
+        for row in db.query(Question.id).filter(Question.exam_id == exam_id).all()
+    ]
+    if qids:
+        db.query(Room).filter(Room.current_question_id.in_(qids)).update(
+            {Room.current_question_id: None},
+            synchronize_session=False,
+        )
+        db.query(Submission).filter(Submission.question_id.in_(qids)).update(
+            {Submission.answer_id: None},
+            synchronize_session=False,
+        )
+        db.query(Submission).filter(Submission.question_id.in_(qids)).delete(
+            synchronize_session=False
+        )
+        db.query(AnswerOption).filter(AnswerOption.question_id.in_(qids)).delete(
+            synchronize_session=False
+        )
+        db.query(Question).filter(Question.id.in_(qids)).delete(synchronize_session=False)
+    # Commit deletes so identity map cannot resurrect old Question/Option rows
+    db.commit()
+
+    for q_data in exam_data.get("questions") or []:
+        q = Question(
+            exam_id=exam_id,
+            content=q_data.get("content") or "",
+            question_type=q_data.get("question_type") or "MULTIPLE_CHOICE",
+            order_index=int(q_data.get("order_index") or 0),
+            media_type=q_data.get("media_type") or MediaType.NONE.value,
+            media_url=q_data.get("media_url"),
+            media_position=q_data.get("media_position") or "BEFORE",
+            points=int(q_data.get("points") or 10),
+            input_mode=(q_data.get("input_mode") or "TEXT"),
+            blocks_json=q_data.get("blocks_json"),
+        )
+        db.add(q)
+        db.flush()
+        _add_options(db, q.id, q_data.get("options") or [])
+    db.commit()
+
+
+def sync_exams_from_seed(db: Session, *, force: bool = False) -> bool:
+    """
+    When seed_data/content.json changes (git pull), update exams with the same title.
+    Preserves exam.id so existing rooms keep working.
+    """
+    digest = content_file_hash()
+    if not digest or not CONTENT_FILE.is_file():
+        return False
+    stored = _get_setting(db, PACK_HASH_KEY)
+    if not force and stored == digest:
+        return False
+
+    payload = json.loads(CONTENT_FILE.read_text(encoding="utf-8"))
+    exams = payload.get("exams") or []
+    bank_questions = payload.get("bank_questions") or []
+    updated = 0
+    created = 0
+
+    for exam_data in exams:
+        title = (exam_data.get("title") or "Untitled").strip()
+        # Do not eager-load questions/options — stale instances break FK after bulk delete
+        exam = db.query(Exam).filter(Exam.title == title).first()
+        if exam:
+            _replace_exam_questions(db, exam, exam_data)
+            updated += 1
+        else:
+            exam = Exam(
+                title=title,
+                description=exam_data.get("description") or "",
+                time_per_question=int(exam_data.get("time_per_question") or 15),
+            )
+            db.add(exam)
+            db.flush()
+            _replace_exam_questions(db, exam, exam_data)
+            created += 1
+
+    existing_contents = {b.content for b in db.query(BankQuestion).all()}
+    bank_added = 0
+    for q_data in bank_questions:
+        content = q_data.get("content") or ""
+        if not content or content in existing_contents:
+            continue
+        bq = BankQuestion(
+            content=content,
+            question_type=q_data.get("question_type") or "MULTIPLE_CHOICE",
+            media_type=q_data.get("media_type") or MediaType.NONE.value,
+            media_url=q_data.get("media_url"),
+            media_position=q_data.get("media_position") or "BEFORE",
+            tags=q_data.get("tags") or "",
+            points=int(q_data.get("points") or 10),
+            blocks_json=q_data.get("blocks_json"),
+        )
+        db.add(bq)
+        db.flush()
+        for o_data in q_data.get("options") or []:
+            db.add(
+                BankAnswerOption(
+                    question_id=bq.id,
+                    content=o_data.get("content") or "",
+                    is_correct=bool(o_data.get("is_correct")),
+                    media_type=o_data.get("media_type") or MediaType.NONE.value,
+                    media_url=o_data.get("media_url"),
+                    order_index=int(o_data.get("order_index") or 0),
+                )
+            )
+        existing_contents.add(content)
+        bank_added += 1
+
+    _set_setting(db, PACK_HASH_KEY, digest)
+    db.commit()
+    print(
+        f"Synced seed pack: {updated} exams updated, {created} exams created, "
+        f"{bank_added} bank questions added"
+    )
+    return True
 
 
 def _media_rel_from_url(url: str | None) -> str | None:
@@ -148,8 +310,34 @@ def sync_content_pack(db: Session | None = None) -> None:
     """Best-effort export after admin edits (keeps seed_data ready for git push)."""
     try:
         export_content(db, quiet=True)
+        # Remember hash so next startup won't overwrite local admin edits with old seed
+        if db is not None:
+            digest = content_file_hash()
+            if digest:
+                _set_setting(db, PACK_HASH_KEY, digest)
+                db.commit()
     except Exception:
         pass
+
+
+def ensure_content_on_startup() -> None:
+    """Called from app lifespan: restore media; import if empty; sync when seed pack changes."""
+    init_db()
+    _restore_media_files()
+    db = SessionLocal()
+    try:
+        if db.query(Exam).count() == 0 or db.query(BankQuestion).count() == 0:
+            import_content(db, only_if_empty=True)
+            digest = content_file_hash()
+            if digest:
+                _set_setting(db, PACK_HASH_KEY, digest)
+                db.commit()
+        else:
+            # git pull updated seed_data → refresh exams with same titles
+            sync_exams_from_seed(db)
+        ensure_scratch_practice(db)
+    finally:
+        db.close()
 
 
 def _restore_media_files() -> int:
@@ -373,14 +561,4 @@ def ensure_scratch_practice(db: Session) -> None:
         db.commit()
 
 
-def ensure_content_on_startup() -> None:
-    """Called from app lifespan: restore media always; import exams/bank if empty."""
-    init_db()
-    _restore_media_files()
-    db = SessionLocal()
-    try:
-        if db.query(Exam).count() == 0 or db.query(BankQuestion).count() == 0:
-            import_content(db, only_if_empty=True)
-        ensure_scratch_practice(db)
-    finally:
-        db.close()
+# ensure_content_on_startup is defined above (near sync_content_pack)

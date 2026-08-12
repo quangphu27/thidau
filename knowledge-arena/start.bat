@@ -39,11 +39,11 @@ if not exist "backend\venv\Scripts\python.exe" (
   call backend\venv\Scripts\activate.bat
 )
 
-REM Seed / import đề thi từ seed_data nếu DB chưa có
+REM Seed / import đề thi từ seed_data nếu DB chưa có; nếu đã có thì sync khi seed đổi
 if not exist "backend\database.db" (
   python backend\seed.py
 ) else (
-  python backend\import_content.py
+  python backend\import_content.py --sync
 )
 
 echo Khởi động Backend (port 8000)...
