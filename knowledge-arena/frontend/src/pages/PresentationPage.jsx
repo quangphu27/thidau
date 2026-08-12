@@ -139,7 +139,7 @@ export default function PresentationPage() {
             mediaUrl={question.media_url}
             className="my-4 max-h-80"
           />
-          <h2 className="mt-4 text-3xl font-extrabold leading-tight text-arena-ink md:text-5xl">
+          <h2 className="mt-4 whitespace-pre-wrap text-3xl font-extrabold leading-tight text-arena-ink md:text-5xl">
             {question.content}
           </h2>
           {question.question_type === 'BLOCK_PUZZLE' && (

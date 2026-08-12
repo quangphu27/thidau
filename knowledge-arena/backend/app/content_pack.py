@@ -158,6 +158,7 @@ def sync_exams_from_seed(db: Session, *, force: bool = False) -> bool:
             media_position=q_data.get("media_position") or "BEFORE",
             tags=q_data.get("tags") or "",
             points=int(q_data.get("points") or 10),
+            input_mode=(q_data.get("input_mode") or "TEXT"),
             blocks_json=q_data.get("blocks_json"),
         )
         db.add(bq)
@@ -485,6 +486,7 @@ def import_content(
                     media_position=q_data.get("media_position") or "BEFORE",
                     tags=q_data.get("tags") or "",
                     points=int(q_data.get("points") or 10),
+                    input_mode=(q_data.get("input_mode") or "TEXT"),
                     blocks_json=q_data.get("blocks_json"),
                 )
                 db.add(bq)

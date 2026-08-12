@@ -152,6 +152,7 @@ def create_bank_question(
         media_position=body.media_position,
         tags=(body.tags or "").strip(),
         points=int(body.points or 10),
+        input_mode=(body.input_mode or "TEXT").upper(),
         blocks_json=body.blocks_json,
     )
     db.add(item)
@@ -198,6 +199,8 @@ def update_bank_question(
         item.tags = body.tags.strip()
     if body.points is not None:
         item.points = int(body.points)
+    if body.input_mode is not None:
+        item.input_mode = body.input_mode.upper()
     if body.blocks_json is not None:
         item.blocks_json = body.blocks_json
 
@@ -289,6 +292,7 @@ def add_bank_questions_to_exam(
             media_url=bq.media_url,
             media_position=bq.media_position or "BEFORE",
             points=int(getattr(bq, "points", None) or 10),
+            input_mode=(getattr(bq, "input_mode", None) or "TEXT"),
             blocks_json=getattr(bq, "blocks_json", None),
         )
         db.add(q)

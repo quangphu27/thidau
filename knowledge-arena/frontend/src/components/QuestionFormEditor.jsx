@@ -24,6 +24,7 @@ export const defaultQuestionForm = () => ({
   media_position: 'BEFORE',
   tags: '',
   points: 10,
+  input_mode: 'TEXT',
   blocks: [],
   options: [emptyOption(0), emptyOption(1), emptyOption(2), emptyOption(3)],
 })
@@ -37,6 +38,7 @@ export function formFromQuestion(q) {
     media_position: q.media_position || 'BEFORE',
     tags: q.tags || '',
     points: q.points || 10,
+    input_mode: q.input_mode || 'TEXT',
     blocks: parseBlocks(q.blocks_json),
     options: q.options?.length
       ? q.options.map((o, i) => ({
@@ -72,6 +74,7 @@ export function buildQuestionPayload(form) {
     media_position: form.media_position,
     tags: form.tags || '',
     points: Number(form.points) || (isPuzzle ? 20 : 10),
+    input_mode: form.question_type === 'ESSAY' ? form.input_mode || 'TEXT' : 'TEXT',
     blocks_json: isPuzzle ? JSON.stringify({ script: form.blocks || [] }) : null,
     options:
       form.question_type === 'ESSAY'
@@ -296,10 +299,26 @@ export default function QuestionFormEditor({
       )}
 
       {form.question_type === 'ESSAY' && (
+        <div>
+          <label className="text-sm text-arena-ink/50">Kiểu nhập</label>
+          <select
+            className="ml-2 rounded border border-arena-sky/30 bg-white px-2 py-1"
+            value={form.input_mode || 'TEXT'}
+            onChange={(e) => setForm({ ...form, input_mode: e.target.value })}
+          >
+            <option value="TEXT">Chữ</option>
+            <option value="NUMBER">Số (sai được nhập lại sau 10s)</option>
+          </select>
+        </div>
+      )}
+
+      {form.question_type === 'ESSAY' && (
         <div className="space-y-2">
           <p className="text-sm font-semibold">Danh sách đáp án đúng (tự động chấm)</p>
           <p className="text-xs text-arena-ink/50">
-            Học sinh nhập trùng một trong các đáp án này (không phân biệt hoa/thường) → +10 điểm.
+            {form.input_mode === 'NUMBER'
+              ? 'Học sinh nhập số trùng đáp án → được điểm; sai thì đợi 10 giây rồi nhập lại.'
+              : 'Học sinh nhập trùng một trong các đáp án này (không phân biệt hoa/thường) → được điểm.'}
           </p>
           {form.options.map((opt, i) => (
             <div key={i} className="flex items-center gap-2">

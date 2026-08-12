@@ -285,6 +285,7 @@ class BankQuestionCreate(BaseModel):
     media_position: str = "BEFORE"
     tags: str = ""
     points: int = Field(default=10, ge=1, le=100)
+    input_mode: str = "TEXT"
     blocks_json: Optional[str] = None
     options: List[BankOptionCreate] = []
 
@@ -297,6 +298,7 @@ class BankQuestionUpdate(BaseModel):
     media_position: Optional[str] = None
     tags: Optional[str] = None
     points: Optional[int] = Field(default=None, ge=1, le=100)
+    input_mode: Optional[str] = None
     blocks_json: Optional[str] = None
     options: Optional[List[BankOptionCreate]] = None
 
@@ -310,6 +312,7 @@ class BankQuestionOut(BaseModel):
     media_position: str
     tags: str = ""
     points: int = 10
+    input_mode: str = "TEXT"
     blocks_json: Optional[str] = None
     created_at: datetime
     updated_at: datetime

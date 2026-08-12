@@ -205,6 +205,7 @@ class BankQuestion(Base):
     media_position = Column(String(20), default=MediaPosition.BEFORE.value)
     tags = Column(String(200), default="")  # free text, e.g. "toán, lớp 3"
     points = Column(Integer, default=10)
+    input_mode = Column(String(20), default="TEXT")  # TEXT | NUMBER
     blocks_json = Column(Text, nullable=True)
     created_at = Column(DateTime, default=utcnow)
     updated_at = Column(DateTime, default=utcnow, onupdate=utcnow)

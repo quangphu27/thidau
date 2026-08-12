@@ -237,7 +237,7 @@ export default function RoomControlPage() {
                 mediaUrl={question.media_url}
                 className="my-3"
               />
-              <h2 className="text-xl font-bold md:text-2xl">{question.content}</h2>
+              <h2 className="whitespace-pre-wrap text-xl font-bold md:text-2xl">{question.content}</h2>
               {question.question_type === 'BLOCK_PUZZLE' && (
                 <p className="mt-3 text-sm font-bold text-arena-cyan">
                   Học sinh đang ghép khối Scratch · {question.points || 20} điểm

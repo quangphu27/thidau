@@ -268,7 +268,7 @@ export default function PlayPage() {
                     className="mb-4"
                   />
                 )}
-                <h2 className="text-xl font-extrabold leading-snug text-arena-ink md:text-3xl">
+                <h2 className="whitespace-pre-wrap text-xl font-extrabold leading-snug text-arena-ink md:text-3xl">
                   {question.content}
                 </h2>
                 {question.media_position === 'AFTER' && (

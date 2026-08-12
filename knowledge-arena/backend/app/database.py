@@ -77,6 +77,12 @@ def init_db():
                             "ALTER TABLE bank_questions ADD COLUMN points INTEGER DEFAULT 10"
                         )
                     )
+                if "input_mode" not in bcols:
+                    conn.execute(
+                        text(
+                            "ALTER TABLE bank_questions ADD COLUMN input_mode VARCHAR(20) DEFAULT 'TEXT'"
+                        )
+                    )
     except Exception:
         pass
 
