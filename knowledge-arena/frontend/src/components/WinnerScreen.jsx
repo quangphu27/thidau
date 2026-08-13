@@ -37,6 +37,19 @@ export default function WinnerScreen({ winner, rankings = [], onContinue }) {
     }
   }, [])
 
+  useEffect(() => {
+    if (!winner) return undefined
+    const audio = new Audio(`${import.meta.env.BASE_URL}chienthang.mp3`)
+    audio.volume = 0.85
+    audio.play().catch(() => {
+      /* autoplay may be blocked until a gesture */
+    })
+    return () => {
+      audio.pause()
+      audio.src = ''
+    }
+  }, [winner])
+
   return (
     <div className="arena-bg relative flex min-h-screen flex-col items-center justify-center px-4 py-10">
       <motion.div
