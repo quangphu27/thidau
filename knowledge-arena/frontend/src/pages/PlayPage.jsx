@@ -150,12 +150,6 @@ export default function PlayPage() {
     playerInfo?.score ??
     0
 
-  if (finished) {
-    return (
-      <WinnerScreen winner={finished.winner} rankings={finished.rankings || rankings} />
-    )
-  }
-
   const waiting = !question || roomState?.status === 'WAITING'
 
   const eliminatedSet = useMemo(
@@ -179,6 +173,15 @@ export default function PlayPage() {
       answerText: essayText.trim(),
       lock: !isNumberInput,
     })
+  }
+
+  if (finished || roomState?.status === 'FINISHED') {
+    return (
+      <WinnerScreen
+        winner={finished?.winner || rankings[0] || null}
+        rankings={finished?.rankings || rankings}
+      />
+    )
   }
 
   return (
@@ -263,9 +266,13 @@ export default function PlayPage() {
               <div className="glass rounded-[2rem] p-5 md:p-8">
                 {(question.media_position === 'BEFORE' || !question.media_position) && (
                   <MediaPlayer
+                    key={`q-media-${question.id}-before`}
                     mediaType={question.media_type}
                     mediaUrl={question.media_url}
                     className="mb-4"
+                    autoPlay={
+                      question.media_type === 'AUDIO' || question.media_type === 'VIDEO'
+                    }
                   />
                 )}
                 <h2 className="whitespace-pre-wrap text-xl font-extrabold leading-snug text-arena-ink md:text-3xl">
@@ -273,9 +280,13 @@ export default function PlayPage() {
                 </h2>
                 {question.media_position === 'AFTER' && (
                   <MediaPlayer
+                    key={`q-media-${question.id}-after`}
                     mediaType={question.media_type}
                     mediaUrl={question.media_url}
                     className="mt-4"
+                    autoPlay={
+                      question.media_type === 'AUDIO' || question.media_type === 'VIDEO'
+                    }
                   />
                 )}
               </div>

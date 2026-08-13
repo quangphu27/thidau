@@ -4,25 +4,37 @@ import { motion } from 'framer-motion'
 
 export default function WinnerScreen({ winner, rankings = [], onContinue }) {
   useEffect(() => {
-    const end = Date.now() + 4500
-    const frame = () => {
-      confetti({
-        particleCount: 5,
-        angle: 60,
-        spread: 60,
-        origin: { x: 0, y: 0.7 },
-        colors: ['#ffb703', '#ff5a36', '#4cc9f0', '#ff6b9d', '#06d6a0'],
-      })
-      confetti({
-        particleCount: 5,
-        angle: 120,
-        spread: 60,
-        origin: { x: 1, y: 0.7 },
-        colors: ['#ffb703', '#ff5a36', '#4cc9f0', '#ff6b9d', '#06d6a0'],
-      })
-      if (Date.now() < end) requestAnimationFrame(frame)
+    let raf = 0
+    try {
+      const end = Date.now() + 4500
+      const frame = () => {
+        try {
+          confetti({
+            particleCount: 5,
+            angle: 60,
+            spread: 60,
+            origin: { x: 0, y: 0.7 },
+            colors: ['#ffb703', '#ff5a36', '#4cc9f0', '#ff6b9d', '#06d6a0'],
+          })
+          confetti({
+            particleCount: 5,
+            angle: 120,
+            spread: 60,
+            origin: { x: 1, y: 0.7 },
+            colors: ['#ffb703', '#ff5a36', '#4cc9f0', '#ff6b9d', '#06d6a0'],
+          })
+        } catch {
+          return
+        }
+        if (Date.now() < end) raf = requestAnimationFrame(frame)
+      }
+      raf = requestAnimationFrame(frame)
+    } catch {
+      /* confetti optional */
     }
-    frame()
+    return () => {
+      if (raf) cancelAnimationFrame(raf)
+    }
   }, [])
 
   return (
@@ -91,7 +103,8 @@ export default function WinnerScreen({ winner, rankings = [], onContinue }) {
               }`}
             >
               <span className="text-arena-ink">
-                {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${p.rank}.`} {p.name}
+                {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${p.rank ?? i + 1}.`}{' '}
+                {p.name}
               </span>
               <span className="font-display text-arena-cyan">{p.score} điểm</span>
             </motion.li>

@@ -11,8 +11,8 @@ router = APIRouter(prefix="/api/upload", tags=["upload"])
 
 ALLOWED = {
     "image": {".jpg", ".jpeg", ".png", ".gif", ".webp"},
-    "audio": {".mp3", ".wav", ".ogg"},
-    "video": {".mp4", ".webm"},
+    "audio": {".mp3", ".wav", ".ogg", ".m4a", ".aac"},
+    "video": {".mp4", ".webm", ".mov"},
 }
 
 FOLDER_MAP = {
@@ -47,7 +47,7 @@ async def upload_file(
     if not kind:
         raise HTTPException(
             status_code=400,
-            detail="INVALID_ANSWER",
+            detail="MEDIA_TYPE_UNSUPPORTED",
         )
     folder = FOLDER_MAP[kind]
     dest_dir = UPLOAD_DIR / folder

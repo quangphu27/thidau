@@ -866,55 +866,8 @@
     {
       "title": "Kiểm tra Scratch",
       "description": "Bài kiểm tra: tư duy xen kẽ Scratch tự luận (nhập số)",
-      "time_per_question": 45,
+      "time_per_question": 300,
       "questions": [
-        {
-          "content": "Tìm số hạng tiếp theo của dãy 2, 6, 12, 20, 30, ?",
-          "question_type": "ESSAY",
-          "media_type": "NONE",
-          "media_url": null,
-          "media_position": "BEFORE",
-          "points": 20,
-          "input_mode": "NUMBER",
-          "blocks_json": null,
-          "options": [
-            {
-              "content": "42",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 0
-            }
-          ],
-          "order_index": 0
-        },
-        {
-          "content": "Trong Scratch:\n\n• Lặp 5 lần\n• Mỗi lần lặp lại «di chuyển 2 bước» 4 lần\n\nTổng cộng nhân vật đi bao nhiêu bước?",
-          "question_type": "ESSAY",
-          "media_type": "NONE",
-          "media_url": null,
-          "media_position": "BEFORE",
-          "points": 20,
-          "input_mode": "NUMBER",
-          "blocks_json": null,
-          "options": [
-            {
-              "content": "40",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 0
-            },
-            {
-              "content": "40 bước",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 1
-            }
-          ],
-          "order_index": 1
-        },
         {
           "content": "Một con ốc sên leo lên cây cao 10m. Ban ngày leo 3m, ban đêm tụt 2m. Hỏi sau bao nhiêu ngày lên đến đỉnh?",
           "question_type": "ESSAY",
@@ -940,88 +893,7 @@
               "order_index": 1
             }
           ],
-          "order_index": 2
-        },
-        {
-          "content": "Trong Scratch:\n\n• Có 1 nhân vật gốc\n• Tạo thêm 3 bản sao (clone)\n\nCó tất cả bao nhiêu nhân vật?",
-          "question_type": "ESSAY",
-          "media_type": "NONE",
-          "media_url": null,
-          "media_position": "BEFORE",
-          "points": 20,
-          "input_mode": "NUMBER",
-          "blocks_json": null,
-          "options": [
-            {
-              "content": "4",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 0
-            },
-            {
-              "content": "4 nhân vật",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 1
-            }
-          ],
-          "order_index": 3
-        },
-        {
-          "content": "Có 3 con vịt đi thành hàng.\n\nCon thứ nhất nói:\n“Sau tôi có 2 con vịt.”\n\nCon thứ hai nói:\n“Trước tôi có 1 con, sau tôi có 1 con.”\n\nCon thứ ba nói:\n“Trước tôi có 2 con.”\n\nHỏi có bao nhiêu con vịt?",
-          "question_type": "ESSAY",
-          "media_type": "NONE",
-          "media_url": null,
-          "media_position": "BEFORE",
-          "points": 20,
-          "input_mode": "NUMBER",
-          "blocks_json": null,
-          "options": [
-            {
-              "content": "3",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 0
-            },
-            {
-              "content": "3 con",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 1
-            }
-          ],
-          "order_index": 4
-        },
-        {
-          "content": "Trong Scratch:\n\n• Xoay phải 15°\n• Lặp lại khối đó 24 lần\n\nNhân vật quay được bao nhiêu độ?",
-          "question_type": "ESSAY",
-          "media_type": "NONE",
-          "media_url": null,
-          "media_position": "BEFORE",
-          "points": 20,
-          "input_mode": "NUMBER",
-          "blocks_json": null,
-          "options": [
-            {
-              "content": "360",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 0
-            },
-            {
-              "content": "360 độ",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 1
-            }
-          ],
-          "order_index": 5
+          "order_index": 1
         },
         {
           "content": "Một chiếc balo giá 20 nghìn được giảm 20%. Hỏi phải trả bao nhiêu tiền?",
@@ -1055,34 +927,7 @@
               "order_index": 2
             }
           ],
-          "order_index": 6
-        },
-        {
-          "content": "Trong Scratch:\n\n• Ban đầu có 1 nhân vật\n• Lặp 2 lần, mỗi lần tạo 1 bản sao (clone)\n\nSau khi chạy xong có tất cả bao nhiêu nhân vật?",
-          "question_type": "ESSAY",
-          "media_type": "NONE",
-          "media_url": null,
-          "media_position": "BEFORE",
-          "points": 20,
-          "input_mode": "NUMBER",
-          "blocks_json": null,
-          "options": [
-            {
-              "content": "3",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 0
-            },
-            {
-              "content": "3 nhân vật",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 1
-            }
-          ],
-          "order_index": 7
+          "order_index": 2
         },
         {
           "content": "Một lớp có 37 học sinh. Mỗi bàn ngồi được 2 học sinh. Cần ít nhất bao nhiêu bàn?",
@@ -1109,10 +954,10 @@
               "order_index": 1
             }
           ],
-          "order_index": 8
+          "order_index": 3
         },
         {
-          "content": "Trong Scratch:\n\n• Lặp 3 lần\n• Mỗi lần: di chuyển 4 bước\n\nTổng cộng đi bao nhiêu bước?",
+          "content": "Trong Scratch:\n\n• Ban đầu có 1 nhân vật\n• Lặp 2 lần, mỗi lần tạo 1 bản sao (clone)\n\nSau khi chạy xong có tất cả bao nhiêu nhân vật?",
           "question_type": "ESSAY",
           "media_type": "NONE",
           "media_url": null,
@@ -1122,24 +967,24 @@
           "blocks_json": null,
           "options": [
             {
-              "content": "12",
+              "content": "3",
               "is_correct": true,
               "media_type": "NONE",
               "media_url": null,
               "order_index": 0
             },
             {
-              "content": "12 bước",
+              "content": "3 nhân vật",
               "is_correct": true,
               "media_type": "NONE",
               "media_url": null,
               "order_index": 1
             }
           ],
-          "order_index": 9
+          "order_index": 4
         },
         {
-          "content": "Một cửa hàng có chương trình: cứ 3 vỏ chai nước rỗng thì đổi được 1 chai nước mới.\n\nBạn muốn uống ít nhất 50 chai nước. Sau khi uống, bạn giữ lại tất cả vỏ chai để tiếp tục đổi nước.\n\nHỏi bạn cần mua ít nhất bao nhiêu chai nước ban đầu?",
+          "content": "Game né vật cản trong Scratch:\n\n• Điểm ban đầu = 20\n• Chạm vật cản 3 lần\n• Mỗi lần chạm: trừ 5 điểm\n\nĐiểm còn lại bao nhiêu?",
           "question_type": "ESSAY",
           "media_type": "NONE",
           "media_url": null,
@@ -1149,14 +994,61 @@
           "blocks_json": null,
           "options": [
             {
-              "content": "35",
+              "content": "5",
               "is_correct": true,
               "media_type": "NONE",
               "media_url": null,
               "order_index": 0
             },
             {
-              "content": "35 chai",
+              "content": "5 điểm",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            }
+          ],
+          "order_index": 8
+        },
+        {
+          "content": "Tìm số hạng tiếp theo của dãy 2, 6, 12, 20, 30, ?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "42",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            }
+          ],
+          "order_index": 9
+        },
+        {
+          "content": "Có 3 con vịt đi thành hàng.\n\nCon thứ nhất nói:\n“Sau tôi có 2 con vịt.”\n\nCon thứ hai nói:\n“Trước tôi có 1 con, sau tôi có 1 con.”\n\nCon thứ ba nói:\n“Trước tôi có 2 con.”\n\nHỏi có bao nhiêu con vịt?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "3",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "3 con",
               "is_correct": true,
               "media_type": "NONE",
               "media_url": null,
@@ -1166,28 +1058,21 @@
           "order_index": 10
         },
         {
-          "content": "Vẽ hình vuông cạnh 50 trong Scratch:\n\n• Lặp 4 lần\n• Mỗi lần: di chuyển 50 bước → xoay 90°\n\nTổng quãng đường nhân vật đi bao nhiêu bước?",
+          "content": "Nge âm thanh và trả lời",
           "question_type": "ESSAY",
-          "media_type": "NONE",
-          "media_url": null,
+          "media_type": "AUDIO",
+          "media_url": "/media/audio/4174d52a64da445da90c66bedf876b74.m4a",
           "media_position": "BEFORE",
-          "points": 20,
+          "points": 10,
           "input_mode": "NUMBER",
           "blocks_json": null,
           "options": [
             {
-              "content": "200",
+              "content": "360",
               "is_correct": true,
               "media_type": "NONE",
               "media_url": null,
               "order_index": 0
-            },
-            {
-              "content": "200 bước",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 1
             }
           ],
           "order_index": 11
@@ -1220,61 +1105,27 @@
           "order_index": 12
         },
         {
-          "content": "Trò chơi bắt sao trong Scratch:\n\n• Điểm ban đầu = 5\n• Mỗi lần chạm sao: +2 điểm\n• Chạm sao 3 lần\n\nĐiểm cuối cùng là bao nhiêu?",
+          "content": "Nge câu hỏi tiếng Anh sau",
           "question_type": "ESSAY",
-          "media_type": "NONE",
-          "media_url": null,
-          "media_position": "BEFORE",
+          "media_type": "AUDIO",
+          "media_url": "/media/audio/edf1397426ff458faf39775a99053fd9.m4a",
+          "media_position": "AFTER",
           "points": 20,
           "input_mode": "NUMBER",
           "blocks_json": null,
           "options": [
             {
-              "content": "11",
+              "content": "15",
               "is_correct": true,
               "media_type": "NONE",
               "media_url": null,
               "order_index": 0
-            },
-            {
-              "content": "11 điểm",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 1
-            }
-          ],
-          "order_index": 13
-        },
-        {
-          "content": "Game né vật cản trong Scratch:\n\n• Điểm ban đầu = 20\n• Chạm vật cản 3 lần\n• Mỗi lần chạm: trừ 5 điểm\n\nĐiểm còn lại bao nhiêu?",
-          "question_type": "ESSAY",
-          "media_type": "NONE",
-          "media_url": null,
-          "media_position": "BEFORE",
-          "points": 20,
-          "input_mode": "NUMBER",
-          "blocks_json": null,
-          "options": [
-            {
-              "content": "5",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 0
-            },
-            {
-              "content": "5 điểm",
-              "is_correct": true,
-              "media_type": "NONE",
-              "media_url": null,
-              "order_index": 1
             }
           ],
           "order_index": 14
         },
         {
-          "content": "Trong Scratch, muốn vẽ hình tròn bằng cách:\n\n• Mỗi lần xoay phải 1 độ rồi di chuyển một chút\n\nCần lặp lại bao nhiêu lần để quay đủ một vòng?",
+          "content": "Vẽ hình vuông cạnh 50 trong Scratch:\n\n• Lặp 4 lần\n• Mỗi lần: di chuyển 50 bước → xoay 90°\n\nTổng quãng đường nhân vật đi bao nhiêu bước?",
           "question_type": "ESSAY",
           "media_type": "NONE",
           "media_url": null,
@@ -1284,21 +1135,82 @@
           "blocks_json": null,
           "options": [
             {
-              "content": "360",
+              "content": "200",
               "is_correct": true,
               "media_type": "NONE",
               "media_url": null,
               "order_index": 0
             },
             {
-              "content": "360 lần",
+              "content": "200 bước",
               "is_correct": true,
               "media_type": "NONE",
               "media_url": null,
               "order_index": 1
             }
           ],
-          "order_index": 15
+          "order_index": 16
+        },
+        {
+          "content": "Nge câu hỏi bằng tiếng Anh",
+          "question_type": "ESSAY",
+          "media_type": "AUDIO",
+          "media_url": "/media/audio/ad2895fcc5be466686f74f62b61d669f.m4a",
+          "media_position": "AFTER",
+          "points": 10,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "99",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            }
+          ],
+          "order_index": 17
+        },
+        {
+          "content": "Nge và trả lời bằng Tiếng AnhA",
+          "question_type": "MULTIPLE_CHOICE",
+          "media_type": "AUDIO",
+          "media_url": "/media/audio/e3be54901e9b449fbdc1aa047bd28e95.m4a",
+          "media_position": "AFTER",
+          "points": 10,
+          "input_mode": "TEXT",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "A",
+              "is_correct": false,
+              "media_type": "AUDIO",
+              "media_url": "/media/audio/477b514322514804973f050c8ed10be0.m4a",
+              "order_index": 0
+            },
+            {
+              "content": "B",
+              "is_correct": false,
+              "media_type": "AUDIO",
+              "media_url": "/media/audio/718fdd4c25ae447f9eaa3a02354c4d84.m4a",
+              "order_index": 1
+            },
+            {
+              "content": "C",
+              "is_correct": true,
+              "media_type": "AUDIO",
+              "media_url": "/media/audio/87dedce2d2914049abb240abccf65005.m4a",
+              "order_index": 2
+            },
+            {
+              "content": "D",
+              "is_correct": false,
+              "media_type": "AUDIO",
+              "media_url": "/media/audio/a700560621f24b2f8cbc4a7d9684706d.m4a",
+              "order_index": 3
+            }
+          ],
+          "order_index": 18
         }
       ]
     }

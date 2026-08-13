@@ -1,4 +1,4 @@
-import { mediaUrl } from '../utils/config'
+import MediaPlayer from './MediaPlayer'
 
 const COLORS = [
   'bg-[#4cc9f0]',
@@ -21,14 +21,25 @@ export default function AnswerOption({
   const letter = String.fromCharCode(65 + index)
   const color = COLORS[index % COLORS.length]
   const blocked = disabled || eliminated
+  const hasMedia = option.media_type && option.media_type !== 'NONE' && option.media_url
+
+  const pick = () => {
+    if (blocked) return
+    onSelect(option)
+  }
 
   return (
-    <button
-      type="button"
-      disabled={blocked}
-      onClick={() => {
+    <div
+      role="button"
+      tabIndex={blocked ? -1 : 0}
+      aria-disabled={blocked}
+      onClick={pick}
+      onKeyDown={(e) => {
         if (blocked) return
-        onSelect(option)
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          pick()
+        }
       }}
       className={`answer-btn relative w-full rounded-3xl border-4 p-4 text-left md:p-5 ${
         eliminated
@@ -56,21 +67,13 @@ export default function AnswerOption({
               {option.content}
             </p>
           )}
-          {option.media_type && option.media_type !== 'NONE' && option.media_url && (
+          {hasMedia && (
             <div className="mt-2">
-              {option.media_type === 'IMAGE' && (
-                <img
-                  src={option.media_url.startsWith('http') ? option.media_url : mediaUrl(option.media_url)}
-                  alt=""
-                  className="max-h-28 rounded-xl object-contain"
-                />
-              )}
-              {option.media_type === 'AUDIO' && (
-                <span className="text-sm font-bold text-arena-cyan">🔊 Âm thanh</span>
-              )}
-              {option.media_type === 'VIDEO' && (
-                <span className="text-sm font-bold text-arena-pink">🎬 Video</span>
-              )}
+              <MediaPlayer
+                mediaType={option.media_type}
+                mediaUrl={option.media_url}
+                compact
+              />
             </div>
           )}
         </div>
@@ -80,6 +83,6 @@ export default function AnswerOption({
           SAI
         </span>
       )}
-    </button>
+    </div>
   )
 }

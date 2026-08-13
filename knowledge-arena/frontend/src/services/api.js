@@ -73,6 +73,8 @@ export const roomApi = {
   next: (code) => api.post(`/api/rooms/${code}/next`),
   pause: (code) => api.post(`/api/rooms/${code}/pause`),
   resume: (code) => api.post(`/api/rooms/${code}/resume`),
+  adjustTime: (code, delta_seconds) =>
+    api.post(`/api/rooms/${code}/adjust-time`, null, { params: { delta_seconds } }),
   finish: (code) => api.post(`/api/rooms/${code}/finish`),
   players: (code) => api.get(`/api/rooms/${code}/players`),
   results: (code) => api.get(`/api/rooms/${code}/results`),

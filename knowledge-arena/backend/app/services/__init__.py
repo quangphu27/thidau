@@ -67,6 +67,8 @@ class GameService:
         self._wrong_retry_at: Dict[tuple, float] = {}
         # (room_code, question_id) -> set of eliminated (wrong) option ids
         self._eliminated_options: Dict[tuple, set] = {}
+        # room_code -> seconds remaining when paused
+        self._paused_remaining: Dict[str, float] = {}
 
     def push_lobby_event(self, room_code: str, event: dict) -> None:
         hist = self._lobby_history.setdefault(room_code, [])
@@ -80,6 +82,7 @@ class GameService:
     def clear_lobby(self, room_code: str) -> None:
         self._lobby_history.pop(room_code, None)
         self._lobby_positions.pop(room_code, None)
+        self._paused_remaining.pop(room_code, None)
         for key in list(self._eliminated_options):
             if key[0] == room_code:
                 self._eliminated_options.pop(key, None)
@@ -244,7 +247,13 @@ class GameService:
         if room.question_ends_at:
             ends = _as_naive(room.question_ends_at)
             payload["question_ends_at"] = ends.isoformat() + "Z"
-            remaining = (ends - _utcnow()).total_seconds()
+            if (
+                room.status == RoomStatus.PAUSED.value
+                and room.room_code in self._paused_remaining
+            ):
+                remaining = float(self._paused_remaining[room.room_code])
+            else:
+                remaining = (ends - _utcnow()).total_seconds()
             payload["remaining_seconds"] = max(0, remaining)
         return payload
 
@@ -335,6 +344,7 @@ class GameService:
         room.question_ends_at = now + timedelta(seconds=duration)
         room.question_answered = False
         room.first_answer_player_id = None
+        self._paused_remaining.pop(room_code, None)
         db.commit()
         db.refresh(room)
 
@@ -383,6 +393,7 @@ class GameService:
         room.question_started_at = now
         room.question_ends_at = now + timedelta(seconds=duration)
         room.question_answered = False
+        self._paused_remaining.pop(room_code, None)
         room.first_answer_player_id = None
         room.status = RoomStatus.RUNNING.value
         db.commit()
@@ -399,6 +410,13 @@ class GameService:
             raise ValueError("ROOM_NOT_FOUND")
         if room.status != RoomStatus.RUNNING.value:
             raise ValueError("ROOM_NOT_RUNNING")
+        remaining = 0.0
+        if room.question_ends_at:
+            ends = _as_naive(room.question_ends_at)
+            remaining = max(0.0, (ends - _utcnow()).total_seconds())
+        self._paused_remaining[room_code] = remaining
+        # Anchor ends_at so clients that re-read ends_at see the frozen remaining
+        room.question_ends_at = _utcnow() + timedelta(seconds=remaining)
         room.status = RoomStatus.PAUSED.value
         db.commit()
         payload = {
@@ -415,13 +433,15 @@ class GameService:
             raise ValueError("ROOM_NOT_FOUND")
         if room.status != RoomStatus.PAUSED.value:
             raise ValueError("NOT_ALLOWED")
-        remaining = 0
-        if room.question_ends_at:
-            ends = _as_naive(room.question_ends_at)
-            remaining = max(0, (ends - _utcnow()).total_seconds())
+        remaining = self._paused_remaining.pop(room_code, None)
+        if remaining is None:
+            remaining = 0.0
+            if room.question_ends_at:
+                ends = _as_naive(room.question_ends_at)
+                remaining = max(0.0, (ends - _utcnow()).total_seconds())
         if remaining <= 0:
             exam = db.query(Exam).filter(Exam.id == room.exam_id).first()
-            remaining = exam.time_per_question if exam else 15
+            remaining = float(exam.time_per_question if exam else 15)
         now = _utcnow()
         room.question_ends_at = now + timedelta(seconds=remaining)
         room.status = RoomStatus.RUNNING.value
@@ -439,6 +459,55 @@ class GameService:
                 await ws_manager.broadcast(
                     room_code, self.question_public_payload(db, room, q)
                 )
+        return payload
+
+    async def adjust_question_time(
+        self, db: Session, room_code: str, delta_seconds: int
+    ) -> dict:
+        """Add/remove seconds from the current question timer (+/-5 typical)."""
+        room = self.get_room(db, room_code)
+        if not room:
+            raise ValueError("ROOM_NOT_FOUND")
+        if room.status not in (RoomStatus.RUNNING.value, RoomStatus.PAUSED.value):
+            raise ValueError("ROOM_NOT_RUNNING")
+        if not room.current_question_id:
+            raise ValueError("GAME_NOT_STARTED")
+
+        delta = int(delta_seconds)
+        if delta == 0:
+            raise ValueError("INVALID_ANSWER")
+
+        if room.status == RoomStatus.PAUSED.value:
+            remaining = float(self._paused_remaining.get(room_code, 0.0))
+            if room_code not in self._paused_remaining and room.question_ends_at:
+                ends = _as_naive(room.question_ends_at)
+                remaining = max(0.0, (ends - _utcnow()).total_seconds())
+            remaining = max(1.0, remaining + delta)
+            self._paused_remaining[room_code] = remaining
+            room.question_ends_at = _utcnow() + timedelta(seconds=remaining)
+        else:
+            if not room.question_ends_at:
+                raise ValueError("GAME_NOT_STARTED")
+            ends = _as_naive(room.question_ends_at) + timedelta(seconds=delta)
+            if (ends - _utcnow()).total_seconds() < 1:
+                ends = _utcnow() + timedelta(seconds=1)
+            room.question_ends_at = ends
+
+        db.commit()
+        ends = _as_naive(room.question_ends_at)
+        remaining = max(0.0, (ends - _utcnow()).total_seconds())
+        if room.status == RoomStatus.PAUSED.value:
+            remaining = float(self._paused_remaining.get(room_code, remaining))
+
+        payload = {
+            "type": "timer_adjusted",
+            "question_id": room.current_question_id,
+            "ends_at": ends.isoformat() + "Z",
+            "remaining_seconds": remaining,
+            "delta_seconds": delta,
+            **self.room_state_payload(db, room),
+        }
+        await ws_manager.broadcast(room_code, payload)
         return payload
 
     async def finish_game(self, db: Session, room_code: str) -> dict:

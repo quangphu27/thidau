@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { uploadApi } from '../services/api'
 import ScratchBlockBuilder from './ScratchBlockBuilder'
+import MediaPlayer from './MediaPlayer'
 
 export function questionTypeLabel(t) {
   if (t === 'ESSAY') return 'Tự luận'
@@ -217,18 +218,32 @@ export default function QuestionFormEditor({
         </select>
       </div>
       <div>
-        <label className="text-sm text-arena-ink/50">Media câu hỏi</label>
+        <label className="text-sm text-arena-ink/50">Media câu hỏi (ảnh / mp3·wav·ogg / mp4·webm)</label>
         <input
           type="file"
-          accept="image/*,audio/*,video/*"
+          accept="image/*,audio/*,video/*,.mp3,.wav,.ogg,.m4a,.mp4,.webm"
           disabled={uploading}
           className="mt-1 block w-full text-sm"
           onChange={(e) => e.target.files?.[0] && uploadMedia(e.target.files[0])}
         />
         {form.media_url && (
-          <p className="mt-1 text-xs text-arena-cyan">
-            {form.media_type}: {form.media_url}
-          </p>
+          <div className="mt-2 space-y-2">
+            <div className="flex flex-wrap items-center gap-2 text-xs text-arena-cyan">
+              <span>
+                {form.media_type}: {form.media_url}
+              </span>
+              <button
+                type="button"
+                className="rounded bg-red-500/15 px-2 py-0.5 font-bold text-arena-red"
+                onClick={() =>
+                  setForm({ ...form, media_type: 'NONE', media_url: null })
+                }
+              >
+                Xóa media
+              </button>
+            </div>
+            <MediaPlayer mediaType={form.media_type} mediaUrl={form.media_url} compact />
+          </div>
         )}
       </div>
 

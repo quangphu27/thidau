@@ -29,8 +29,12 @@ export function getWsBase() {
 
 export function mediaUrl(path) {
   if (!path) return ''
-  if (path.startsWith('http')) return path
-  return `${getApiBase()}${path}`
+  if (path.startsWith('http://') || path.startsWith('https://')) return path
+  // Dev: always same-origin /media → Vite proxy (works on localhost + LAN phones)
+  if (import.meta.env.DEV) {
+    return path.startsWith('/') ? path : `/${path}`
+  }
+  return `${getApiBase()}${path.startsWith('/') ? path : `/${path}`}`
 }
 
 export const ERROR_VI = {
@@ -59,6 +63,8 @@ export const ERROR_VI = {
   COOLDOWN: 'Chờ một chút rồi chơi tiếp nhé!',
   RETRY_COOLDOWN: 'Nhập sai — đợi rồi thử lại',
   OPTION_ELIMINATED: 'Đáp án này đã bị loại',
+  MEDIA_TYPE_UNSUPPORTED:
+    'File media không hỗ trợ — dùng ảnh (jpg/png), audio (mp3/wav/ogg/m4a) hoặc video (mp4/webm)',
 }
 
 export function errorMessage(code) {

@@ -55,6 +55,22 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
           })
         }
         break
+      case 'timer_adjusted':
+        setRoomState((prev) => ({
+          ...prev,
+          ...data,
+          question_ends_at: data.ends_at || data.question_ends_at || prev?.question_ends_at,
+        }))
+        setQuestion((prev) =>
+          prev
+            ? {
+                ...prev,
+                ends_at: data.ends_at || prev.ends_at,
+                remaining_seconds: data.remaining_seconds ?? prev.remaining_seconds,
+              }
+            : prev,
+        )
+        break
       case 'game_started':
         setRoomState((prev) => ({ ...prev, ...data }))
         if (data.rankings) setRankings(data.rankings)

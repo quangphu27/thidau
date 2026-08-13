@@ -63,12 +63,14 @@ export default function RoomControlPage() {
     }
   }
 
-  if (finished) {
+  if (finished || roomState?.status === 'FINISHED') {
     return (
       <WinnerScreen
-        winner={finished.winner}
-        rankings={finished.rankings || rankings}
-        onContinue={() => window.location.href = '/admin/rooms'}
+        winner={finished?.winner || rankings[0] || null}
+        rankings={finished?.rankings || rankings}
+        onContinue={() => {
+          window.location.href = '/admin/rooms'
+        }}
       />
     )
   }
@@ -204,6 +206,32 @@ export default function RoomControlPage() {
           <p className="font-display text-3xl font-black text-arena-cyan">
             ⏱ {remaining != null ? Math.ceil(remaining) : '—'}s
           </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <button
+              type="button"
+              disabled={
+                busy ||
+                (roomState?.status !== 'RUNNING' && roomState?.status !== 'PAUSED') ||
+                !question
+              }
+              onClick={() => act(() => roomApi.adjustTime(code, -5))}
+              className="rounded-lg bg-stone-200 px-3 py-1.5 text-sm font-black disabled:opacity-40"
+            >
+              −5s
+            </button>
+            <button
+              type="button"
+              disabled={
+                busy ||
+                (roomState?.status !== 'RUNNING' && roomState?.status !== 'PAUSED') ||
+                !question
+              }
+              onClick={() => act(() => roomApi.adjustTime(code, 5))}
+              className="rounded-lg bg-arena-cyan px-3 py-1.5 text-sm font-black text-white disabled:opacity-40"
+            >
+              +5s
+            </button>
+          </div>
           <p className="mt-1 text-sm text-arena-ink/50">
             Đã trả lời: {typeof answered === 'number' ? answered : answeredCount} · Chưa: {pending}
             {roomState?.question_answered ? ' · 🔒 Đã có đáp án đúng' : ''}

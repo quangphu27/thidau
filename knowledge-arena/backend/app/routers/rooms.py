@@ -210,6 +210,22 @@ async def resume_room(
         raise HTTPException(status_code=400, detail=str(e))
 
 
+@router.post("/{code}/adjust-time")
+async def adjust_time(
+    code: str,
+    delta_seconds: int = 5,
+    db: Session = Depends(get_db),
+    admin: Admin = Depends(get_current_admin),
+):
+    """Adjust current question timer by delta_seconds (e.g. +5 or -5)."""
+    try:
+        return await game_service.adjust_question_time(
+            db, code.upper(), int(delta_seconds)
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @router.post("/{code}/finish")
 async def finish_room(
     code: str,

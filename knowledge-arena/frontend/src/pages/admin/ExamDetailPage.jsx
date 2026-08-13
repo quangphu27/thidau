@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import BankPickerModal from '../../components/BankPickerModal'
+import MediaPlayer from '../../components/MediaPlayer'
 import QuestionFormEditor, {
   buildQuestionPayload,
   defaultQuestionForm,
@@ -264,6 +265,11 @@ export default function ExamDetailPage() {
                   Câu {idx + 1} · {questionTypeLabel(q.question_type)} · {q.points || 10} điểm
                 </span>
                 <p className="mt-1 font-medium whitespace-pre-wrap">{q.content}</p>
+                {q.media_url && q.media_type && q.media_type !== 'NONE' && (
+                  <div className="mt-2 max-w-md">
+                    <MediaPlayer mediaType={q.media_type} mediaUrl={q.media_url} compact />
+                  </div>
+                )}
                 {q.question_type === 'MULTIPLE_CHOICE' && (
                   <ul className="mt-2 space-y-1 text-sm text-arena-ink/70">
                     {q.options?.map((o, i) => (

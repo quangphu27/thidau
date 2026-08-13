@@ -71,9 +71,12 @@ export default function PresentationPage() {
     setCountdownWinner('')
   }, [question?.id])
 
-  if (finished) {
+  if (finished || roomState?.status === 'FINISHED') {
     return (
-      <WinnerScreen winner={finished.winner} rankings={finished.rankings || rankings} />
+      <WinnerScreen
+        winner={finished?.winner || rankings[0] || null}
+        rankings={finished?.rankings || rankings}
+      />
     )
   }
 
@@ -135,9 +138,11 @@ export default function PresentationPage() {
             Câu {question.question_number} / {question.total_questions}
           </p>
           <MediaPlayer
+            key={`present-media-${question.id}`}
             mediaType={question.media_type}
             mediaUrl={question.media_url}
             className="my-4 max-h-80"
+            autoPlay={question.media_type === 'AUDIO' || question.media_type === 'VIDEO'}
           />
           <h2 className="mt-4 whitespace-pre-wrap text-3xl font-extrabold leading-tight text-arena-ink md:text-5xl">
             {question.content}
