@@ -8,6 +8,7 @@ from app.database import get_db
 from app.models import Admin, Exam, Player, Room, RoomStatus, Submission
 from app.schemas import (
     GradeEssayRequest,
+    JudgeBuzzerRequest,
     JoinRoomRequest,
     JoinRoomResponse,
     PlayerOut,
@@ -49,6 +50,7 @@ def _room_out(room: Room, request: Optional[Request] = None) -> RoomOut:
         room_code=room.room_code,
         exam_id=room.exam_id,
         exam_title=exam_title,
+        mode=getattr(room, "mode", None) or "QUIZ",
         status=room.status,
         current_question_id=room.current_question_id,
         current_question_index=room.current_question_index,
@@ -70,7 +72,10 @@ def create_room(
     admin: Admin = Depends(get_current_admin),
 ):
     try:
-        room = game_service.create_room(db, body.exam_id)
+        mode = (body.mode or "QUIZ").upper()
+        if mode not in ("QUIZ", "BUZZER"):
+            mode = "QUIZ"
+        room = game_service.create_room(db, body.exam_id, mode=mode)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     room = (
@@ -234,6 +239,33 @@ async def finish_room(
 ):
     try:
         return await game_service.finish_game(db, code.upper())
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/{code}/judge")
+async def judge_buzzer(
+    code: str,
+    body: JudgeBuzzerRequest,
+    db: Session = Depends(get_db),
+    admin: Admin = Depends(get_current_admin),
+):
+    """Admin marks buzzer claimer correct/wrong."""
+    try:
+        return await game_service.judge_buzzer(db, code.upper(), bool(body.correct))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/{code}/reveal-buzzer")
+async def reveal_buzzer(
+    code: str,
+    db: Session = Depends(get_db),
+    admin: Admin = Depends(get_current_admin),
+):
+    """After reading aloud: reveal question + spawn random buzzer."""
+    try:
+        return await game_service.reveal_buzzer(db, code.upper())
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

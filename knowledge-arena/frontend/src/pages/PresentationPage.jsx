@@ -3,21 +3,51 @@ import { useParams } from 'react-router-dom'
 import { useRoomSocket } from '../hooks/useRoomSocket'
 import { useServerTimer } from '../hooks/useServerTimer'
 import { useBattleFighters } from '../hooks/useBattleFighters'
+import { useRoomVoice } from '../hooks/useRoomVoice'
 import AnswerToast from '../components/AnswerToast'
 import BattleArena from '../components/BattleArena'
+import BuzzerButton from '../components/BuzzerButton'
 import NextQuestionCountdown from '../components/NextQuestionCountdown'
 import WinnerScreen from '../components/WinnerScreen'
 import MediaPlayer from '../components/MediaPlayer'
 
 export default function PresentationPage() {
   const { code } = useParams()
-  const { roomState, question, rankings, toast, finished, clearToast, battleEvent, eliminatedIds } =
-    useRoomSocket(code, { role: 'presentation' })
+  const {
+    roomState,
+    question,
+    rankings,
+    toast,
+    finished,
+    clearToast,
+    battleEvent,
+    eliminatedIds,
+    buzzer,
+    lastEvent,
+    status,
+    wsRef,
+  } = useRoomSocket(code, { role: 'presentation' })
+
+  const voice = useRoomVoice({
+    wsRef,
+    role: 'presentation',
+    playerId: null,
+    lastEvent,
+    status,
+  })
+
+  const isBuzzer = roomState?.mode === 'BUZZER'
 
   const remaining = useServerTimer(
     question?.ends_at || roomState?.question_ends_at,
     roomState?.status === 'PAUSED',
   )
+  const answerLeft = useServerTimer(
+    isBuzzer && buzzer.phase === 'CLAIMED' ? buzzer.answer_ends_at : null,
+    false,
+  )
+  const answerExpired =
+    isBuzzer && buzzer.phase === 'CLAIMED' && answerLeft != null && answerLeft <= 0
 
   const players = roomState?.players || []
   const scoreMap = Object.fromEntries(
@@ -91,12 +121,28 @@ export default function PresentationPage() {
       <header className="relative z-10 flex flex-wrap items-center justify-between gap-4">
         <h1 className="font-display text-2xl font-bold text-arena-accent md:text-4xl">
           ĐẤU TRƯỜNG KIẾN THỨC
+          {isBuzzer ? ' · CHUÔNG' : ''}
         </h1>
         <div className="flex items-center gap-4 text-xl font-bold text-arena-ink md:text-3xl">
+          {(voice.adminSpeaking || voice.needUnlock || voice.listening) && (
+            <button
+              type="button"
+              onClick={voice.unlockAudio}
+              className={`rounded-full px-4 py-2 text-base font-black ${
+                voice.listening ? 'bg-emerald-500 text-white' : 'bg-amber-400'
+              }`}
+            >
+              {voice.listening
+                ? '🔊 Đang nghe admin'
+                : voice.needUnlock
+                  ? '👆 Bật loa'
+                  : '🎙️ Admin đang nói'}
+            </button>
+          )}
           <span className="rounded-full bg-white px-4 py-2 shadow">
             {roomState?.player_count || 0} HS
           </span>
-          {remaining != null && roomState?.status === 'RUNNING' && countdown == null && (
+          {!isBuzzer && remaining != null && roomState?.status === 'RUNNING' && countdown == null && (
             <span
               className={`rounded-full px-5 py-2 font-display font-bold text-white ${
                 remaining <= 5 ? 'bg-arena-red' : 'bg-arena-cyan'
@@ -134,20 +180,47 @@ export default function PresentationPage() {
 
       {question && roomState?.status !== 'WAITING' && (
         <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center py-8">
+          {isBuzzer && buzzer.revealed && (
+            <BuzzerButton
+              visible={buzzer.phase === 'VISIBLE'}
+              claimed={buzzer.phase === 'CLAIMED'}
+              claimerName={buzzer.claimer_name}
+              answerLeft={answerLeft}
+              answerExpired={answerExpired}
+              x={buzzer.x}
+              y={buzzer.y}
+              disabled
+            />
+          )}
           <p className="font-display text-xl font-bold text-arena-pink md:text-2xl">
             Câu {question.question_number} / {question.total_questions}
+            {isBuzzer ? ` · ${question.points || 10} điểm` : ''}
           </p>
-          <MediaPlayer
-            key={`present-media-${question.id}`}
-            mediaType={question.media_type}
-            mediaUrl={question.media_url}
-            className="my-4 max-h-80"
-            autoPlay={question.media_type === 'AUDIO' || question.media_type === 'VIDEO'}
-          />
-          <h2 className="mt-4 whitespace-pre-wrap text-3xl font-extrabold leading-tight text-arena-ink md:text-5xl">
-            {question.content}
-          </h2>
-          {question.question_type === 'BLOCK_PUZZLE' && (
+          {isBuzzer && !buzzer.revealed ? (
+            <div className="mt-10 text-center">
+              <p className="text-6xl">🎧</p>
+              <h2 className="mt-6 font-display text-4xl font-black text-arena-accent md:text-6xl">
+                Hãy lắng nghe câu hỏi!
+              </h2>
+              <p className="mt-4 text-2xl font-bold text-arena-ink/60">
+                Admin đang đọc qua mic...
+              </p>
+            </div>
+          ) : (
+            <>
+              <MediaPlayer
+                key={`present-media-${question.id}`}
+                mediaType={question.media_type}
+                mediaUrl={question.media_url}
+                className="my-4 max-h-80"
+                autoPlay={question.media_type === 'AUDIO' || question.media_type === 'VIDEO'}
+              />
+              <h2 className="mt-4 whitespace-pre-wrap text-3xl font-extrabold leading-tight text-arena-ink md:text-5xl">
+                {question.content}
+              </h2>
+            </>
+          )}
+          {!isBuzzer && question.question_type === 'BLOCK_PUZZLE' && (
             <div className="mt-8">
               <p className="mb-3 text-center text-xl font-extrabold text-arena-cyan">
                 Ghép khối Scratch · {question.points || 20} điểm
@@ -165,7 +238,7 @@ export default function PresentationPage() {
               </div>
             </div>
           )}
-          {question.question_type === 'MULTIPLE_CHOICE' && (
+          {!isBuzzer && question.question_type === 'MULTIPLE_CHOICE' && (
             <div className="mt-8 grid gap-4 md:grid-cols-2">
               {question.options?.map((o, i) => {
                 const colors = ['#4cc9f0', '#ff6b9d', '#ffb703', '#06d6a0']

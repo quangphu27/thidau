@@ -81,6 +81,35 @@ class WebSocketManager:
                 except Exception:
                     pass
 
+    async def send_to_peer(self, room_code: str, peer_id: str, event: dict):
+        """Route by peer_id: player_id, 'admin', or 'presentation'."""
+        payload = json.dumps(event, default=str, ensure_ascii=False)
+        async with self._lock:
+            conns = list(self.rooms.get(room_code, []))
+        for conn in conns:
+            cid = conn.player_id if conn.role == "student" else conn.role
+            if cid == peer_id or (
+                peer_id == "admin" and conn.role == "admin"
+            ) or (peer_id == "presentation" and conn.role == "presentation"):
+                try:
+                    await conn.websocket.send_text(payload)
+                except Exception:
+                    pass
+
+    def list_voice_peers(self, room_code: str) -> List[dict]:
+        """Listeners that should receive admin mic (students + presentation)."""
+        peers = []
+        for conn in self.rooms.get(room_code, []):
+            if conn.role == "student" and conn.player_id:
+                peers.append(
+                    {"peer_id": conn.player_id, "role": "student", "player_id": conn.player_id}
+                )
+            elif conn.role == "presentation":
+                peers.append(
+                    {"peer_id": "presentation", "role": "presentation", "player_id": None}
+                )
+        return peers
+
     async def send_to_connection(self, websocket: WebSocket, event: dict):
         payload = json.dumps(event, default=str, ensure_ascii=False)
         try:

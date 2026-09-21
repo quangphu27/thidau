@@ -1213,6 +1213,532 @@
           "order_index": 18
         }
       ]
+    },
+    {
+      "title": "Scratch lớp 5-6",
+      "description": "20 câu Scratch vui cho lớp 5–6: mèo bắt chuột, cá lớn nuốt cá bé, đàn piano, vẽ hoa sen (tự luận nhập số)",
+      "time_per_question": 60,
+      "questions": [
+        {
+          "content": "Trò chơi «Mèo bắt chuột» trong Scratch:\n\n• Mỗi lần chạy, mèo tiến thêm 5 bước\n• Mèo chạy liên tục 6 lần\n\nHỏi: mèo đã đi tất cả bao nhiêu bước?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "30",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "30 bước",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            }
+          ],
+          "order_index": 0
+        },
+        {
+          "content": "Trò chơi «Mèo bắt chuột»:\n\n• Điểm ban đầu = 0\n• Mỗi lần bắt được chuột: được thêm 10 điểm\n• Mèo bắt được 4 lần\n• Sau đó bị trừ 5 điểm vì để chuột chạy thoát\n\nĐiểm cuối cùng của mèo là bao nhiêu?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "35",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "35 điểm",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            }
+          ],
+          "order_index": 1
+        },
+        {
+          "content": "Trong Scratch, mèo dùng vòng lặp «lặp lại 10 lần»:\n\n• Mỗi lần lặp: điểm tăng thêm 3\n• Điểm ban đầu = 0\n\nSau khi vòng lặp chạy xong, điểm bằng bao nhiêu?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "30",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "30 điểm",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            }
+          ],
+          "order_index": 2
+        },
+        {
+          "content": "Trò chơi tạo thêm chuột bằng nhân bản (clone):\n\n• Lúc bắt đầu: tạo 4 chuột clone\n• Sau đó tạo thêm 3 chuột clone nữa\n• Không xóa clone nào\n\nTổng số chuột clone trên sân là bao nhiêu?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "7",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "7 clone",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "7 chuột",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            }
+          ],
+          "order_index": 3
+        },
+        {
+          "content": "Chuột có biến «mạng»:\n\n• Ban đầu mạng = 3\n• Mỗi lần bị mèo chạm: mạng giảm 1\n• Chuột bị chạm đúng 3 lần\n\nLúc này biến «mạng» bằng bao nhiêu?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "0",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            }
+          ],
+          "order_index": 4
+        },
+        {
+          "content": "Trò chơi «Cá lớn nuốt cá bé»:\n\n• Kích thước cá của bạn ban đầu = 40%\n• Mỗi lần nuốt cá bé: kích thước tăng thêm 10%\n• Bạn nuốt được 3 con cá bé\n\nKích thước cuối cùng là bao nhiêu phần trăm?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "70",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "70%",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "70 phần trăm",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            }
+          ],
+          "order_index": 5
+        },
+        {
+          "content": "Trong trò «Cá lớn nuốt cá bé»:\n\n• Mỗi lần nuốt được 1 cá bé: được 5 điểm\n• Bạn nuốt được 6 con\n• Không bị trừ điểm\n\nTổng điểm là bao nhiêu?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "30",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "30 điểm",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            }
+          ],
+          "order_index": 6
+        },
+        {
+          "content": "Tạo cá địch bằng clone:\n\n• Gửi tin nhắn «tạo cá» đúng 3 lần\n• Mỗi lần nhận tin nhắn: tạo 4 clone cá\n• Không xóa clone nào\n\nTổng số clone cá được tạo là bao nhiêu?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "12",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "12 clone",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            }
+          ],
+          "order_index": 7
+        },
+        {
+          "content": "Cá của bạn chỉ nuốt được cá nhỏ hơn mình:\n\n• Cá bạn có kích thước 50\n• Gặp lần lượt các cá: 30, 60, 20, 45, 70\n• Nuốt được khi số của đối thủ nhỏ hơn 50\n\nBạn nuốt được bao nhiêu con?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "3",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "3 con",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            }
+          ],
+          "order_index": 8
+        },
+        {
+          "content": "Cá di chuyển bằng phím mũi tên:\n\n• Ban đầu tọa độ x = 0\n• Mỗi lần ấn phải: x tăng 10\n• Mỗi lần ấn trái: x giảm 10\n• Ấn phải 5 lần, rồi ấn trái 2 lần\n\nTọa độ x lúc cuối bằng bao nhiêu?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "30",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            }
+          ],
+          "order_index": 9
+        },
+        {
+          "content": "Dự án «Đàn piano» trong Scratch:\n\n• Mỗi nốt phát trong 1 giây\n• Bạn chơi liên tiếp 4 nốt (không nghỉ giữa các nốt)\n\nTổng thời gian phát nhạc là bao nhiêu giây?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "4",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "4 giây",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            }
+          ],
+          "order_index": 10
+        },
+        {
+          "content": "Piano dùng biến «số_nốt»:\n\n• Ban đầu số_nốt = 1\n• Mỗi lần bấm phím: số_nốt tăng thêm 1\n• Bạn bấm phím đúng 7 lần\n\nGiá trị biến số_nốt sau cùng là bao nhiêu?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "8",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            }
+          ],
+          "order_index": 11
+        },
+        {
+          "content": "Tạo các phím piano bằng clone:\n\n• Ban đầu biến i = 0\n• Lặp 5 lần: tạo 1 clone, rồi tăng i thêm 1\n• Mỗi clone đặt vị trí x = 20 × i\n\nClone cuối (khi i = 4) có tọa độ x bằng bao nhiêu?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "80",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            }
+          ],
+          "order_index": 12
+        },
+        {
+          "content": "Khối «phát âm thanh … cho đến khi kết thúc» kéo dài 2 giây.\n\n• Đặt khối này trong vòng lặp «lặp 3 lần»\n• Không có khối chờ nào khác\n\nChương trình mất bao nhiêu giây để chạy xong vòng lặp?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "6",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "6 giây",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            }
+          ],
+          "order_index": 13
+        },
+        {
+          "content": "Nhân vật «Nhạc trưởng» gửi tin nhắn «chơi»:\n\n• Gửi tin nhắn đúng 5 lần\n• Mỗi lần nhận tin, nhân vật «Phím» tăng biến «đếm» thêm 1\n• Ban đầu đếm = 0\n\nSau khi nhận đủ tin nhắn, biến đếm bằng bao nhiêu?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "5",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            }
+          ],
+          "order_index": 14
+        },
+        {
+          "content": "Vẽ hoa sen bằng bút trong Scratch:\n\n• Hoa có 6 cánh\n• Mỗi cánh dùng khối «di chuyển 50» đúng 2 lần\n\nTổng số lần dùng khối «di chuyển 50» là bao nhiêu?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "12",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "12 lần",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            }
+          ],
+          "order_index": 15
+        },
+        {
+          "content": "Vẽ vòng tròn nhụy hoa:\n\n• Mỗi lần: di chuyển một chút rồi xoay phải 30 độ\n• Muốn xoay đủ 1 vòng tròn (360 độ)\n\nCần lặp bao nhiêu lần?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "12",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "12 lần",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            }
+          ],
+          "order_index": 16
+        },
+        {
+          "content": "Vẽ hoa sen 2 lớp:\n\n• Lớp ngoài: 8 cánh\n• Lớp trong: 5 cánh\n• Mỗi cánh tính là 1 nét vẽ\n\nTổng số cánh (nét vẽ) là bao nhiêu?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "13",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "13 cánh",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            },
+            {
+              "content": "13 nét",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 2
+            }
+          ],
+          "order_index": 17
+        },
+        {
+          "content": "Đổi màu bút khi vẽ hoa:\n\n• Biến màu ban đầu = 0\n• Mỗi cánh: tăng màu thêm 10 rồi mới vẽ\n• Vẽ đúng 5 cánh\n\nSau cánh cuối, biến màu bằng bao nhiêu?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "50",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            }
+          ],
+          "order_index": 18
+        },
+        {
+          "content": "Vẽ 3 lá sen:\n\n• Mỗi lá: lặp 10 lần khối «di chuyển 4»\n• Vẽ đủ 3 lá\n\nTổng số lần chạy khối «di chuyển 4» là bao nhiêu?",
+          "question_type": "ESSAY",
+          "media_type": "NONE",
+          "media_url": null,
+          "media_position": "BEFORE",
+          "points": 20,
+          "input_mode": "NUMBER",
+          "blocks_json": null,
+          "options": [
+            {
+              "content": "30",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 0
+            },
+            {
+              "content": "30 lần",
+              "is_correct": true,
+              "media_type": "NONE",
+              "media_url": null,
+              "order_index": 1
+            }
+          ],
+          "order_index": 19
+        }
+      ]
     }
   ],
   "bank_questions": [
@@ -3217,6 +3743,525 @@
         }
       ],
       "tags": "tự luận, logic, vỏ chai"
+    },
+    {
+      "content": "Trò chơi «Mèo bắt chuột» trong Scratch:\n\n• Mỗi lần chạy, mèo tiến thêm 5 bước\n• Mèo chạy liên tục 6 lần\n\nHỏi: mèo đã đi tất cả bao nhiêu bước?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "30",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "30 bước",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        }
+      ],
+      "tags": "scratch, lớp 5-6, mèo bắt chuột"
+    },
+    {
+      "content": "Trò chơi «Mèo bắt chuột»:\n\n• Điểm ban đầu = 0\n• Mỗi lần bắt được chuột: được thêm 10 điểm\n• Mèo bắt được 4 lần\n• Sau đó bị trừ 5 điểm vì để chuột chạy thoát\n\nĐiểm cuối cùng của mèo là bao nhiêu?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "35",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "35 điểm",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        }
+      ],
+      "tags": "scratch, lớp 5-6, mèo bắt chuột, biến điểm"
+    },
+    {
+      "content": "Trong Scratch, mèo dùng vòng lặp «lặp lại 10 lần»:\n\n• Mỗi lần lặp: điểm tăng thêm 3\n• Điểm ban đầu = 0\n\nSau khi vòng lặp chạy xong, điểm bằng bao nhiêu?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "30",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "30 điểm",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        }
+      ],
+      "tags": "scratch, lớp 5-6, mèo bắt chuột, vòng lặp"
+    },
+    {
+      "content": "Trò chơi tạo thêm chuột bằng nhân bản (clone):\n\n• Lúc bắt đầu: tạo 4 chuột clone\n• Sau đó tạo thêm 3 chuột clone nữa\n• Không xóa clone nào\n\nTổng số chuột clone trên sân là bao nhiêu?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "7",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "7 clone",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "7 chuột",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        }
+      ],
+      "tags": "scratch, lớp 5-6, mèo bắt chuột, clone"
+    },
+    {
+      "content": "Chuột có biến «mạng»:\n\n• Ban đầu mạng = 3\n• Mỗi lần bị mèo chạm: mạng giảm 1\n• Chuột bị chạm đúng 3 lần\n\nLúc này biến «mạng» bằng bao nhiêu?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "0",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        }
+      ],
+      "tags": "scratch, lớp 5-6, mèo bắt chuột, biến"
+    },
+    {
+      "content": "Trò chơi «Cá lớn nuốt cá bé»:\n\n• Kích thước cá của bạn ban đầu = 40%\n• Mỗi lần nuốt cá bé: kích thước tăng thêm 10%\n• Bạn nuốt được 3 con cá bé\n\nKích thước cuối cùng là bao nhiêu phần trăm?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "70",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "70%",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "70 phần trăm",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        }
+      ],
+      "tags": "scratch, lớp 5-6, cá lớn nuốt cá bé"
+    },
+    {
+      "content": "Trong trò «Cá lớn nuốt cá bé»:\n\n• Mỗi lần nuốt được 1 cá bé: được 5 điểm\n• Bạn nuốt được 6 con\n• Không bị trừ điểm\n\nTổng điểm là bao nhiêu?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "30",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "30 điểm",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        }
+      ],
+      "tags": "scratch, lớp 5-6, cá lớn nuốt cá bé, điểm"
+    },
+    {
+      "content": "Tạo cá địch bằng clone:\n\n• Gửi tin nhắn «tạo cá» đúng 3 lần\n• Mỗi lần nhận tin nhắn: tạo 4 clone cá\n• Không xóa clone nào\n\nTổng số clone cá được tạo là bao nhiêu?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "12",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "12 clone",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        }
+      ],
+      "tags": "scratch, lớp 5-6, cá lớn nuốt cá bé, clone"
+    },
+    {
+      "content": "Cá của bạn chỉ nuốt được cá nhỏ hơn mình:\n\n• Cá bạn có kích thước 50\n• Gặp lần lượt các cá: 30, 60, 20, 45, 70\n• Nuốt được khi số của đối thủ nhỏ hơn 50\n\nBạn nuốt được bao nhiêu con?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "3",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "3 con",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        }
+      ],
+      "tags": "scratch, lớp 5-6, cá lớn nuốt cá bé, điều kiện"
+    },
+    {
+      "content": "Cá di chuyển bằng phím mũi tên:\n\n• Ban đầu tọa độ x = 0\n• Mỗi lần ấn phải: x tăng 10\n• Mỗi lần ấn trái: x giảm 10\n• Ấn phải 5 lần, rồi ấn trái 2 lần\n\nTọa độ x lúc cuối bằng bao nhiêu?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "30",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        }
+      ],
+      "tags": "scratch, lớp 5-6, cá lớn nuốt cá bé, tọa độ"
+    },
+    {
+      "content": "Dự án «Đàn piano» trong Scratch:\n\n• Mỗi nốt phát trong 1 giây\n• Bạn chơi liên tiếp 4 nốt (không nghỉ giữa các nốt)\n\nTổng thời gian phát nhạc là bao nhiêu giây?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "4",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "4 giây",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        }
+      ],
+      "tags": "scratch, lớp 5-6, đàn piano"
+    },
+    {
+      "content": "Piano dùng biến «số_nốt»:\n\n• Ban đầu số_nốt = 1\n• Mỗi lần bấm phím: số_nốt tăng thêm 1\n• Bạn bấm phím đúng 7 lần\n\nGiá trị biến số_nốt sau cùng là bao nhiêu?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "8",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        }
+      ],
+      "tags": "scratch, lớp 5-6, đàn piano, biến"
+    },
+    {
+      "content": "Tạo các phím piano bằng clone:\n\n• Ban đầu biến i = 0\n• Lặp 5 lần: tạo 1 clone, rồi tăng i thêm 1\n• Mỗi clone đặt vị trí x = 20 × i\n\nClone cuối (khi i = 4) có tọa độ x bằng bao nhiêu?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "80",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        }
+      ],
+      "tags": "scratch, lớp 5-6, đàn piano, clone"
+    },
+    {
+      "content": "Khối «phát âm thanh … cho đến khi kết thúc» kéo dài 2 giây.\n\n• Đặt khối này trong vòng lặp «lặp 3 lần»\n• Không có khối chờ nào khác\n\nChương trình mất bao nhiêu giây để chạy xong vòng lặp?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "6",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "6 giây",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        }
+      ],
+      "tags": "scratch, lớp 5-6, đàn piano, âm thanh"
+    },
+    {
+      "content": "Nhân vật «Nhạc trưởng» gửi tin nhắn «chơi»:\n\n• Gửi tin nhắn đúng 5 lần\n• Mỗi lần nhận tin, nhân vật «Phím» tăng biến «đếm» thêm 1\n• Ban đầu đếm = 0\n\nSau khi nhận đủ tin nhắn, biến đếm bằng bao nhiêu?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "5",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        }
+      ],
+      "tags": "scratch, lớp 5-6, đàn piano, tin nhắn"
+    },
+    {
+      "content": "Vẽ hoa sen bằng bút trong Scratch:\n\n• Hoa có 6 cánh\n• Mỗi cánh dùng khối «di chuyển 50» đúng 2 lần\n\nTổng số lần dùng khối «di chuyển 50» là bao nhiêu?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "12",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "12 lần",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        }
+      ],
+      "tags": "scratch, lớp 5-6, vẽ hoa sen"
+    },
+    {
+      "content": "Vẽ vòng tròn nhụy hoa:\n\n• Mỗi lần: di chuyển một chút rồi xoay phải 30 độ\n• Muốn xoay đủ 1 vòng tròn (360 độ)\n\nCần lặp bao nhiêu lần?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "12",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "12 lần",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        }
+      ],
+      "tags": "scratch, lớp 5-6, vẽ hoa sen, vòng lặp"
+    },
+    {
+      "content": "Vẽ hoa sen 2 lớp:\n\n• Lớp ngoài: 8 cánh\n• Lớp trong: 5 cánh\n• Mỗi cánh tính là 1 nét vẽ\n\nTổng số cánh (nét vẽ) là bao nhiêu?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "13",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "13 cánh",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        },
+        {
+          "content": "13 nét",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 2
+        }
+      ],
+      "tags": "scratch, lớp 5-6, vẽ hoa sen"
+    },
+    {
+      "content": "Đổi màu bút khi vẽ hoa:\n\n• Biến màu ban đầu = 0\n• Mỗi cánh: tăng màu thêm 10 rồi mới vẽ\n• Vẽ đúng 5 cánh\n\nSau cánh cuối, biến màu bằng bao nhiêu?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "50",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        }
+      ],
+      "tags": "scratch, lớp 5-6, vẽ hoa sen, màu"
+    },
+    {
+      "content": "Vẽ 3 lá sen:\n\n• Mỗi lá: lặp 10 lần khối «di chuyển 4»\n• Vẽ đủ 3 lá\n\nTổng số lần chạy khối «di chuyển 4» là bao nhiêu?",
+      "question_type": "ESSAY",
+      "media_type": "NONE",
+      "media_url": null,
+      "media_position": "BEFORE",
+      "points": 20,
+      "input_mode": "NUMBER",
+      "blocks_json": null,
+      "options": [
+        {
+          "content": "30",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 0
+        },
+        {
+          "content": "30 lần",
+          "is_correct": true,
+          "media_type": "NONE",
+          "media_url": null,
+          "order_index": 1
+        }
+      ],
+      "tags": "scratch, lớp 5-6, vẽ hoa sen, lá sen"
     }
   ]
 }

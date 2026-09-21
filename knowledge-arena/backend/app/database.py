@@ -83,6 +83,15 @@ def init_db():
                             "ALTER TABLE bank_questions ADD COLUMN input_mode VARCHAR(20) DEFAULT 'TEXT'"
                         )
                     )
+        if "rooms" in insp.get_table_names():
+            rcols = {c["name"] for c in insp.get_columns("rooms")}
+            with engine.begin() as conn:
+                if "mode" not in rcols:
+                    conn.execute(
+                        text(
+                            "ALTER TABLE rooms ADD COLUMN mode VARCHAR(20) DEFAULT 'QUIZ'"
+                        )
+                    )
     except Exception:
         pass
 

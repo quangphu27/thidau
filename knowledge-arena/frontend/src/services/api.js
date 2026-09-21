@@ -66,7 +66,7 @@ export const bankApi = {
 export const roomApi = {
   list: () => api.get('/api/rooms'),
   get: (code) => api.get(`/api/rooms/${code}`),
-  create: (exam_id) => api.post('/api/rooms', { exam_id }),
+  create: (exam_id, mode = 'QUIZ') => api.post('/api/rooms', { exam_id, mode }),
   remove: (code) => api.delete(`/api/rooms/${code}`),
   join: (code, name) => api.post(`/api/rooms/${code}/join`, { name }),
   start: (code) => api.post(`/api/rooms/${code}/start`),
@@ -76,6 +76,8 @@ export const roomApi = {
   adjustTime: (code, delta_seconds) =>
     api.post(`/api/rooms/${code}/adjust-time`, null, { params: { delta_seconds } }),
   finish: (code) => api.post(`/api/rooms/${code}/finish`),
+  judge: (code, correct) => api.post(`/api/rooms/${code}/judge`, { correct: !!correct }),
+  revealBuzzer: (code) => api.post(`/api/rooms/${code}/reveal-buzzer`),
   players: (code) => api.get(`/api/rooms/${code}/players`),
   results: (code) => api.get(`/api/rooms/${code}/results`),
   state: (code) => api.get(`/api/rooms/${code}/state`),

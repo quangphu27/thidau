@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import random
 import time
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
@@ -14,6 +15,7 @@ from app.models import (
     Player,
     Question,
     Room,
+    RoomMode,
     RoomStatus,
     Submission,
     QuestionType,
@@ -50,6 +52,7 @@ class GameService:
     CORRECT_SETTLE_MS = 1000  # pause before countdown
     CORRECT_COUNTDOWN_SEC = 3
     WRONG_RETRY_SEC = 10
+    BUZZER_ANSWER_SEC = 10
 
     def correct_effect_ms(self, victim_count: int) -> int:
         n = max(0, int(victim_count))
@@ -69,6 +72,149 @@ class GameService:
         self._eliminated_options: Dict[tuple, set] = {}
         # room_code -> seconds remaining when paused
         self._paused_remaining: Dict[str, float] = {}
+        # Buzzer duel in-memory state per room
+        self._buzzer: Dict[str, dict] = {}
+        self._buzzer_spawn_tasks: Dict[str, asyncio.Task] = {}
+
+    def is_buzzer_mode(self, room: Room) -> bool:
+        return (getattr(room, "mode", None) or RoomMode.QUIZ.value) == RoomMode.BUZZER.value
+
+    def clear_buzzer_state(self, room_code: str) -> None:
+        task = self._buzzer_spawn_tasks.pop(room_code, None)
+        if task and not task.done():
+            task.cancel()
+        self._buzzer.pop(room_code, None)
+
+    def get_buzzer_state(self, room_code: str) -> dict:
+        state = self._buzzer.get(room_code) or {
+            "phase": "READING",
+            "revealed": False,
+            "claimer_id": None,
+            "claimer_name": None,
+            "excluded_ids": [],
+            "x": 50.0,
+            "y": 50.0,
+            "question_id": None,
+            "answer_ends_at": None,
+        }
+        ends = state.get("answer_ends_at")
+        ends_iso = None
+        answer_remaining = None
+        if ends:
+            if isinstance(ends, datetime):
+                ends_iso = ends.isoformat() + "Z"
+                answer_remaining = max(0.0, (ends - _utcnow()).total_seconds())
+            elif isinstance(ends, str):
+                ends_iso = ends if ends.endswith("Z") else ends + "Z"
+        return {
+            "phase": state.get("phase") or "READING",
+            "revealed": bool(state.get("revealed")),
+            "claimer_id": state.get("claimer_id"),
+            "claimer_name": state.get("claimer_name"),
+            "excluded_ids": list(state.get("excluded_ids") or []),
+            "x": float(state.get("x") or 50),
+            "y": float(state.get("y") or 50),
+            "question_id": state.get("question_id"),
+            "answer_ends_at": ends_iso,
+            "answer_remaining_seconds": answer_remaining,
+            "answer_seconds": self.BUZZER_ANSWER_SEC,
+        }
+
+    def reset_buzzer_for_question(self, room_code: str, question_id: int) -> None:
+        self.clear_buzzer_state(room_code)
+        self._buzzer[room_code] = {
+            "phase": "READING",
+            "revealed": False,
+            "claimer_id": None,
+            "claimer_name": None,
+            "excluded_ids": [],
+            "x": 50.0,
+            "y": 50.0,
+            "question_id": question_id,
+            "answer_ends_at": None,
+        }
+
+    def schedule_buzzer_spawn(
+        self, room_code: str, question_id: int, delay: Optional[float] = None
+    ) -> None:
+        """Spawn buzzer after random delay at random position (only after reveal)."""
+        old = self._buzzer_spawn_tasks.pop(room_code, None)
+        if old and not old.done():
+            old.cancel()
+
+        async def _spawn():
+            try:
+                wait = delay if delay is not None else random.uniform(0.6, 2.5)
+                await asyncio.sleep(wait)
+                state = self._buzzer.get(room_code)
+                if not state or state.get("question_id") != question_id:
+                    return
+                if not state.get("revealed"):
+                    return
+                if state.get("phase") not in ("IDLE", "RESET"):
+                    return
+                # Random point inside the right empty lane (0–100 mapped by UI)
+                x = round(random.uniform(18, 82), 1)
+                y = round(random.uniform(18, 82), 1)
+                state["phase"] = "VISIBLE"
+                state["claimer_id"] = None
+                state["claimer_name"] = None
+                state["answer_ends_at"] = None
+                state["x"] = x
+                state["y"] = y
+                await ws_manager.broadcast(
+                    room_code,
+                    {
+                        "type": "buzzer_spawn",
+                        "x": x,
+                        "y": y,
+                        "question_id": question_id,
+                        "excluded_ids": list(state.get("excluded_ids") or []),
+                        "revealed": True,
+                    },
+                )
+            except asyncio.CancelledError:
+                return
+            finally:
+                self._buzzer_spawn_tasks.pop(room_code, None)
+
+        self._buzzer_spawn_tasks[room_code] = asyncio.create_task(_spawn())
+
+    async def reveal_buzzer(self, db: Session, room_code: str) -> dict:
+        """Admin finished reading: reveal question text and spawn the buzzer."""
+        lock = await self.get_room_lock(room_code)
+        async with lock:
+            room = self.get_room(db, room_code)
+            if not room:
+                raise ValueError("ROOM_NOT_FOUND")
+            if not self.is_buzzer_mode(room):
+                raise ValueError("NOT_ALLOWED")
+            if room.status != RoomStatus.RUNNING.value:
+                raise ValueError("ROOM_NOT_RUNNING")
+            if room.question_answered:
+                raise ValueError("QUESTION_ALREADY_ANSWERED")
+            if not room.current_question_id:
+                raise ValueError("GAME_NOT_STARTED")
+
+            state = self._buzzer.get(room_code)
+            if not state or state.get("question_id") != room.current_question_id:
+                self.reset_buzzer_for_question(room_code, room.current_question_id)
+                state = self._buzzer[room_code]
+            if state.get("revealed"):
+                raise ValueError("ALREADY_REVEALED")
+
+            state["revealed"] = True
+            state["phase"] = "IDLE"
+            state["answer_ends_at"] = None
+            payload = {
+                "type": "buzzer_revealed",
+                "question_id": room.current_question_id,
+                "revealed": True,
+                "buzzer": self.get_buzzer_state(room_code),
+            }
+            await ws_manager.broadcast(room_code, payload)
+            self.schedule_buzzer_spawn(room_code, room.current_question_id)
+            return payload
 
     def push_lobby_event(self, room_code: str, event: dict) -> None:
         hist = self._lobby_history.setdefault(room_code, [])
@@ -83,6 +229,7 @@ class GameService:
         self._lobby_history.pop(room_code, None)
         self._lobby_positions.pop(room_code, None)
         self._paused_remaining.pop(room_code, None)
+        self.clear_buzzer_state(room_code)
         for key in list(self._eliminated_options):
             if key[0] == room_code:
                 self._eliminated_options.pop(key, None)
@@ -132,7 +279,7 @@ class GameService:
                 self._room_locks[room_code] = asyncio.Lock()
             return self._room_locks[room_code]
 
-    def create_room(self, db: Session, exam_id: int) -> Room:
+    def create_room(self, db: Session, exam_id: int, mode: str = "QUIZ") -> Room:
         exam = db.query(Exam).filter(Exam.id == exam_id).first()
         if not exam:
             raise ValueError("EXAM_NOT_FOUND")
@@ -145,6 +292,10 @@ class GameService:
         if not questions:
             raise ValueError("NO_QUESTIONS")
 
+        mode_val = (mode or RoomMode.QUIZ.value).upper()
+        if mode_val not in (RoomMode.QUIZ.value, RoomMode.BUZZER.value):
+            mode_val = RoomMode.QUIZ.value
+
         for _ in range(20):
             code = generate_room_code()
             exists = db.query(Room).filter(Room.room_code == code).first()
@@ -152,6 +303,7 @@ class GameService:
                 room = Room(
                     room_code=code,
                     exam_id=exam_id,
+                    mode=mode_val,
                     status=RoomStatus.WAITING.value,
                 )
                 db.add(room)
@@ -222,6 +374,7 @@ class GameService:
             "type": "room_updated",
             "room_code": room.room_code,
             "status": room.status,
+            "mode": getattr(room, "mode", None) or RoomMode.QUIZ.value,
             "exam_title": exam.title if exam else "",
             "host_name": host_name,
             "time_per_question": exam.time_per_question if exam else 15,
@@ -241,6 +394,9 @@ class GameService:
                 for p in players
             ],
             "rankings": self.compute_rankings(players),
+            "buzzer": self.get_buzzer_state(room.room_code)
+            if self.is_buzzer_mode(room)
+            else None,
         }
         if room.question_started_at:
             payload["question_started_at"] = room.question_started_at.isoformat() + "Z"
@@ -355,6 +511,18 @@ class GameService:
         )
         payload = self.question_public_payload(db, room, first_q)
         await ws_manager.broadcast(room_code, payload)
+        if self.is_buzzer_mode(room):
+            self.reset_buzzer_for_question(room_code, first_q.id)
+            await ws_manager.broadcast(
+                room_code,
+                {
+                    "type": "buzzer_reading",
+                    "question_id": first_q.id,
+                    "revealed": False,
+                    "buzzer": self.get_buzzer_state(room_code),
+                    "message": "Admin đang đọc câu hỏi — hãy lắng nghe!",
+                },
+            )
         return payload
 
     async def next_question(self, db: Session, room_code: str) -> dict:
@@ -402,6 +570,18 @@ class GameService:
         payload = self.question_public_payload(db, room, q)
         await ws_manager.broadcast(room_code, payload)
         await ws_manager.broadcast(room_code, self.room_state_payload(db, room))
+        if self.is_buzzer_mode(room):
+            self.reset_buzzer_for_question(room_code, q.id)
+            await ws_manager.broadcast(
+                room_code,
+                {
+                    "type": "buzzer_reading",
+                    "question_id": q.id,
+                    "revealed": False,
+                    "buzzer": self.get_buzzer_state(room_code),
+                    "message": "Admin đang đọc câu hỏi — hãy lắng nghe!",
+                },
+            )
         return payload
 
     async def pause_game(self, db: Session, room_code: str) -> dict:
@@ -512,6 +692,7 @@ class GameService:
 
     async def finish_game(self, db: Session, room_code: str) -> dict:
         self.cancel_auto_next(room_code)
+        self.clear_buzzer_state(room_code)
         room = self.get_room(db, room_code)
         if not room:
             raise ValueError("ROOM_NOT_FOUND")
@@ -529,6 +710,256 @@ class GameService:
         }
         await ws_manager.broadcast(room_code, payload)
         return payload
+
+    async def handle_buzz(self, db: Session, room_code: str, player_id: str) -> dict:
+        """First valid buzz claims the right to answer verbally."""
+        lock = await self.get_room_lock(room_code)
+        async with lock:
+            room = self.get_room(db, room_code)
+            if not room:
+                raise ValueError("ROOM_NOT_FOUND")
+            if not self.is_buzzer_mode(room):
+                raise ValueError("NOT_ALLOWED")
+            if room.status != RoomStatus.RUNNING.value:
+                raise ValueError("ROOM_NOT_RUNNING")
+            if room.question_answered:
+                raise ValueError("QUESTION_ALREADY_ANSWERED")
+            player = self.get_player(db, player_id)
+            if not player or player.room_id != room.id:
+                raise ValueError("PLAYER_NOT_FOUND")
+
+            state = self._buzzer.setdefault(
+                room_code,
+                {
+                    "phase": "IDLE",
+                    "claimer_id": None,
+                    "claimer_name": None,
+                    "excluded_ids": [],
+                    "x": 50.0,
+                    "y": 50.0,
+                    "question_id": room.current_question_id,
+                },
+            )
+            excluded = set(state.get("excluded_ids") or [])
+            if player_id in excluded:
+                raise ValueError("BUZZER_EXCLUDED")
+            if state.get("phase") != "VISIBLE":
+                raise ValueError("BUZZER_NOT_READY")
+            if state.get("claimer_id"):
+                raise ValueError("BUZZER_ALREADY_CLAIMED")
+
+            state["phase"] = "CLAIMED"
+            state["claimer_id"] = player_id
+            state["claimer_name"] = player.name
+            answer_ends = _utcnow() + timedelta(seconds=self.BUZZER_ANSWER_SEC)
+            state["answer_ends_at"] = answer_ends
+            payload = {
+                "type": "buzzer_claimed",
+                "player_id": player_id,
+                "player_name": player.name,
+                "question_id": room.current_question_id,
+                "excluded_ids": list(excluded),
+                "answer_ends_at": answer_ends.isoformat() + "Z",
+                "answer_seconds": self.BUZZER_ANSWER_SEC,
+                "revealed": True,
+            }
+            await ws_manager.broadcast(room_code, payload)
+            return payload
+
+    async def judge_buzzer(
+        self, db: Session, room_code: str, correct: bool
+    ) -> dict:
+        """Admin marks the current buzzer claimer correct or wrong."""
+        lock = await self.get_room_lock(room_code)
+        async with lock:
+            room = self.get_room(db, room_code)
+            if not room:
+                raise ValueError("ROOM_NOT_FOUND")
+            if not self.is_buzzer_mode(room):
+                raise ValueError("NOT_ALLOWED")
+            if room.status not in (RoomStatus.RUNNING.value, RoomStatus.PAUSED.value):
+                raise ValueError("ROOM_NOT_RUNNING")
+            if room.question_answered:
+                raise ValueError("QUESTION_ALREADY_ANSWERED")
+
+            state = self._buzzer.get(room_code) or {}
+            claimer_id = state.get("claimer_id")
+            if state.get("phase") != "CLAIMED" or not claimer_id:
+                raise ValueError("NO_CLAIMER")
+
+            player = self.get_player(db, claimer_id)
+            if not player or player.room_id != room.id:
+                raise ValueError("PLAYER_NOT_FOUND")
+
+            question = (
+                db.query(Question)
+                .filter(Question.id == room.current_question_id)
+                .first()
+            )
+            if not question:
+                raise ValueError("GAME_NOT_STARTED")
+
+            q_points = int(getattr(question, "points", None) or 10)
+
+            if correct:
+                # Award points; lock question; auto-advance
+                points = q_points
+                player.score += points
+                player.correct_count += 1
+                room.question_answered = True
+                room.first_answer_player_id = player.player_id
+
+                # Record submission (verbal — no answer text)
+                existing = (
+                    db.query(Submission)
+                    .filter(
+                        Submission.room_id == room.id,
+                        Submission.question_id == question.id,
+                        Submission.player_id == player.player_id,
+                    )
+                    .first()
+                )
+                if not existing:
+                    db.add(
+                        Submission(
+                            room_id=room.id,
+                            question_id=question.id,
+                            player_id=player.player_id,
+                            answer_text="[buzzer]",
+                            is_correct=True,
+                            is_first=True,
+                            points=points,
+                            response_time_ms=0,
+                            essay_graded=True,
+                        )
+                    )
+                db.commit()
+
+                players = db.query(Player).filter(Player.room_id == room.id).all()
+                rankings = self.compute_rankings(players)
+                judged = {
+                    "type": "buzzer_judged",
+                    "correct": True,
+                    "player_id": player.player_id,
+                    "player_name": player.name,
+                    "points_awarded": points,
+                    "score": player.score,
+                    "question_id": question.id,
+                }
+                await ws_manager.broadcast(room_code, judged)
+                await ws_manager.broadcast(
+                    room_code,
+                    {
+                        "type": "answer_correct",
+                        "player_name": player.name,
+                        "player_id": player.player_id,
+                        "points": points,
+                        "score": player.score,
+                        "answer_display": "Chuông",
+                        "question_locked": True,
+                        "question_type": question.question_type,
+                        "question_id": question.id,
+                        "effect_ms": 1200,
+                        "countdown_seconds": self.CORRECT_COUNTDOWN_SEC,
+                        "auto_next": True,
+                        "message": f"🎉 {player.name} trả lời đúng! +{points} điểm",
+                    },
+                )
+                await ws_manager.broadcast(
+                    room_code,
+                    {
+                        "type": "score_updated",
+                        "rankings": rankings,
+                        "question_answered": True,
+                        "first_answer_player_id": player.player_id,
+                    },
+                )
+                self.schedule_auto_next_after_correct(
+                    room_code, int(question.id), 1200
+                )
+                return judged
+
+            # Wrong: −10 points, exclude claimer, reset buzzer for others
+            penalty = -10
+            player.score += penalty
+            excluded = set(state.get("excluded_ids") or [])
+            excluded.add(claimer_id)
+            state["excluded_ids"] = list(excluded)
+            state["phase"] = "IDLE"
+            state["claimer_id"] = None
+            state["claimer_name"] = None
+            state["answer_ends_at"] = None
+            state["revealed"] = True
+
+            existing = (
+                db.query(Submission)
+                .filter(
+                    Submission.room_id == room.id,
+                    Submission.question_id == question.id,
+                    Submission.player_id == player.player_id,
+                )
+                .first()
+            )
+            if not existing:
+                db.add(
+                    Submission(
+                        room_id=room.id,
+                        question_id=question.id,
+                        player_id=player.player_id,
+                        answer_text="[buzzer]",
+                        is_correct=False,
+                        is_first=False,
+                        points=penalty,
+                        response_time_ms=0,
+                        essay_graded=True,
+                    )
+                )
+            else:
+                existing.is_correct = False
+                existing.points = (existing.points or 0) + penalty
+                existing.essay_graded = True
+
+            db.commit()
+
+            players = db.query(Player).filter(Player.room_id == room.id).all()
+            rankings = self.compute_rankings(players)
+            judged = {
+                "type": "buzzer_judged",
+                "correct": False,
+                "player_id": player.player_id,
+                "player_name": player.name,
+                "points_awarded": penalty,
+                "score": player.score,
+                "question_id": question.id,
+                "excluded_ids": list(excluded),
+            }
+            await ws_manager.broadcast(room_code, judged)
+            await ws_manager.broadcast(
+                room_code,
+                {
+                    "type": "score_updated",
+                    "rankings": rankings,
+                    "question_answered": False,
+                },
+            )
+            await ws_manager.broadcast(
+                room_code,
+                {
+                    "type": "buzzer_reset",
+                    "excluded_ids": list(excluded),
+                    "player_id": player.player_id,
+                    "player_name": player.name,
+                    "question_id": question.id,
+                    "revealed": True,
+                    "points": penalty,
+                    "message": (
+                        f"❌ {player.name} sai! {penalty} điểm. "
+                        "Người khác dành quyền trả lời."
+                    ),
+                },
+            )
+            self.schedule_buzzer_spawn(room_code, question.id, delay=random.uniform(0.8, 2.2))
+            return judged
 
     def compute_rankings(self, players: List[Player]) -> List[dict]:
         """Tie-break: higher score → more correct → lower answer time → earlier join."""
@@ -588,6 +1019,8 @@ class GameService:
         room = db.query(Room).filter(Room.room_code == room_code).first()
         if not room:
             raise ValueError("ROOM_NOT_FOUND")
+        if self.is_buzzer_mode(room):
+            raise ValueError("NOT_ALLOWED")
         if room.status == RoomStatus.FINISHED.value:
             raise ValueError("ROOM_FINISHED")
         if room.status == RoomStatus.WAITING.value:

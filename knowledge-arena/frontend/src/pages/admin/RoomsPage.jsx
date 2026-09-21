@@ -6,6 +6,7 @@ export default function RoomsPage() {
   const [rooms, setRooms] = useState([])
   const [exams, setExams] = useState([])
   const [examId, setExamId] = useState('')
+  const [mode, setMode] = useState('QUIZ')
   const [created, setCreated] = useState(null)
   const [error, setError] = useState('')
 
@@ -22,7 +23,7 @@ export default function RoomsPage() {
   const create = async () => {
     setError('')
     try {
-      const { data } = await roomApi.create(Number(examId))
+      const { data } = await roomApi.create(Number(examId), mode)
       setCreated(data)
       load()
     } catch (err) {
@@ -76,6 +77,17 @@ export default function RoomsPage() {
             ))}
           </select>
         </div>
+        <div>
+          <label className="text-sm text-arena-ink/50">Chế độ</label>
+          <select
+            className="mt-1 block rounded-xl border border-arena-sky/30 bg-white px-3 py-2"
+            value={mode}
+            onChange={(e) => setMode(e.target.value)}
+          >
+            <option value="QUIZ">Quiz thường</option>
+            <option value="BUZZER">Thi đấu chuông</option>
+          </select>
+        </div>
         <button
           type="button"
           onClick={create}
@@ -91,6 +103,9 @@ export default function RoomsPage() {
           <p className="text-sm font-bold tracking-widest text-arena-ink/50">MÃ PHÒNG</p>
           <p className="mt-2 font-display text-5xl font-black text-arena-gold md:text-7xl">
             {created.room_code}
+          </p>
+          <p className="mt-2 text-sm font-bold text-arena-ink/60">
+            {created.mode === 'BUZZER' ? 'Chế độ: Thi đấu chuông' : 'Chế độ: Quiz thường'}
           </p>
           <p className="mt-4 text-sm text-arena-ink/50">Link tham gia:</p>
           <p className="mt-1 break-all font-mono text-arena-cyan">{created.join_url}</p>
@@ -132,6 +147,7 @@ export default function RoomsPage() {
               </p>
               <p className="text-sm text-arena-ink/50">
                 {r.exam_title} ·{' '}
+                {r.mode === 'BUZZER' ? 'Chuông · ' : ''}
                 <span className={statusColor[r.status]}>{r.status}</span> ·{' '}
                 {r.player_count} HS
               </p>

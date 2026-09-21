@@ -1,5 +1,24 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { RoomWebSocket } from '../websocket/RoomWebSocket'
+import {
+  playAmbientRandom,
+  playBuzzerCorrect,
+  playBuzzerRetry,
+  playBuzzerWrong,
+  stopAmbient,
+} from '../utils/sound'
+
+const emptyBuzzer = {
+  phase: 'READING',
+  revealed: false,
+  x: 50,
+  y: 50,
+  claimer_id: null,
+  claimer_name: null,
+  excluded_ids: [],
+  answer_ends_at: null,
+  answer_seconds: 10,
+}
 
 export function useRoomSocket(roomCode, { role = 'student', playerId = null, enabled = true } = {}) {
   const [status, setStatus] = useState('idle')
@@ -17,6 +36,7 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
   const [lobbyPositions, setLobbyPositions] = useState({})
   const [retryUntil, setRetryUntil] = useState(0)
   const [eliminatedIds, setEliminatedIds] = useState([])
+  const [buzzer, setBuzzer] = useState(emptyBuzzer)
   const wsRef = useRef(null)
 
   const mergeEliminated = useCallback((data) => {
@@ -46,6 +66,9 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
         setRoomState((prev) => ({ ...prev, ...data }))
         if (data.rankings) setRankings(data.rankings)
         if (data.already_submitted) setAlreadySubmitted(true)
+        if (data.buzzer) {
+          setBuzzer((prev) => ({ ...prev, ...data.buzzer }))
+        }
         if (data.type === 'player_left' && data.player_id) {
           setLobbyPositions((prev) => {
             if (!prev[data.player_id]) return prev
@@ -78,6 +101,7 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
         setLobbyFx(null)
         setLobbyPositions({})
         setEliminatedIds([])
+        setBuzzer(emptyBuzzer)
         break
       case 'lobby_history':
         setLobbyMessages(Array.isArray(data.items) ? data.items : [])
@@ -202,10 +226,107 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
         setToast(null)
         setBattleEvent(null)
         setAutoNext(null)
+        setBuzzer(emptyBuzzer)
         setRoomState((prev) => ({
           ...prev,
           status: 'RUNNING',
           question_answered: data.question_answered,
+        }))
+        break
+      case 'buzzer_reading':
+        stopAmbient()
+        setBuzzer({
+          ...emptyBuzzer,
+          phase: 'READING',
+          revealed: false,
+          question_id: data.question_id,
+          ...(data.buzzer || {}),
+        })
+        setToast({
+          kind: 'announce',
+          title: 'Lắng nghe',
+          message: data.message || 'Admin đang đọc câu hỏi...',
+        })
+        break
+      case 'buzzer_revealed':
+        setBuzzer((prev) => ({
+          ...prev,
+          ...(data.buzzer || {}),
+          phase: data.buzzer?.phase || 'IDLE',
+          revealed: true,
+          answer_ends_at: null,
+        }))
+        setToast({
+          kind: 'locked',
+          title: 'Bắt đầu!',
+          message: 'Câu hỏi đã mở — sẵn sàng nhấn chuông!',
+        })
+        break
+      case 'buzzer_spawn':
+        setBuzzer((prev) => ({
+          ...prev,
+          phase: 'VISIBLE',
+          revealed: true,
+          x: data.x ?? 50,
+          y: data.y ?? 50,
+          claimer_id: null,
+          claimer_name: null,
+          answer_ends_at: null,
+          excluded_ids: Array.isArray(data.excluded_ids)
+            ? data.excluded_ids
+            : prev.excluded_ids,
+        }))
+        break
+      case 'buzzer_claimed':
+        stopAmbient()
+        setBuzzer((prev) => ({
+          ...prev,
+          phase: 'CLAIMED',
+          revealed: true,
+          claimer_id: data.player_id,
+          claimer_name: data.player_name,
+          answer_ends_at: data.answer_ends_at || null,
+          answer_seconds: data.answer_seconds || 10,
+          excluded_ids: Array.isArray(data.excluded_ids)
+            ? data.excluded_ids
+            : prev.excluded_ids,
+        }))
+        setToast({
+          kind: 'locked',
+          title: data.player_name,
+          message: `${data.player_name} đã dành quyền — ${data.answer_seconds || 10}s trả lời!`,
+        })
+        break
+      case 'buzzer_reset':
+        playBuzzerWrong()
+        setTimeout(() => playBuzzerRetry(), 350)
+        setBuzzer((prev) => ({
+          ...prev,
+          phase: 'IDLE',
+          revealed: true,
+          claimer_id: null,
+          claimer_name: null,
+          answer_ends_at: null,
+          excluded_ids: Array.isArray(data.excluded_ids)
+            ? data.excluded_ids
+            : prev.excluded_ids,
+        }))
+        setToast({
+          kind: 'locked-wrong',
+          title: data.player_name || 'Sai',
+          message: data.message || 'Sai rồi — người khác dành quyền!',
+        })
+        break
+      case 'buzzer_judged':
+        if (data.correct) {
+          playBuzzerCorrect()
+          stopAmbient()
+        }
+        setBuzzer((prev) => ({
+          ...prev,
+          answer_ends_at: null,
+          // leave CLAIMED until reset/next; correct keeps ambient off via effect
+          phase: data.correct ? 'CLAIMED' : prev.phase,
         }))
         break
       case 'score_updated':
@@ -222,11 +343,14 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
         }))
         break
       case 'question_finished':
+        stopAmbient()
         break
       case 'game_finished':
+        stopAmbient()
         setFinished(data)
         setRankings(data.rankings || [])
         setAutoNext(null)
+        setBuzzer(emptyBuzzer)
         break
       case 'error':
         setToast({
@@ -267,14 +391,50 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
     return () => {
       ws.close()
       wsRef.current = null
+      stopAmbient()
     }
   }, [roomCode, role, playerId, enabled, handleMessage])
+
+  // Ambient only while question is open for buzzing (not during claim / reading)
+  useEffect(() => {
+    if (roomState?.mode !== 'BUZZER') return undefined
+    const canPlay =
+      question?.id &&
+      roomState?.status === 'RUNNING' &&
+      buzzer.revealed &&
+      buzzer.phase !== 'CLAIMED' &&
+      buzzer.phase !== 'READING'
+    if (!canPlay) {
+      stopAmbient()
+      return undefined
+    }
+    playAmbientRandom()
+    return () => stopAmbient()
+  }, [
+    question?.id,
+    roomState?.mode,
+    roomState?.status,
+    buzzer.revealed,
+    buzzer.phase,
+  ])
 
   const submitAnswer = useCallback((payload) => {
     if (payload?.lock !== false) {
       setAlreadySubmitted(true)
     }
     wsRef.current?.submitAnswer(payload)
+  }, [])
+
+  const buzz = useCallback(() => {
+    wsRef.current?.buzz()
+  }, [])
+
+  const judge = useCallback((correct) => {
+    wsRef.current?.judgeAnswer(correct)
+  }, [])
+
+  const revealBuzzer = useCallback(() => {
+    wsRef.current?.revealBuzzer()
   }, [])
 
   const sendLobbyChat = useCallback((text) => {
@@ -313,7 +473,11 @@ export function useRoomSocket(roomCode, { role = 'student', playerId = null, ena
     lobbyPositions,
     retryUntil,
     eliminatedIds,
+    buzzer,
     submitAnswer,
+    buzz,
+    judge,
+    revealBuzzer,
     sendLobbyChat,
     sendLobbyAnnounce,
     sendLobbyAction,

@@ -97,6 +97,18 @@ export class RoomWebSocket {
     this.send({ type: 'lobby_move', player_id: this.playerId, x, y })
   }
 
+  buzz() {
+    this.send({ type: 'buzz', player_id: this.playerId })
+  }
+
+  judgeAnswer(correct) {
+    this.send({ type: 'judge_answer', correct: !!correct })
+  }
+
+  revealBuzzer() {
+    this.send({ type: 'reveal_buzzer' })
+  }
+
   setPlayerId(id) {
     this.playerId = id
   }

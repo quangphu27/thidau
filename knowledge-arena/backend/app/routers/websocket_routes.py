@@ -87,6 +87,55 @@ async def websocket_room(
                         db, room.id, room.current_question_id, player_id
                     )
                 await ws_manager.send_to_connection(websocket, payload)
+                if game_service.is_buzzer_mode(room):
+                    bz = game_service.get_buzzer_state(room_code)
+                    if not bz.get("revealed") or bz["phase"] == "READING":
+                        await ws_manager.send_to_connection(
+                            websocket,
+                            {
+                                "type": "buzzer_reading",
+                                "question_id": bz.get("question_id"),
+                                "revealed": False,
+                                "buzzer": bz,
+                                "message": "Admin đang đọc câu hỏi — hãy lắng nghe!",
+                            },
+                        )
+                    elif bz["phase"] == "VISIBLE":
+                        await ws_manager.send_to_connection(
+                            websocket,
+                            {
+                                "type": "buzzer_spawn",
+                                "x": bz["x"],
+                                "y": bz["y"],
+                                "question_id": bz.get("question_id"),
+                                "excluded_ids": bz["excluded_ids"],
+                                "revealed": True,
+                            },
+                        )
+                    elif bz["phase"] == "CLAIMED":
+                        await ws_manager.send_to_connection(
+                            websocket,
+                            {
+                                "type": "buzzer_claimed",
+                                "player_id": bz["claimer_id"],
+                                "player_name": bz["claimer_name"],
+                                "question_id": bz.get("question_id"),
+                                "excluded_ids": bz["excluded_ids"],
+                                "answer_ends_at": bz.get("answer_ends_at"),
+                                "answer_seconds": bz.get("answer_seconds"),
+                                "revealed": True,
+                            },
+                        )
+                    elif bz.get("revealed"):
+                        await ws_manager.send_to_connection(
+                            websocket,
+                            {
+                                "type": "buzzer_revealed",
+                                "question_id": bz.get("question_id"),
+                                "revealed": True,
+                                "buzzer": bz,
+                            },
+                        )
 
         if room.status == RoomStatus.FINISHED.value:
             players = room.players
@@ -100,6 +149,21 @@ async def websocket_room(
                     "winner": rankings[0] if rankings else None,
                 },
             )
+
+        # Notify admin that a listener peer is ready for WebRTC mic
+        if role in ("student", "presentation"):
+            peer_id = player_id if role == "student" else "presentation"
+            if peer_id:
+                await ws_manager.broadcast(
+                    room_code,
+                    {
+                        "type": "webrtc_peer_ready",
+                        "peer_id": peer_id,
+                        "role": role,
+                        "player_id": player_id,
+                    },
+                    roles={"admin"},
+                )
 
         while True:
             raw = await websocket.receive_text()
@@ -197,6 +261,94 @@ async def websocket_room(
                     await ws_manager.send_to_connection(
                         websocket, {"type": "error", "code": str(e)}
                     )
+
+            elif msg_type == "buzz":
+                pid = data.get("player_id") or player_id
+                if not pid:
+                    await ws_manager.send_to_connection(
+                        websocket, {"type": "error", "code": "NOT_ALLOWED"}
+                    )
+                    continue
+                try:
+                    db.close()
+                    db = SessionLocal()
+                    await game_service.handle_buzz(db, room_code, pid)
+                except ValueError as e:
+                    await ws_manager.send_to_connection(
+                        websocket, {"type": "error", "code": str(e)}
+                    )
+
+            elif msg_type == "reveal_buzzer":
+                if role != "admin":
+                    await ws_manager.send_to_connection(
+                        websocket, {"type": "error", "code": "NOT_ALLOWED"}
+                    )
+                    continue
+                try:
+                    db.close()
+                    db = SessionLocal()
+                    await game_service.reveal_buzzer(db, room_code)
+                except ValueError as e:
+                    await ws_manager.send_to_connection(
+                        websocket, {"type": "error", "code": str(e)}
+                    )
+
+            elif msg_type == "judge_answer":
+                if role != "admin":
+                    await ws_manager.send_to_connection(
+                        websocket, {"type": "error", "code": "NOT_ALLOWED"}
+                    )
+                    continue
+                try:
+                    db.close()
+                    db = SessionLocal()
+                    await game_service.judge_buzzer(
+                        db, room_code, bool(data.get("correct"))
+                    )
+                except ValueError as e:
+                    await ws_manager.send_to_connection(
+                        websocket, {"type": "error", "code": str(e)}
+                    )
+
+            elif msg_type == "admin_mic_status":
+                if role != "admin":
+                    await ws_manager.send_to_connection(
+                        websocket, {"type": "error", "code": "NOT_ALLOWED"}
+                    )
+                    continue
+                await ws_manager.broadcast(
+                    room_code,
+                    {
+                        "type": "admin_mic_status",
+                        "active": bool(data.get("active")),
+                    },
+                )
+
+            elif msg_type in ("webrtc_offer", "webrtc_answer", "webrtc_ice"):
+                target = data.get("target_peer_id")
+                if not target:
+                    continue
+                from_peer = data.get("from_peer_id")
+                if not from_peer:
+                    if role == "admin":
+                        from_peer = "admin"
+                    elif role == "presentation":
+                        from_peer = "presentation"
+                    else:
+                        from_peer = player_id
+                fwd = {**data, "from_peer_id": from_peer, "type": msg_type}
+                await ws_manager.send_to_peer(room_code, target, fwd)
+
+            elif msg_type == "webrtc_list_peers":
+                if role != "admin":
+                    continue
+                await ws_manager.send_to_connection(
+                    websocket,
+                    {
+                        "type": "webrtc_peers",
+                        "peers": ws_manager.list_voice_peers(room_code),
+                    },
+                )
 
             elif msg_type == "ping":
                 await ws_manager.send_to_connection(

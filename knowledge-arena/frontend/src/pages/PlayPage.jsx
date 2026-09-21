@@ -2,11 +2,13 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useRoomSocket } from '../hooks/useRoomSocket'
 import { useServerTimer } from '../hooks/useServerTimer'
+import { useRoomVoice } from '../hooks/useRoomVoice'
 import AnswerOption from '../components/AnswerOption'
 import AnswerToast from '../components/AnswerToast'
 import LiveScoreboard from '../components/LiveScoreboard'
 import MediaPlayer from '../components/MediaPlayer'
 import BattleArena from '../components/BattleArena'
+import BuzzerButton from '../components/BuzzerButton'
 import NextQuestionCountdown from '../components/NextQuestionCountdown'
 import WaitingLobby from '../components/WaitingLobby'
 import WinnerScreen from '../components/WinnerScreen'
@@ -45,20 +47,39 @@ export default function PlayPage() {
     lobbyPositions,
     retryUntil,
     eliminatedIds,
+    buzzer,
     submitAnswer,
+    buzz,
     sendLobbyChat,
     sendLobbyAction,
     sendLobbyMove,
     clearToast,
     clearLobbyFx,
     status,
+    lastEvent,
+    wsRef,
   } = useRoomSocket(code, {
     role: 'student',
     playerId: playerInfo?.player_id,
     enabled: !!playerInfo?.player_id,
   })
 
+  const voice = useRoomVoice({
+    wsRef,
+    role: 'student',
+    playerId: playerInfo?.player_id,
+    lastEvent,
+    status,
+  })
+
+  const isBuzzer = roomState?.mode === 'BUZZER'
   const players = roomState?.players || []
+  const answerLeft = useServerTimer(
+    isBuzzer && buzzer.phase === 'CLAIMED' ? buzzer.answer_ends_at : null,
+    false,
+  )
+  const answerExpired =
+    isBuzzer && buzzer.phase === 'CLAIMED' && answerLeft != null && answerLeft <= 0
   const scoreMap = Object.fromEntries(
     (rankings.length ? rankings : roomState?.rankings || []).map((r) => [
       r.player_id,
@@ -185,60 +206,67 @@ export default function PlayPage() {
   }
 
   return (
-    <div className="arena-bg relative min-h-screen pb-10">
+    <div className="arena-bg relative flex h-[100dvh] flex-col overflow-hidden">
       <NextQuestionCountdown seconds={countdown} winnerName={countdownWinner} />
 
-      <header className="relative z-10 flex flex-wrap items-center justify-between gap-3 px-4 py-4 md:px-8">
+      <header className="relative z-10 flex shrink-0 flex-wrap items-center justify-between gap-2 px-3 py-2 md:px-6 md:py-3">
         <div>
-          <h1 className="font-display text-base font-bold text-arena-accent md:text-lg">
+          <h1 className="font-display text-sm font-bold text-arena-accent md:text-base">
             ĐẤU TRƯỜNG KIẾN THỨC
           </h1>
           {question && (
-            <p className="text-sm font-bold text-arena-ink/60">
+            <p className="text-xs font-bold text-arena-ink/60">
               Câu {question.question_number} / {question.total_questions}
             </p>
           )}
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="rounded-full border-2 border-white bg-white px-3 py-1.5 text-sm font-bold text-arena-ink shadow-sm">
+        <div className="flex flex-wrap items-center gap-1.5">
+          {(voice.adminSpeaking || voice.listening || voice.needUnlock) && (
+            <button
+              type="button"
+              onClick={voice.unlockAudio}
+              className={`rounded-full px-2.5 py-1 text-[11px] font-black ${
+                voice.listening
+                  ? 'bg-emerald-500 text-white'
+                  : 'bg-amber-400 text-arena-ink'
+              }`}
+            >
+              {voice.listening
+                ? '🔊 Nghe admin'
+                : voice.needUnlock
+                  ? '👆 Bật loa'
+                  : '🎙️ Admin nói'}
+            </button>
+          )}
+          <div className="rounded-full border-2 border-white bg-white px-2.5 py-1 text-xs font-bold text-arena-ink shadow-sm">
             {playerInfo?.name}
           </div>
-          <div className="rounded-full border-2 border-arena-gold bg-arena-gold px-3 py-1.5 font-display font-bold text-arena-ink shadow-sm">
+          <div className="rounded-full border-2 border-arena-gold bg-arena-gold px-2.5 py-1 font-display text-xs font-bold text-arena-ink shadow-sm">
             {myScore} điểm
           </div>
-          {remaining != null && roomState?.status === 'RUNNING' && countdown == null && (
+          {remaining != null &&
+            !isBuzzer &&
+            roomState?.status === 'RUNNING' &&
+            countdown == null && (
             <div
-              className={`rounded-full px-4 py-1.5 font-display text-2xl font-bold text-white shadow-md ${
+              className={`rounded-full px-3 py-1 font-display text-xl font-bold text-white shadow-md ${
                 remaining <= 5 ? 'bg-arena-red' : 'bg-arena-cyan'
               }`}
             >
               {Math.ceil(remaining)}
             </div>
           )}
+          {isBuzzer && (
+            <div className="rounded-full border-2 border-rose-400 bg-rose-500/15 px-2.5 py-1 text-[10px] font-black uppercase text-rose-700">
+              Chuông
+            </div>
+          )}
         </div>
       </header>
 
-      <div className="relative z-10 mx-auto grid max-w-6xl gap-4 px-4 md:grid-cols-[1fr_210px] md:px-8">
-        <div className="space-y-4">
-          {!waiting && (
-            <BattleArena
-              players={battlePlayers}
-              fighterStatus={fighterStatus}
-              myPlayerId={playerInfo?.player_id}
-              banner={banner}
-              dustBurst={dustBurst}
-              zoomed={arenaZoom}
-              attackPulse={attackPulse}
-            />
-          )}
-
-          {status === 'disconnected' && (
-            <p className="mb-3 rounded-2xl bg-amber-100 px-3 py-2 text-sm font-bold text-amber-800">
-              Mất kết nối — đang thử kết nối lại...
-            </p>
-          )}
-
-          {waiting && (
+      <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col gap-2 px-3 pb-3 md:px-6">
+        {waiting ? (
+          <div className="min-h-0 flex-1 overflow-hidden">
             <WaitingLobby
               roomCode={code}
               players={roomState?.players || []}
@@ -253,138 +281,263 @@ export default function PlayPage() {
               onMove={sendLobbyMove}
               onClearFx={clearLobbyFx}
             />
-          )}
-
-          {question && roomState?.status !== 'WAITING' && roomState?.status !== 'FINISHED' && (
-            <div className="float-in space-y-4">
-              {expired && countdown == null && (
-                <div className="rounded-3xl bg-arena-red py-3 text-center font-display text-xl font-bold text-white shadow-lg">
-                  HẾT GIỜ!
-                </div>
+          </div>
+        ) : (
+          <div className="grid min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)] gap-2 md:grid-cols-[minmax(0,1fr)_180px] md:grid-rows-1 md:gap-3">
+            <div className="flex min-h-0 flex-col gap-2 overflow-hidden rounded-[1.75rem] border-4 border-white/80 bg-white/35 p-2 shadow-lg backdrop-blur-sm md:p-3">
+              {status === 'disconnected' && (
+                <p className="shrink-0 rounded-xl bg-amber-100 px-2 py-1 text-xs font-bold text-amber-800">
+                  Mất kết nối — đang thử lại...
+                </p>
               )}
 
-              <div className="glass rounded-[2rem] p-5 md:p-8">
-                {(question.media_position === 'BEFORE' || !question.media_position) && (
-                  <MediaPlayer
-                    key={`q-media-${question.id}-before`}
-                    mediaType={question.media_type}
-                    mediaUrl={question.media_url}
-                    className="mb-4"
-                    autoPlay={
-                      question.media_type === 'AUDIO' || question.media_type === 'VIDEO'
-                    }
-                  />
-                )}
-                <h2 className="whitespace-pre-wrap text-xl font-extrabold leading-snug text-arena-ink md:text-3xl">
-                  {question.content}
-                </h2>
-                {question.media_position === 'AFTER' && (
-                  <MediaPlayer
-                    key={`q-media-${question.id}-after`}
-                    mediaType={question.media_type}
-                    mediaUrl={question.media_url}
-                    className="mt-4"
-                    autoPlay={
-                      question.media_type === 'AUDIO' || question.media_type === 'VIDEO'
-                    }
-                  />
+              <div className="min-h-0 flex-1 overflow-hidden">
+                {question && roomState?.status !== 'FINISHED' ? (
+                  <div className="flex h-full min-h-0 flex-col gap-2">
+                    {!isBuzzer && expired && countdown == null && (
+                      <div className="shrink-0 rounded-2xl bg-arena-red py-2 text-center font-display text-lg font-bold text-white">
+                        HẾT GIỜ!
+                      </div>
+                    )}
+
+                    {isBuzzer && !buzzer.revealed ? (
+                      <div className="glass flex min-h-0 flex-1 flex-col items-center justify-center rounded-[1.5rem] p-4 text-center">
+                        <p className="text-4xl">🎧</p>
+                        <h2 className="mt-2 font-display text-xl font-black text-arena-accent md:text-3xl">
+                          Hãy lắng nghe!
+                        </h2>
+                        <p className="mt-2 text-sm font-bold text-arena-ink/60">
+                          Admin đang đọc câu hỏi. Chuông xuất hiện khi admin bấm Bắt đầu.
+                        </p>
+                      </div>
+                    ) : isBuzzer ? (
+                      <div className="grid min-h-0 flex-1 grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_132px]">
+                        <div className="glass flex min-h-0 flex-col overflow-hidden rounded-[1.5rem] p-3 md:p-4">
+                          <div className="min-h-0 flex-1 overflow-y-auto">
+                            {(question.media_position === 'BEFORE' || !question.media_position) && (
+                              <MediaPlayer
+                                key={`q-media-${question.id}-before`}
+                                mediaType={question.media_type}
+                                mediaUrl={question.media_url}
+                                className="mb-2 max-h-28"
+                                autoPlay={
+                                  question.media_type === 'AUDIO' || question.media_type === 'VIDEO'
+                                }
+                              />
+                            )}
+                            <h2 className="whitespace-pre-wrap text-base font-extrabold leading-snug text-arena-ink md:text-xl">
+                              {question.content}
+                            </h2>
+                            <p className="mt-2 text-center text-xs font-extrabold text-arena-cyan">
+                              {question.points || 10} điểm · Nhấn chuông · trả lời miệng (10s)
+                            </p>
+                            {question.media_position === 'AFTER' && (
+                              <MediaPlayer
+                                key={`q-media-${question.id}-after`}
+                                mediaType={question.media_type}
+                                mediaUrl={question.media_url}
+                                className="mt-2 max-h-28"
+                                autoPlay={
+                                  question.media_type === 'AUDIO' || question.media_type === 'VIDEO'
+                                }
+                              />
+                            )}
+                          </div>
+                          <div className="mt-2 shrink-0 border-t border-arena-ink/10 pt-2 text-center">
+                            {(buzzer.excluded_ids || []).includes(playerInfo?.player_id) ? (
+                              <p className="font-display text-sm font-bold text-arena-red">
+                                Bạn đã sai — chờ vòng sau
+                              </p>
+                            ) : buzzer.phase === 'VISIBLE' ? (
+                              <p className="font-display text-base font-black text-arena-accent">
+                                NHẤN CHUÔNG NGAY!
+                              </p>
+                            ) : buzzer.claimer_id === playerInfo?.player_id ? (
+                              <p className="font-display text-sm font-black text-emerald-600">
+                                {answerExpired
+                                  ? 'Hết 10s — chờ admin chấm'
+                                  : `Bạn được quyền — nói miệng! (${answerLeft != null ? Math.ceil(answerLeft) : 10}s)`}
+                              </p>
+                            ) : (
+                              <p className="text-sm font-bold text-arena-ink/70">
+                                Đợi {buzzer.claimer_name} trả lời
+                                {answerLeft != null && !answerExpired
+                                  ? ` (${Math.ceil(answerLeft)}s)`
+                                  : answerExpired
+                                    ? ' — hết giờ'
+                                    : '...'}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="relative min-h-[140px] overflow-hidden rounded-[1.5rem] border-2 border-dashed border-rose-300/60 bg-white/50 sm:min-h-0">
+                          {buzzer.revealed && (
+                            <BuzzerButton
+                              inLane
+                              visible={buzzer.phase === 'VISIBLE'}
+                              claimed={buzzer.phase === 'CLAIMED'}
+                              claimerName={buzzer.claimer_name}
+                              answerLeft={answerLeft}
+                              answerExpired={answerExpired}
+                              x={buzzer.x}
+                              y={buzzer.y}
+                              disabled={
+                                (buzzer.excluded_ids || []).includes(playerInfo?.player_id) ||
+                                roomState?.question_answered
+                              }
+                              onBuzz={buzz}
+                            />
+                          )}
+                          {buzzer.phase === 'VISIBLE' && (
+                            <p className="pointer-events-none absolute bottom-1.5 left-0 right-0 z-10 text-center text-[10px] font-bold uppercase tracking-wide text-rose-500/80">
+                              Vùng chuông
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-hidden">
+                        <div className="glass min-h-0 flex-1 overflow-y-auto rounded-[1.5rem] p-3 md:p-4">
+                          {(question.media_position === 'BEFORE' || !question.media_position) && (
+                            <MediaPlayer
+                              key={`q-media-${question.id}-before`}
+                              mediaType={question.media_type}
+                              mediaUrl={question.media_url}
+                              className="mb-2 max-h-28"
+                              autoPlay={
+                                question.media_type === 'AUDIO' || question.media_type === 'VIDEO'
+                              }
+                            />
+                          )}
+                          <h2 className="whitespace-pre-wrap text-base font-extrabold leading-snug text-arena-ink md:text-xl">
+                            {question.content}
+                          </h2>
+                          {question.media_position === 'AFTER' && (
+                            <MediaPlayer
+                              key={`q-media-${question.id}-after`}
+                              mediaType={question.media_type}
+                              mediaUrl={question.media_url}
+                              className="mt-2 max-h-28"
+                              autoPlay={
+                                question.media_type === 'AUDIO' || question.media_type === 'VIDEO'
+                              }
+                            />
+                          )}
+                        </div>
+
+                        <div className="min-h-0 shrink-0 overflow-y-auto">
+                          {question.question_type === 'MULTIPLE_CHOICE' ? (
+                            <div className="grid gap-2 sm:grid-cols-2">
+                              {(question.options || []).map((opt, i) => (
+                                <AnswerOption
+                                  key={opt.id}
+                                  option={{
+                                    ...opt,
+                                    media_url: opt.media_url ? mediaUrl(opt.media_url) : null,
+                                  }}
+                                  index={i}
+                                  disabled={locked}
+                                  eliminated={eliminatedSet.has(Number(opt.id))}
+                                  selected={selectedId === opt.id}
+                                  onSelect={onSelect}
+                                  large
+                                />
+                              ))}
+                            </div>
+                          ) : question.question_type === 'BLOCK_PUZZLE' ? (
+                            <div className="glass rounded-[1.5rem] p-3">
+                              <BlockPuzzlePlay
+                                pieces={question.pieces || []}
+                                disabled={locked}
+                                seed={`${question.id}-${playerInfo?.player_id || 's'}`}
+                                points={question.points || 20}
+                                retryLeft={retryLeft}
+                                onSubmit={(answerText) => {
+                                  if (locked) return
+                                  submitAnswer({
+                                    questionId: question.id,
+                                    answerText,
+                                    lock: false,
+                                  })
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            <form onSubmit={onEssay} className="glass rounded-[1.5rem] p-3">
+                              {isNumberInput ? (
+                                <>
+                                  <p className="mb-1 text-center text-xs font-extrabold text-arena-cyan">
+                                    Nhập số · Đúng được {question.points || 20} điểm
+                                  </p>
+                                  <input
+                                    type="text"
+                                    inputMode="numeric"
+                                    value={essayText}
+                                    onChange={(e) => setEssayText(e.target.value)}
+                                    disabled={locked}
+                                    placeholder="Nhập số..."
+                                    className="w-full rounded-2xl border-4 border-arena-sky/30 bg-white p-3 text-center font-display text-2xl font-black text-arena-ink outline-none focus:border-arena-cyan disabled:opacity-60"
+                                  />
+                                </>
+                              ) : (
+                                <textarea
+                                  value={essayText}
+                                  onChange={(e) => setEssayText(e.target.value)}
+                                  disabled={locked}
+                                  rows={3}
+                                  placeholder="Gõ câu trả lời..."
+                                  className="w-full rounded-2xl border-4 border-arena-sky/30 bg-white p-3 font-bold text-arena-ink outline-none focus:border-arena-cyan disabled:opacity-60"
+                                />
+                              )}
+                              <button
+                                type="submit"
+                                disabled={locked || !essayText.trim()}
+                                className="mt-2 w-full rounded-full bg-arena-accent py-2.5 font-black text-white shadow-[0_6px_0_#c43a1a] disabled:opacity-50"
+                              >
+                                {retryLeft > 0 ? `Đợi ${retryLeft}s...` : 'Gửi đáp án'}
+                              </button>
+                            </form>
+                          )}
+                          {!isBuzzer && retryLeft > 0 && !expired && countdown == null && (
+                            <p className="mt-1 text-center font-display text-sm font-bold text-arena-pink">
+                              Sai rồi — đợi {retryLeft}s
+                            </p>
+                          )}
+                          {!isBuzzer && locked && retryLeft <= 0 && !expired && countdown == null && (
+                            <p className="mt-1 text-center font-display text-sm font-bold text-arena-accent">
+                              ĐÃ CHỐT ĐÁP ÁN
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex h-full items-center justify-center text-sm font-bold text-arena-ink/50">
+                    Đang chờ câu hỏi...
+                  </div>
                 )}
               </div>
 
-              {question.question_type === 'MULTIPLE_CHOICE' ? (
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {(question.options || []).map((opt, i) => (
-                    <AnswerOption
-                      key={opt.id}
-                      option={{
-                        ...opt,
-                        media_url: opt.media_url ? mediaUrl(opt.media_url) : null,
-                      }}
-                      index={i}
-                      disabled={locked}
-                      eliminated={eliminatedSet.has(Number(opt.id))}
-                      selected={selectedId === opt.id}
-                      onSelect={onSelect}
-                      large
-                    />
-                  ))}
-                </div>
-              ) : question.question_type === 'BLOCK_PUZZLE' ? (
-                <div className="glass rounded-[2rem] p-4 md:p-5">
-                  <BlockPuzzlePlay
-                    pieces={question.pieces || []}
-                    disabled={locked}
-                    seed={`${question.id}-${playerInfo?.player_id || 's'}`}
-                    points={question.points || 20}
-                    retryLeft={retryLeft}
-                    onSubmit={(answerText) => {
-                      if (locked) return
-                      submitAnswer({
-                        questionId: question.id,
-                        answerText,
-                        lock: false,
-                      })
-                    }}
-                  />
-                </div>
-              ) : (
-                <form onSubmit={onEssay} className="glass rounded-[2rem] p-5">
-                  {isNumberInput ? (
-                    <>
-                      <p className="mb-2 text-center text-sm font-extrabold text-arena-cyan">
-                        Nhập số · Đúng được {question.points || 20} điểm
-                      </p>
-                      <input
-                        type="text"
-                        inputMode="numeric"
-                        value={essayText}
-                        onChange={(e) => setEssayText(e.target.value)}
-                        disabled={locked}
-                        placeholder="Nhập số..."
-                        className="w-full rounded-2xl border-4 border-arena-sky/30 bg-white p-4 text-center font-display text-3xl font-black text-arena-ink outline-none focus:border-arena-cyan disabled:opacity-60"
-                      />
-                    </>
-                  ) : (
-                    <textarea
-                      value={essayText}
-                      onChange={(e) => setEssayText(e.target.value)}
-                      disabled={locked}
-                      rows={4}
-                      placeholder="Gõ câu trả lời của bạn ở đây..."
-                      className="w-full rounded-2xl border-4 border-arena-sky/30 bg-white p-4 font-bold text-arena-ink outline-none focus:border-arena-cyan disabled:opacity-60"
-                    />
-                  )}
-                  <button
-                    type="submit"
-                    disabled={locked || !essayText.trim()}
-                    className="mt-3 w-full rounded-full bg-arena-accent py-3 font-black text-white shadow-[0_6px_0_#c43a1a] disabled:opacity-50"
-                  >
-                    {retryLeft > 0 ? `Đợi ${retryLeft}s...` : 'Gửi đáp án'}
-                  </button>
-                </form>
-              )}
-
-              {retryLeft > 0 && !expired && countdown == null && (
-                <p className="text-center font-display text-lg font-bold text-arena-pink">
-                  Sai rồi — đợi {retryLeft} giây rồi nhập lại
-                </p>
-              )}
-              {locked && retryLeft <= 0 && !expired && countdown == null && (
-                <p className="text-center font-display text-lg font-bold text-arena-accent">
-                  ĐÃ CHỐT ĐÁP ÁN
-                </p>
-              )}
+              <div className="shrink-0">
+                <BattleArena
+                  compact
+                  players={battlePlayers}
+                  fighterStatus={fighterStatus}
+                  myPlayerId={playerInfo?.player_id}
+                  banner={banner}
+                  dustBurst={dustBurst}
+                  zoomed={arenaZoom}
+                  attackPulse={attackPulse}
+                />
+              </div>
             </div>
-          )}
-        </div>
 
-        <aside className="relative z-10 hidden md:block">
-          <LiveScoreboard rankings={rankings.length ? rankings : roomState?.rankings || []} />
-        </aside>
-      </div>
-
-      <div className="relative z-10 mt-4 px-4 md:hidden">
-        <LiveScoreboard rankings={rankings.length ? rankings : roomState?.rankings || []} />
+            <aside className="hidden min-h-0 overflow-y-auto md:block">
+              <LiveScoreboard rankings={rankings.length ? rankings : roomState?.rankings || []} />
+            </aside>
+          </div>
+        )}
       </div>
 
       <AnswerToast toast={toast} onDone={clearToast} />

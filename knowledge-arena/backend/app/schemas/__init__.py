@@ -160,6 +160,11 @@ class ExamDetail(ExamOut):
 # ---------- Room ----------
 class RoomCreate(BaseModel):
     exam_id: int
+    mode: str = "QUIZ"  # QUIZ | BUZZER
+
+
+class JudgeBuzzerRequest(BaseModel):
+    correct: bool
 
 
 class PlayerOut(BaseModel):
@@ -178,6 +183,7 @@ class RoomOut(BaseModel):
     room_code: str
     exam_id: int
     exam_title: str = ""
+    mode: str = "QUIZ"
     status: str
     current_question_id: Optional[int] = None
     current_question_index: int = -1

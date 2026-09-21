@@ -29,6 +29,11 @@ class RoomStatus(str, Enum):
     FINISHED = "FINISHED"
 
 
+class RoomMode(str, Enum):
+    QUIZ = "QUIZ"
+    BUZZER = "BUZZER"
+
+
 class QuestionType(str, Enum):
     MULTIPLE_CHOICE = "MULTIPLE_CHOICE"
     ESSAY = "ESSAY"
@@ -123,6 +128,7 @@ class Room(Base):
     id = Column(Integer, primary_key=True, index=True)
     room_code = Column(String(20), unique=True, nullable=False, index=True)
     exam_id = Column(Integer, ForeignKey("exams.id"), nullable=False)
+    mode = Column(String(20), default=RoomMode.QUIZ.value)  # QUIZ | BUZZER
     status = Column(String(20), default=RoomStatus.WAITING.value)
     current_question_id = Column(Integer, ForeignKey("questions.id"), nullable=True)
     current_question_index = Column(Integer, default=-1)

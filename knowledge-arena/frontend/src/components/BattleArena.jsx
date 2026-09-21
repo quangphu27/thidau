@@ -72,10 +72,14 @@ function DustCloud({ active, burstKey = 0 }) {
   )
 }
 
-function Fighter({ fighter, index, isMe, large, showDust, spotlight, attackPulse }) {
+function Fighter({ fighter, index, isMe, large, compact = false, showDust, spotlight, attackPulse }) {
   const skin = SKINS[index % SKINS.length]
   const status = fighter.status || 'standing'
-  const size = large ? 'w-20 h-28 md:w-24 md:h-32' : 'w-14 h-20 sm:w-16 sm:h-24'
+  const size = large
+    ? 'w-20 h-28 md:w-24 md:h-32'
+    : compact
+      ? 'w-11 h-16 sm:w-12 sm:h-[4.5rem]'
+      : 'w-14 h-20 sm:w-16 sm:h-24'
 
   return (
     <motion.div
@@ -194,6 +198,7 @@ export default function BattleArena({
   fighterStatus = {},
   myPlayerId = null,
   large = false,
+  compact = false,
   banner = null,
   dustBurst = null,
   zoomed = false,
@@ -219,24 +224,26 @@ export default function BattleArena({
   return (
     <motion.div
       layout
-      className={`battle-ground glass relative overflow-hidden rounded-[2rem] px-3 py-4 md:px-5 md:py-5 ${
-        zoomed ? 'battle-zoom-active z-20 ring-4 ring-arena-gold/80 shadow-2xl' : ''
-      }`}
+      className={`battle-ground glass relative overflow-hidden rounded-[2rem] ${
+        compact ? 'px-2 py-2 md:px-3 md:py-2.5' : 'px-3 py-4 md:px-5 md:py-5'
+      } ${zoomed ? 'battle-zoom-active z-20 ring-4 ring-arena-gold/80 shadow-2xl' : ''}`}
       animate={{
-        scale: zoomed ? (large ? 1.12 : 1.22) : 1,
-        y: zoomed ? (large ? -8 : -12) : 0,
+        scale: zoomed ? (compact ? 1.04 : large ? 1.12 : 1.22) : 1,
+        y: zoomed ? (compact ? -2 : large ? -8 : -12) : 0,
       }}
       transition={{ type: 'spring', stiffness: 160, damping: 18 }}
     >
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <p className="font-display text-xs font-bold text-arena-accent md:text-sm">
-          🏟️ ĐẤU TRƯỜNG
-        </p>
-        <p className="text-[10px] font-bold text-arena-ink/45 md:text-xs">
-          {fighters.filter((f) => f.status === 'standing' || f.status === 'attacking').length}/
-          {fighters.length} đang chiến
-        </p>
-      </div>
+      {!compact && (
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="font-display text-xs font-bold text-arena-accent md:text-sm">
+            🏟️ ĐẤU TRƯỜNG
+          </p>
+          <p className="text-[10px] font-bold text-arena-ink/45 md:text-xs">
+            {fighters.filter((f) => f.status === 'standing' || f.status === 'attacking').length}/
+            {fighters.length} đang chiến
+          </p>
+        </div>
+      )}
 
       <AnimatePresence>
         {banner && (
@@ -245,10 +252,10 @@ export default function BattleArena({
             initial={{ opacity: 0, y: -10, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0 }}
-            className={`mb-3 rounded-2xl px-3 py-2 text-center font-black text-white shadow-md ${
+            className={`mb-2 rounded-2xl px-3 py-1.5 text-center font-black text-white shadow-md ${
               zoomed
-                ? 'bg-gradient-to-r from-arena-accent to-arena-pink text-base md:text-xl'
-                : 'bg-arena-accent text-sm md:text-base'
+                ? 'bg-gradient-to-r from-arena-accent to-arena-pink text-sm md:text-lg'
+                : 'bg-arena-accent text-xs md:text-sm'
             }`}
           >
             {banner}
@@ -257,10 +264,12 @@ export default function BattleArena({
       </AnimatePresence>
 
       <div
-        className={`battle-floor relative flex flex-wrap items-end justify-center gap-2 pt-2 sm:gap-3 md:gap-4 ${
-          zoomed
-            ? 'min-h-[10rem] gap-3 sm:gap-4 md:min-h-[12rem] md:gap-6'
-            : 'min-h-[7.5rem] md:min-h-[9rem]'
+        className={`battle-floor relative flex flex-wrap items-end justify-center gap-1.5 sm:gap-2 md:gap-3 ${
+          compact
+            ? 'min-h-0 pt-0'
+            : zoomed
+              ? 'min-h-[10rem] gap-3 pt-2 sm:gap-4 md:min-h-[12rem] md:gap-6'
+              : 'min-h-[7.5rem] pt-2 md:min-h-[9rem]'
         }`}
       >
         {fighters.map((f, i) => (
@@ -269,7 +278,8 @@ export default function BattleArena({
             fighter={f}
             index={i}
             isMe={f.player_id === myPlayerId}
-            large={large || zoomed}
+            large={!compact && (large || zoomed)}
+            compact={compact}
             showDust={dustSet.has(f.player_id)}
             spotlight={zoomed && (f.status === 'attacking' || dustSet.has(f.player_id))}
             attackPulse={attackPulse}
