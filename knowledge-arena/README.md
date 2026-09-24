@@ -31,8 +31,40 @@ Windows:
 ```bash
 venv\Scripts\activate
 pip install -r requirements.txt
+```
+
+> **Không bắt buộc** chạy `python seed.py`. Khi mở backend, app tự đọc `seed_data/content.json` + copy media vào `uploads/` (đề Trung thu, Scratch, video chú Cuội, nhạc nền…).
+
+Nếu muốn seed thủ công (DB trống):
+
+```bash
 python seed.py
 ```
+
+## Máy khác `git pull` rồi chạy
+
+```bash
+git pull
+cd knowledge-arena
+start.bat
+```
+
+Hoặc:
+
+```bash
+cd backend
+venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+```bash
+cd frontend
+npm install
+npm run dev -- --host 0.0.0.0 --port 5173
+```
+
+Lần đầu / sau khi `content.json` đổi: backend **tự cập nhật đề** (kể cả «Trung thu vui vẻ») và khôi phục video/nhạc từ `seed_data/media/`.
 
 ## Chạy backend
 

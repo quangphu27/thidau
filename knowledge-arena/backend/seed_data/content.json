@@ -5173,47 +5173,6 @@
       "tags": "trung thu, câu đố"
     },
     {
-      "content": "🌕 Xem video «Sự tích chú Cuội cung trăng» rồi trả lời:\n\nCuối cùng, chú Cuội ở đâu?",
-      "question_type": "MULTIPLE_CHOICE",
-      "media_type": "VIDEO",
-      "media_url": "/media/videos/su_tich_chu_cuoi_trung_thu.mp4",
-      "media_position": "BEFORE",
-      "points": 15,
-      "input_mode": "TEXT",
-      "blocks_json": null,
-      "options": [
-        {
-          "content": "Dưới đáy biển",
-          "is_correct": false,
-          "media_type": "NONE",
-          "media_url": null,
-          "order_index": 0
-        },
-        {
-          "content": "Cung trăng (ngồi gốc cây đa)",
-          "is_correct": true,
-          "media_type": "NONE",
-          "media_url": null,
-          "order_index": 1
-        },
-        {
-          "content": "Hang cọp trong rừng",
-          "is_correct": false,
-          "media_type": "NONE",
-          "media_url": null,
-          "order_index": 2
-        },
-        {
-          "content": "Nhà vua ở kinh thành",
-          "is_correct": false,
-          "media_type": "NONE",
-          "media_url": null,
-          "order_index": 3
-        }
-      ],
-      "tags": "trung thu, câu đố"
-    },
-    {
       "content": "Chúc các bạn một mùa Trung thu thật vui vẻ! 🥮🏮\n\nCây thuốc quý của chú Cuội có phép gì?",
       "question_type": "MULTIPLE_CHOICE",
       "media_type": "NONE",

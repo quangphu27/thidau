@@ -324,6 +324,9 @@ def sync_content_pack(db: Session | None = None) -> None:
 def ensure_content_on_startup() -> None:
     """Called from app lifespan: restore media; import if empty; sync when seed pack changes."""
     init_db()
+    missing = verify_portable_pack()
+    if missing:
+        print("! Cảnh báo seed pack thiếu:", "; ".join(missing))
     _restore_media_files()
     db = SessionLocal()
     try:
@@ -355,7 +358,43 @@ def _restore_media_files() -> int:
         if not dest.exists() or dest.stat().st_size != src.stat().st_size:
             shutil.copy2(src, dest)
             count += 1
+    # Summary video + BGM (not always referenced in questions JSON)
+    for name in (
+        "videos/su_tich_chu_cuoi_trung_thu.mp4",
+        "videos/amthanh.mp3",
+    ):
+        src = MEDIA_DIR / name
+        if not src.is_file():
+            continue
+        dest = UPLOAD_DIR / name
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        if not dest.exists() or dest.stat().st_size != src.stat().st_size:
+            shutil.copy2(src, dest)
+            count += 1
     return count
+
+
+def verify_portable_pack() -> list[str]:
+    """Return list of missing critical seed assets (empty = OK)."""
+    missing: list[str] = []
+    if not CONTENT_FILE.is_file():
+        missing.append(str(CONTENT_FILE))
+        return missing
+    try:
+        payload = json.loads(CONTENT_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        missing.append(f"{CONTENT_FILE} (invalid JSON)")
+        return missing
+    titles = {(e.get("title") or "") for e in (payload.get("exams") or [])}
+    if "Trung thu vui vẻ" not in titles:
+        missing.append("exam: Trung thu vui vẻ")
+    for name in (
+        "videos/su_tich_chu_cuoi_trung_thu.mp4",
+        "videos/amthanh.mp3",
+    ):
+        if not (MEDIA_DIR / name).is_file():
+            missing.append(f"seed_data/media/{name}")
+    return missing
 
 
 def import_content(
