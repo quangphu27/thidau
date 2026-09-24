@@ -13,8 +13,10 @@ import NextQuestionCountdown from '../components/NextQuestionCountdown'
 import WaitingLobby from '../components/WaitingLobby'
 import WinnerScreen from '../components/WinnerScreen'
 import BlockPuzzlePlay from '../components/BlockPuzzlePlay'
+import SummaryVideoScreen from '../components/SummaryVideoScreen'
 import { mediaUrl } from '../utils/config'
 import { useBattleFighters } from '../hooks/useBattleFighters'
+import { getSummaryVideo } from '../data/summaryVideos'
 
 export default function PlayPage() {
   const { code } = useParams()
@@ -96,6 +98,7 @@ export default function PlayPage() {
 
   const [countdown, setCountdown] = useState(null)
   const [countdownWinner, setCountdownWinner] = useState('')
+  const [summaryDone, setSummaryDone] = useState(false)
 
   useEffect(() => {
     if (!battleEvent?.at) return
@@ -197,6 +200,19 @@ export default function PlayPage() {
   }
 
   if (finished || roomState?.status === 'FINISHED') {
+    const summary = getSummaryVideo(roomState?.exam_title || finished?.exam_title)
+    if (summary && !summaryDone) {
+      return (
+        <SummaryVideoScreen
+          title={summary.title}
+          url={summary.url}
+          bgmUrl={summary.bgmUrl}
+          bgmVolume={summary.bgmVolume}
+          cues={summary.cues}
+          onDone={() => setSummaryDone(true)}
+        />
+      )
+    }
     return (
       <WinnerScreen
         winner={finished?.winner || rankings[0] || null}

@@ -10,6 +10,8 @@ import WaitingLobby from '../../components/WaitingLobby'
 import WinnerScreen from '../../components/WinnerScreen'
 import MediaPlayer from '../../components/MediaPlayer'
 import BuzzerButton from '../../components/BuzzerButton'
+import SummaryVideoScreen from '../../components/SummaryVideoScreen'
+import { getSummaryVideo } from '../../data/summaryVideos'
 
 export default function RoomControlPage() {
   const { code } = useParams()
@@ -17,6 +19,7 @@ export default function RoomControlPage() {
   const [busy, setBusy] = useState(false)
   const [subs, setSubs] = useState([])
   const [err, setErr] = useState('')
+  const [summaryDone, setSummaryDone] = useState(false)
 
   const {
     roomState,
@@ -113,6 +116,19 @@ export default function RoomControlPage() {
   }
 
   if (finished || roomState?.status === 'FINISHED') {
+    const summary = getSummaryVideo(roomState?.exam_title || finished?.exam_title)
+    if (summary && !summaryDone) {
+      return (
+        <SummaryVideoScreen
+          title={summary.title}
+          url={summary.url}
+          bgmUrl={summary.bgmUrl}
+          bgmVolume={summary.bgmVolume}
+          cues={summary.cues}
+          onDone={() => setSummaryDone(true)}
+        />
+      )
+    }
     return (
       <WinnerScreen
         winner={finished?.winner || rankings[0] || null}

@@ -10,6 +10,8 @@ import BuzzerButton from '../components/BuzzerButton'
 import NextQuestionCountdown from '../components/NextQuestionCountdown'
 import WinnerScreen from '../components/WinnerScreen'
 import MediaPlayer from '../components/MediaPlayer'
+import SummaryVideoScreen from '../components/SummaryVideoScreen'
+import { getSummaryVideo } from '../data/summaryVideos'
 
 export default function PresentationPage() {
   const { code } = useParams()
@@ -66,6 +68,7 @@ export default function PresentationPage() {
 
   const [countdown, setCountdown] = useState(null)
   const [countdownWinner, setCountdownWinner] = useState('')
+  const [summaryDone, setSummaryDone] = useState(false)
 
   useEffect(() => {
     if (!battleEvent?.at) return
@@ -102,6 +105,19 @@ export default function PresentationPage() {
   }, [question?.id])
 
   if (finished || roomState?.status === 'FINISHED') {
+    const summary = getSummaryVideo(roomState?.exam_title || finished?.exam_title)
+    if (summary && !summaryDone) {
+      return (
+        <SummaryVideoScreen
+          title={summary.title}
+          url={summary.url}
+          bgmUrl={summary.bgmUrl}
+          bgmVolume={summary.bgmVolume}
+          cues={summary.cues}
+          onDone={() => setSummaryDone(true)}
+        />
+      )
+    }
     return (
       <WinnerScreen
         winner={finished?.winner || rankings[0] || null}

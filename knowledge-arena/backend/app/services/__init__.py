@@ -702,11 +702,13 @@ class GameService:
         players = db.query(Player).filter(Player.room_id == room.id).all()
         rankings = self.compute_rankings(players)
         winner = rankings[0] if rankings else None
+        exam = db.query(Exam).filter(Exam.id == room.exam_id).first()
         payload = {
             "type": "game_finished",
             "room_code": room_code,
             "rankings": rankings,
             "winner": winner,
+            "exam_title": exam.title if exam else "",
         }
         await ws_manager.broadcast(room_code, payload)
         return payload
